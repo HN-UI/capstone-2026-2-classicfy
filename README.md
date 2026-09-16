@@ -8,7 +8,6 @@
 - **Java 버전**: 21
 - **빌드 도구**: Gradle
 - **데이터베이스**: mysql
-- 
 
 ## Server Architecture
 추후 이미지 업데이트
