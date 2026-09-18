@@ -102,6 +102,24 @@ class ASAPLoaderTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "outside ASAP root"):
             ASAPLoader(self.root).get_sample(self.performance_keys[0])
 
+    def test_missing_metadata_column_raises(self) -> None:
+        (self.root / "metadata.csv").write_text(
+            "midi_performance\nBach/Fugue/first.mid\n", encoding="utf-8"
+        )
+        with self.assertRaisesRegex(ValueError, "Missing MIDI columns"):
+            ASAPLoader(self.root)
+
+    def test_invalid_annotation_json_raises(self) -> None:
+        (self.root / "asap_annotations.json").write_text("{", encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "Invalid ASAP annotations"):
+            ASAPLoader(self.root)
+
+    def test_missing_alignment_field_raises(self) -> None:
+        del self.annotations[self.performance_keys[0]]["performance_beats"]
+        self._write_annotations()
+        with self.assertRaisesRegex(ValueError, "Invalid performance_beats"):
+            ASAPLoader(self.root).get_sample(self.performance_keys[0])
+
 
 if __name__ == "__main__":
     unittest.main()
