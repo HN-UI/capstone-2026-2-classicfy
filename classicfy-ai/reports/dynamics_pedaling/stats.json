@@ -1,0 +1,156 @@
+{
+  "performances": 1036,
+  "works": 234,
+  "beats_total": 554386,
+  "flag_counts": {
+    "no_pedal_events": 13,
+    "binary_pedal": 3,
+    "short_beat_interval": 46,
+    "long_beat_interval": 15,
+    "many_empty_beats": 0,
+    "global_outlier": 25,
+    "within_work_outlier": 45
+  },
+  "flagged_performances": 141,
+  "statistical_outliers": 67,
+  "pedal_usage_below_5pct": {
+    "count": 93,
+    "by_composer": {
+      "Bach": 86,
+      "Beethoven": 3,
+      "Haydn": 2,
+      "Chopin": 1,
+      "Mozart": 1
+    }
+  },
+  "empty_beat_ratio_max": 0.2669,
+  "velocity_low_ratio_max": 0.0189,
+  "onset_inside_ratio_min": 0.9748,
+  "summary_describe": {
+    "dynamics_mean": {
+      "count": 1036.0,
+      "mean": 0.4979,
+      "std": 0.0577,
+      "min": 0.3241,
+      "25%": 0.4621,
+      "50%": 0.5041,
+      "75%": 0.5402,
+      "max": 0.6406
+    },
+    "dynamics_range": {
+      "count": 1036.0,
+      "mean": 0.3032,
+      "std": 0.0842,
+      "min": 0.0965,
+      "25%": 0.232,
+      "50%": 0.3037,
+      "75%": 0.3693,
+      "max": 0.4933
+    },
+    "pedal_depth_mean": {
+      "count": 1036.0,
+      "mean": 0.5248,
+      "std": 0.2616,
+      "min": 0.0,
+      "25%": 0.3297,
+      "50%": 0.5676,
+      "75%": 0.7438,
+      "max": 0.9684
+    },
+    "pedal_usage": {
+      "count": 1036.0,
+      "mean": 0.5402,
+      "std": 0.2922,
+      "min": 0.0,
+      "25%": 0.2998,
+      "50%": 0.6083,
+      "75%": 0.7967,
+      "max": 0.9879
+    },
+    "pedal_change_rate": {
+      "count": 1036.0,
+      "mean": 1.0155,
+      "std": 0.733,
+      "min": 0.0,
+      "25%": 0.5206,
+      "50%": 0.877,
+      "75%": 1.3638,
+      "max": 4.7273
+    }
+  },
+  "same_work_consistency": {
+    "works": 71,
+    "median": {
+      "performances": 8.0,
+      "dynamics_corr_raw": 0.715,
+      "dynamics_corr_smooth": 0.83,
+      "dynamics_level_std": 0.0193,
+      "pedal_corr_raw": 0.5549,
+      "pedal_corr_smooth": 0.6484,
+      "pedal_level_std": 0.0744
+    },
+    "level_std_across_all_performances": {
+      "dynamics_mean": 0.0577,
+      "pedal_depth_mean": 0.2616
+    }
+  },
+  "eta_squared": {
+    "dynamics_mean": {
+      "observed": 0.8492,
+      "shuffled": 0.1737
+    },
+    "dynamics_range": {
+      "observed": 0.8712,
+      "shuffled": 0.1751
+    },
+    "pedal_depth_mean": {
+      "observed": 0.8989,
+      "shuffled": 0.1754
+    },
+    "pedal_usage": {
+      "observed": 0.9237,
+      "shuffled": 0.1752
+    },
+    "pedal_change_rate": {
+      "observed": 0.8545,
+      "shuffled": 0.1741
+    }
+  },
+  "independent_check": [
+    {
+      "key": "Chopin/Etudes_op_10/12/WuuE06M.mid",
+      "beats": 333,
+      "dynamics_max_abs_error": 2.9776248577917386e-08,
+      "pedal_depth_max_abs_error": 0.0002652546666189748
+    },
+    {
+      "key": "Bach/Fugue/bwv_865/Teo01M.mid",
+      "beats": 345,
+      "dynamics_max_abs_error": 2.976879898142215e-08,
+      "pedal_depth_max_abs_error": 7.88431663019673e-05
+    },
+    {
+      "key": "Liszt/Ballade_2/Sham05.mid",
+      "beats": 1130,
+      "dynamics_max_abs_error": 2.976879898142215e-08,
+      "pedal_depth_max_abs_error": 0.0002437046722886249
+    },
+    {
+      "key": "Schubert/Piano_Sonatas/664-1/Mo10M.mid",
+      "beats": 531,
+      "dynamics_max_abs_error": 2.956765843276088e-08,
+      "pedal_depth_max_abs_error": 0.00011108940371573617
+    },
+    {
+      "key": "Chopin/Berceuse_op_57/Teo11M.mid",
+      "beats": 138,
+      "dynamics_max_abs_error": 1.4809903026158366e-08,
+      "pedal_depth_max_abs_error": 2.2896828617224863e-05
+    }
+  ],
+  "figure_works": [
+    "Liszt/Gran_Etudes_de_Paganini/2_La_campanella",
+    "Chopin/Etudes_op_10/8",
+    "Beethoven/Piano_Sonatas/21-1_no_repeat"
+  ]
+}
