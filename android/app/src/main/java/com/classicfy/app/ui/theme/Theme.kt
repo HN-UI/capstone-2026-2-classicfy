@@ -32,7 +32,7 @@ private val ClassicFyColorScheme = darkColorScheme(
 fun ClassicFyTheme(content: @Composable () -> Unit) {
     MaterialTheme(
         colorScheme = ClassicFyColorScheme,
-        typography = Typography,
+        typography = ClassicFyTypography,
         content = content
     )
 }
