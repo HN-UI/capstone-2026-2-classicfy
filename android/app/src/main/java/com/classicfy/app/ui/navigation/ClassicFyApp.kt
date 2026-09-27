@@ -33,8 +33,6 @@ fun ClassicFyApp() {
             }
             composable(ClassicFyDestination.DETAIL) {
                 NavigationPlaceholder(
-                    title = "Detail placeholder",
-                    actionLabel = "Back",
                     onAction = { navController.popBackStack() }
                 )
             }
@@ -45,8 +43,6 @@ fun ClassicFyApp() {
 // Temporary content for checking navigation until product screens are added.
 @Composable
 private fun NavigationPlaceholder(
-    title: String,
-    actionLabel: String,
     onAction: () -> Unit
 ) {
     Column(
@@ -56,9 +52,9 @@ private fun NavigationPlaceholder(
         verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = title)
+        Text(text = "Detail placeholder")
         Button(onClick = onAction) {
-            Text(text = actionLabel)
+            Text(text = "Back")
         }
     }
 }
