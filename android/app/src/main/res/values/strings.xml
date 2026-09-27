@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">ClassicFy</string>
+    <string name="login_id_label">아이디</string>
+    <string name="login_password_label">비밀번호</string>
+    <string name="login_id_placeholder">아이디를 입력하세요</string>
+    <string name="login_password_placeholder">비밀번호를 입력하세요</string>
+    <string name="login_button">로그인</string>
+    <string name="login_sign_up">회원가입</string>
+    <string name="login_show_password">비밀번호 표시</string>
+    <string name="login_hide_password">비밀번호 숨기기</string>
 </resources>
