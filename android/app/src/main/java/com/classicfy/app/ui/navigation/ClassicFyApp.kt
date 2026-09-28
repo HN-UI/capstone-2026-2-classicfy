@@ -16,6 +16,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.classicfy.app.ui.screen.login.LoginScreen
+import com.classicfy.app.ui.screen.preference.PreferenceScreen
+import com.classicfy.app.ui.screen.preference.PreferenceResultScreen
+import com.classicfy.app.ui.screen.signup.SignUpScreen
 import com.classicfy.app.ui.screen.splash.SplashScreen
 import kotlinx.coroutines.delay
 
@@ -44,6 +47,36 @@ fun ClassicFyApp() {
             composable(ClassicFyDestination.LOGIN) {
                 LoginScreen(
                     onLoginClick = {
+                        navController.navigate(ClassicFyDestination.PREFERENCE) {
+                            launchSingleTop = true
+                        }
+                    },
+                    onSignUpClick = {
+                        navController.navigate(ClassicFyDestination.SIGN_UP) {
+                            launchSingleTop = true
+                        }
+                    }
+                )
+            }
+            composable(ClassicFyDestination.SIGN_UP) {
+                SignUpScreen(
+                    onSignUpClick = {
+                        navController.popBackStack(ClassicFyDestination.LOGIN, false)
+                    }
+                )
+            }
+            composable(ClassicFyDestination.PREFERENCE) {
+                PreferenceScreen(
+                    onAnalyzeClick = {
+                        navController.navigate(ClassicFyDestination.PREFERENCE_RESULT) {
+                            launchSingleTop = true
+                        }
+                    }
+                )
+            }
+            composable(ClassicFyDestination.PREFERENCE_RESULT) {
+                PreferenceResultScreen(
+                    onSearchClick = {
                         navController.navigate(ClassicFyDestination.DETAIL) {
                             launchSingleTop = true
                         }
