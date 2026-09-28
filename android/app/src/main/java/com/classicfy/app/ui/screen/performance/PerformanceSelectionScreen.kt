@@ -111,7 +111,7 @@ fun PerformanceSelectionScreen(
         keyboardController?.hide()
     }
     var favoriteIds by rememberSaveable(workId) {
-        mutableStateOf(arrayListOf<String>())
+        mutableStateOf(emptySet<String>())
     }
 
     Column(
@@ -185,8 +185,10 @@ fun PerformanceSelectionScreen(
                 PerformanceRow(
                     performance = performance.copy(isFavorite = performance.id in favoriteIds),
                     onFavoriteClick = {
-                        favoriteIds = ArrayList(favoriteIds).apply {
-                            if (!remove(performance.id)) add(performance.id)
+                        favoriteIds = if (performance.id in favoriteIds) {
+                            favoriteIds - performance.id
+                        } else {
+                            favoriteIds + performance.id
                         }
                     },
                     onClick = onPerformanceClick
