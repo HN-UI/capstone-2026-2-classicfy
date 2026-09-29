@@ -4,6 +4,9 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from statistics import median
 
+import numpy as np
+
+from .models import BeatSequence, readonly_array
 from .sequence_stats import median_sequence_with_support
 from .tempo import TempoFeature
 
@@ -14,12 +17,24 @@ class RubatoFeature:
 
     performance_key: str
     overall_score_relative_tempo: float | None
-    absolute_rubato_sequence: list[float | None]
-    common_rubato_sequence: list[float | None]
-    common_rubato_support: list[int]
-    relative_rubato_sequence: list[float | None]
+    absolute_rubato_sequence: BeatSequence
+    common_rubato_sequence: BeatSequence
+    common_rubato_support: np.ndarray
+    relative_rubato_sequence: BeatSequence
     absolute_rubato_amount: float | None
     relative_rubato_amount: float | None
+
+    def __post_init__(self) -> None:
+        support = readonly_array(self.common_rubato_support, dtype=int)
+        lengths = {
+            len(self.absolute_rubato_sequence),
+            len(self.common_rubato_sequence),
+            len(self.relative_rubato_sequence),
+            len(support),
+        }
+        if len(lengths) != 1:
+            raise ValueError("Rubato sequences must have the same length")
+        object.__setattr__(self, "common_rubato_support", support)
 
 
 def _amount(sequence: list[float | None]) -> float | None:
@@ -37,7 +52,7 @@ def extract_piece_rubato_features(
     상대적 Rubato는 절대적 Rubato에서 공통 Rubato를 뺀 연주자 고유 편차다.
 
     ``bR``, suspicious 및 0폭 interval처럼 Tempo mask에서 제외된 위치는 모든
-    Rubato sequence에서 ``None``을 유지한다.
+    Rubato sequence에서 ``NaN + mask=False``를 유지한다.
     """
     if len(tempo_features) < 2:
         raise ValueError("At least two tempo features are required for piece comparison")
@@ -87,10 +102,10 @@ def extract_piece_rubato_features(
         features[performance_key] = RubatoFeature(
             performance_key=performance_key,
             overall_score_relative_tempo=baseline_by_key[performance_key],
-            absolute_rubato_sequence=absolute_sequence,
-            common_rubato_sequence=common_sequence.copy(),
-            common_rubato_support=common_support.copy(),
-            relative_rubato_sequence=relative_sequence,
+            absolute_rubato_sequence=BeatSequence.from_optional(absolute_sequence),
+            common_rubato_sequence=BeatSequence.from_optional(common_sequence),
+            common_rubato_support=common_support,
+            relative_rubato_sequence=BeatSequence.from_optional(relative_sequence),
             absolute_rubato_amount=_amount(absolute_sequence),
             relative_rubato_amount=_amount(relative_sequence),
         )

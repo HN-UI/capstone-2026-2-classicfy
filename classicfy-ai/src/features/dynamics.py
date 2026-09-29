@@ -10,17 +10,23 @@ import numpy as np
 
 from preprocessing import MidiData
 from .beat_grid import assign_windows, build_beat_grid
+from .models import BeatSequence, readonly_array
 
 MAX_VELOCITY = 127
 
 
-@dataclass
+@dataclass(frozen=True)
 class DynamicsFeature:
     """beat 구간별 Dynamics 값과 그 값이 유효한지를 담는다."""
 
-    values: np.ndarray  # (T,) 구간에서 시작한 음의 평균 velocity / 127. 음이 없으면 NaN
-    mask: np.ndarray  # (T,) 구간에 시작한 음이 있으면 True
+    sequence: BeatSequence  # 평균 velocity / 127. 음이 없으면 NaN + mask=False
     onset_counts: np.ndarray  # (T,) 구간에서 시작한 음의 개수
+
+    def __post_init__(self) -> None:
+        onset_counts = readonly_array(self.onset_counts, dtype=int)
+        if len(onset_counts) != len(self.sequence):
+            raise ValueError("Dynamics onset counts must match the beat sequence")
+        object.__setattr__(self, "onset_counts", onset_counts)
 
 
 def extract_dynamics(performance: MidiData, beats: Sequence[float]) -> DynamicsFeature:
@@ -39,12 +45,15 @@ def extract_dynamics(performance: MidiData, beats: Sequence[float]) -> DynamicsF
     mask = (counts > 0) & grid.mask
     values = np.full(window_count, np.nan)
     values[mask] = totals[mask] / counts[mask] / MAX_VELOCITY
-    return DynamicsFeature(values=values, mask=mask, onset_counts=counts)
+    return DynamicsFeature(
+        sequence=BeatSequence(values=values, mask=mask),
+        onset_counts=counts,
+    )
 
 
 def summarize_dynamics(feature: DynamicsFeature) -> dict[str, float]:
     """곡 전체 요약. Range는 극단값에 덜 흔들리도록 5~95 백분위 차이로 잰다."""
-    valid = feature.values[feature.mask]
+    valid = feature.sequence.values[feature.sequence.mask]
     if len(valid) == 0:
         return {"dynamics_mean": float("nan"), "dynamics_range": float("nan")}
     low, high = np.percentile(valid, [5, 95])

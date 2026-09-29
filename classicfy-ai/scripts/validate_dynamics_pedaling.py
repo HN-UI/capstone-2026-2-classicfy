@@ -128,18 +128,18 @@ def analyze_sample(performance_key: str) -> dict:
         "pedal_event_count": len(pedal_values),
         "pedal_unique": len(set(pedal_values.tolist())),
         "onset_inside_ratio": float(inside.mean()),
-        "empty_beat_ratio": float((~dynamics.mask).mean()),
+        "empty_beat_ratio": float((~dynamics.sequence.mask).mean()),
         "duration": float(beats[-1] - beats[0]),
         **summarize_dynamics(dynamics),
         **summarize_pedaling(pedaling),
     }
     sequences = {
         "beats": beats,
-        "dynamics": dynamics.values.astype(np.float32),
-        "dynamics_mask": dynamics.mask,
-        "pedal_depth": pedaling.depth.astype(np.float32),
-        "pedal_down": pedaling.down_ratio.astype(np.float32),
-        "pedal_changes": pedaling.changes.astype(np.int16),
+        "dynamics": dynamics.sequence.values.astype(np.float32),
+        "dynamics_mask": dynamics.sequence.mask,
+        "pedal_depth": pedaling.depth.values.astype(np.float32),
+        "pedal_down": pedaling.down_ratio.values.astype(np.float32),
+        "pedal_changes": pedaling.changes.values.astype(np.int16),
     }
     return {"stats": stats, "sequences": sequences}
 

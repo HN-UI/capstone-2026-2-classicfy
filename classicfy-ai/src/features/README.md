@@ -37,6 +37,19 @@ beat 시각이 `[b0, b1, b2, ..., b_{B-1}]`처럼 B개 있으면, 그 **사이 �
 
 **같은 작품, 다른 연주는 구간 개수가 다를 수 있다** — 연주마다 beat를 센 결과가 다르기 때문이다. 다만 ASAP에서 `aligned=True`로 표시된 연주들은 악보 beat와 연주 beat가 1:1로 대응하도록 만들어져 있어서, 실제로는 **같은 작품의 aligned 연주들은 항상 같은 T를 가진다**(1,036개 연주 전체에서 확인함). 그래서 인덱스로 바로 비교할 수 있다.
 
+### 공통 beat-level 결과 형식
+
+Tempo·Rubato·Dynamics·Pedaling의 beat-level 값은 모두 `BeatSequence`로 제공한다.
+
+```python
+sequence.values  # (T,) NumPy 배열
+sequence.mask    # (T,) 같은 위치의 값이 유효한지를 나타내는 boolean 배열
+```
+
+두 배열은 항상 길이가 같고 생성 후에는 수정할 수 없다. 결측 위치는 숫자 배열에서
+`NaN`, mask에서 `False`로 표현한다. 단, 페달 이벤트가 없는 연주의 0은 결측이 아니라
+"페달을 사용하지 않음"이므로 값은 0이고 mask는 `True`다.
+
 ## 2. Dynamics — "이 구간을 얼마나 세게 쳤는가"
 
 ### 계산 방법
@@ -151,8 +164,10 @@ beat별 시퀀스 말고, 연주 하나를 대표하는 숫자 몇 개도 함께
 
 | 함수 | 결과 |
 |---|---|
-| `extract_dynamics(performance, beats)` | `DynamicsFeature`: `values`(평균 velocity / 127), `mask`, `onset_counts` |
-| `extract_pedaling(performance, beats)` | `PedalingFeature`: `depth`, `down_ratio`, `changes`, `mask` |
+| `extract_dynamics(performance, beats)` | `DynamicsFeature`: `sequence`(`values`는 평균 velocity / 127), `onset_counts` |
+| `extract_pedaling(performance, beats)` | `PedalingFeature`: `depth`, `down_ratio`, `changes`가 각각 `BeatSequence` |
+| `extract_piece_tempo_features(performances)` | `TempoFeature`: 공통·개별 tempo `BeatSequence`, interval별 상태와 원시값 |
+| `extract_piece_rubato_features(tempo_features)` | `RubatoFeature`: 절대·공통·상대 rubato `BeatSequence` |
 | `TempoInput.from_asap_sample(sample)` | 정렬된 `AsapSample`의 beat 정보를 Tempo 입력으로 변환 |
 | `summarize_dynamics(feature)` | `dynamics_mean`, `dynamics_range` |
 | `summarize_pedaling(feature)` | `pedal_depth_mean`, `pedal_usage`, `pedal_change_rate` |
@@ -177,6 +192,6 @@ Tempo도 같은 beat grid와 mask를 사용하며, `bR`, suspicious, 0폭 구간
 PYTHONPATH=src python -m unittest discover -s tests -v
 ```
 
-`test_beat_grid.py`, `test_dynamics.py`, `test_pedaling.py`가 위에서 설명한 규칙(구간 경계, 시간 가중, 페달 없음 처리 등)을 각각 검증한다.
+`test_beat_grid.py`, `test_feature_models.py`, `test_dynamics.py`, `test_pedaling.py`가 위에서 설명한 규칙(구간 경계, 공통 결과 형식, 시간 가중, 페달 없음 처리 등)을 각각 검증한다.
 
 ASAP 전체 1,036개 연주에 적용해 다른 방식으로 다시 계산한 값과 대조하고, 분포·이상치·같은 곡 여러 연주 비교까지 마친 결과는 `reports/dynamics_pedaling/README.md`에 있다.

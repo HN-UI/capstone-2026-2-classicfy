@@ -8,9 +8,12 @@ from math import isclose, log2
 from statistics import median
 from typing import Literal
 
+import numpy as np
+
 from preprocessing import AsapSample, BeatType
 
 from .beat_grid import as_beat_array, build_beat_grid
+from .models import BeatSequence, readonly_array
 from .sequence_stats import median_sequence_with_support
 
 TempoIntervalStatus = Literal["regular", "special", "suspicious", "invalid"]
@@ -61,11 +64,24 @@ class TempoFeature:
     """작품의 공통 tempo 해석과 그에 대한 개별 연주의 편차."""
 
     performance_key: str
-    intervals: list[TempoInterval]
-    common_tempo_sequence: list[float | None]
-    common_tempo_support: list[int]
-    individual_tempo_sequence: list[float | None]
+    intervals: tuple[TempoInterval, ...]
+    common_tempo_sequence: BeatSequence
+    common_tempo_support: np.ndarray
+    individual_tempo_sequence: BeatSequence
     overall_individual_tempo: float | None
+
+    def __post_init__(self) -> None:
+        intervals = tuple(self.intervals)
+        support = readonly_array(self.common_tempo_support, dtype=int)
+        expected_length = len(intervals)
+        if (
+            len(self.common_tempo_sequence) != expected_length
+            or len(self.individual_tempo_sequence) != expected_length
+            or len(support) != expected_length
+        ):
+            raise ValueError("Tempo sequences must match the interval count")
+        object.__setattr__(self, "intervals", intervals)
+        object.__setattr__(self, "common_tempo_support", support)
 
 
 def _validate_beat_types(
@@ -149,7 +165,8 @@ def extract_piece_tempo_features(
     ``bR``이 시작 또는 끝에 포함된 interval은 삭제하지 않고 ``special`` 상태로
     보존한다. Score와 최소 3개 peer에서 모두 8배 이상 벗어난 극단 구간도 원시값을
     보존한 채 ``suspicious``로 구분한다. 길이가 0인 구간은 ``invalid``로 보존한다.
-    세 상태 모두 mask에서 제외하고 tempo sequence에서는 ``None``으로 표시한다.
+    세 상태 모두 mask에서 제외하고 tempo sequence에서는 ``NaN + mask=False``로
+    표시한다. Interval에는 원시값과 상태를 그대로 보존한다.
     """
     if len(performances) < 2:
         raise ValueError("At least two performances are required for piece comparison")
@@ -235,10 +252,10 @@ def extract_piece_tempo_features(
         ]
         features[performance_key] = TempoFeature(
             performance_key=performance_key,
-            intervals=intervals,
-            common_tempo_sequence=common_tempo_sequence.copy(),
-            common_tempo_support=common_tempo_support.copy(),
-            individual_tempo_sequence=individual_sequence,
+            intervals=tuple(intervals),
+            common_tempo_sequence=BeatSequence.from_optional(common_tempo_sequence),
+            common_tempo_support=common_tempo_support,
+            individual_tempo_sequence=BeatSequence.from_optional(individual_sequence),
             overall_individual_tempo=(
                 median(valid_individual_values) if valid_individual_values else None
             ),

@@ -3,6 +3,8 @@ import unittest
 from dataclasses import replace
 from pathlib import Path
 
+import numpy as np
+
 from features import TempoInput, extract_piece_tempo_features
 from preprocessing import AsapSample
 
@@ -73,8 +75,10 @@ class ExtractPieceTempoFeaturesTest(unittest.TestCase):
 
         for interval in fast.intervals:
             self.assertAlmostEqual(interval.score_relative_tempo, math.log2(1.25))
-        self.assertEqual(middle.common_tempo_sequence, [0.0, 0.0, 0.0])
-        self.assertEqual(middle.individual_tempo_sequence, [0.0, 0.0, 0.0])
+        np.testing.assert_allclose(middle.common_tempo_sequence.values, [0.0, 0.0, 0.0])
+        np.testing.assert_allclose(
+            middle.individual_tempo_sequence.values, [0.0, 0.0, 0.0]
+        )
         self.assertGreater(fast.overall_individual_tempo, 0.0)
         self.assertLess(slow.overall_individual_tempo, 0.0)
 
@@ -100,8 +104,10 @@ class ExtractPieceTempoFeaturesTest(unittest.TestCase):
         self.assertEqual(first.intervals[1].status_reason, "contains_bR")
         self.assertFalse(first.intervals[1].mask)
         self.assertIsNone(first.intervals[1].score_relative_tempo)
-        self.assertEqual(first.common_tempo_sequence[1:], [None, None])
-        self.assertEqual(first.individual_tempo_sequence[1:], [None, None])
+        self.assertEqual(first.common_tempo_sequence.mask.tolist(), [True, False, False])
+        self.assertEqual(
+            first.individual_tempo_sequence.mask.tolist(), [True, False, False]
+        )
 
     def test_uses_available_regular_performances_for_common_tempo(self) -> None:
         features = extract_piece_tempo_features(
@@ -115,15 +121,20 @@ class ExtractPieceTempoFeaturesTest(unittest.TestCase):
             ]
         )
 
-        self.assertEqual(features["regular.mid"].common_tempo_sequence, [None, None, 0.0])
-        self.assertEqual(features["regular.mid"].common_tempo_support, [1, 1, 2])
+        regular = features["regular.mid"]
+        self.assertEqual(regular.common_tempo_sequence.mask.tolist(), [False, False, True])
+        np.testing.assert_allclose(
+            regular.common_tempo_sequence.values,
+            [np.nan, np.nan, 0.0],
+            equal_nan=True,
+        )
+        self.assertEqual(regular.common_tempo_support.tolist(), [1, 1, 2])
         self.assertEqual(
-            features["regular.mid"].individual_tempo_sequence,
-            [None, None, 0.0],
+            regular.individual_tempo_sequence.mask.tolist(), [False, False, True]
         )
         self.assertEqual(
-            features["special.mid"].individual_tempo_sequence,
-            [None, None, 0.0],
+            features["special.mid"].individual_tempo_sequence.mask.tolist(),
+            [False, False, True],
         )
 
     def test_marks_extreme_peer_and_score_deviation_as_suspicious(self) -> None:
@@ -142,7 +153,10 @@ class ExtractPieceTempoFeaturesTest(unittest.TestCase):
         self.assertFalse(interval.mask)
         self.assertIsNotNone(interval.score_relative_tempo)
         self.assertGreater(interval.peer_log2_deviation, 3.0)
-        self.assertIsNone(features["extreme.mid"].individual_tempo_sequence[0])
+        self.assertFalse(features["extreme.mid"].individual_tempo_sequence.mask[0])
+        self.assertTrue(
+            np.isnan(features["extreme.mid"].individual_tempo_sequence.values[0])
+        )
 
     def test_keeps_shared_large_score_deviation_as_regular(self) -> None:
         features = extract_piece_tempo_features(
@@ -175,9 +189,9 @@ class ExtractPieceTempoFeaturesTest(unittest.TestCase):
         self.assertEqual(interval.status, "invalid")
         self.assertEqual(interval.status_reason, "zero_duration")
         self.assertIsNone(interval.score_relative_tempo)
-        self.assertIsNotNone(duplicate.individual_tempo_sequence[0])
-        self.assertIsNone(duplicate.individual_tempo_sequence[1])
-        self.assertIsNotNone(duplicate.individual_tempo_sequence[2])
+        self.assertEqual(
+            duplicate.individual_tempo_sequence.mask.tolist(), [True, False, True]
+        )
 
     def test_requires_multiple_performances_of_the_same_score(self) -> None:
         with self.assertRaisesRegex(ValueError, "At least two performances"):

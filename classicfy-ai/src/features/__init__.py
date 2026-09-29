@@ -2,6 +2,7 @@
 
 from .beat_grid import BeatGrid, as_beat_array, assign_windows, build_beat_grid
 from .dynamics import DynamicsFeature, extract_dynamics, summarize_dynamics
+from .models import BeatSequence
 from .pedaling import PedalingFeature, extract_pedaling, summarize_pedaling
 from .rubato import RubatoFeature, extract_piece_rubato_features
 from .tempo import (
@@ -13,6 +14,7 @@ from .tempo import (
 
 __all__ = [
     "BeatGrid",
+    "BeatSequence",
     "DynamicsFeature",
     "PedalingFeature",
     "RubatoFeature",
