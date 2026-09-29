@@ -34,13 +34,13 @@ from matplotlib.lines import Line2D  # noqa: E402
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from preprocessing import ASAPLoader, load_midi  # noqa: E402
-from preprocessing.features import (  # noqa: E402
+from features import (  # noqa: E402
     extract_dynamics,
     extract_pedaling,
     summarize_dynamics,
     summarize_pedaling,
 )
+from preprocessing import ASAPLoader, load_midi  # noqa: E402
 
 SHORT_INTERVAL_RATIO = 0.05  # 중앙값 beat 간격 대비 이보다 짧으면 비정상적으로 짧은 beat로 본다
 LONG_INTERVAL_RATIO = 20.0  # 중앙값 beat 간격 대비 이보다 길면 비정상적으로 긴 beat로 본다

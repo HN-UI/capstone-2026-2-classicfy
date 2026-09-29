@@ -1,6 +1,6 @@
 # Classicfy AI features — Dynamics · Pedaling
 
-`preprocessing.features`는 `preprocessing`이 읽은 **연주 MIDI**와 ASAP의 **beat 정렬 정보**로, beat 단위 연주 해석 특징을 계산한다. 이 문서는 Dynamics(음량 표현)와 Pedaling(페달 표현) 두 특징을 **무엇을 기준으로, 어떤 방법으로** 계산했는지 처음부터 설명한다.
+`features`는 `preprocessing`이 읽은 **연주 MIDI**와 ASAP의 **beat 정렬 정보**로, beat 단위 연주 해석 특징을 계산한다. 이 문서는 Dynamics(음량 표현)와 Pedaling(페달 표현) 두 특징을 **무엇을 기준으로, 어떤 방법으로** 계산했는지 처음부터 설명한다.
 
 ## 0. 입력이 무엇인지부터
 

@@ -1,6 +1,6 @@
 # Dynamics · Pedaling 특징 검증 (ASAP)
 
-`preprocessing.features`의 Dynamics·Pedaling 추출기를 ASAP의 정렬된 연주 전체에 적용해 검증한 결과다. 특징 정의와 시간축 규칙은 `src/preprocessing/features/README.md`에 있다.
+`features`의 Dynamics·Pedaling 추출기를 ASAP의 정렬된 연주 전체에 적용해 검증한 결과다. 특징 정의와 시간축 규칙은 `src/features/README.md`에 있다.
 
 - 대상: `aligned=True`인 연주 **1,036개**, 작품 **234개**(ASAP 폴더 기준), beat 구간 **554,386개**
 - 수치의 원본은 `stats.json`, 연주별 값은 `performance_summary.csv`, 이상치 목록은 `outliers.csv`다.

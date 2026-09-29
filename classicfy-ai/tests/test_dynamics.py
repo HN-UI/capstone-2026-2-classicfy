@@ -3,7 +3,7 @@ import unittest
 import numpy as np
 
 from preprocessing import MidiData, NoteEvent
-from preprocessing.features.dynamics import (
+from features.dynamics import (
     MAX_VELOCITY,
     DynamicsFeature,
     extract_dynamics,

@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from preprocessing.features.beat_grid import as_beat_array, assign_windows
+from features.beat_grid import as_beat_array, assign_windows
 
 
 class BeatGridTest(unittest.TestCase):

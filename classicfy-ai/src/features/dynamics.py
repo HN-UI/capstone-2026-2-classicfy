@@ -8,7 +8,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from ..midi_loader import MidiData
+from preprocessing import MidiData
 from .beat_grid import as_beat_array, assign_windows
 
 MAX_VELOCITY = 127

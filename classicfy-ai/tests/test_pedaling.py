@@ -3,7 +3,7 @@ import unittest
 import numpy as np
 
 from preprocessing import MidiData, PedalEvent
-from preprocessing.features.pedaling import (
+from features.pedaling import (
     MAX_PEDAL_VALUE,
     PedalingFeature,
     extract_pedaling,
