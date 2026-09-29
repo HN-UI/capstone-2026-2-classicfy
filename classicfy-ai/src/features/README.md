@@ -1,6 +1,6 @@
 # Classicfy AI features — Dynamics · Pedaling
 
-`preprocessing.features`는 `preprocessing`이 읽은 **연주 MIDI**와 ASAP의 **beat 정렬 정보**로, beat 단위 연주 해석 특징을 계산한다. 이 문서는 Dynamics(음량 표현)와 Pedaling(페달 표현) 두 특징을 **무엇을 기준으로, 어떤 방법으로** 계산했는지 처음부터 설명한다.
+`features`는 `preprocessing`이 읽은 **연주 MIDI**와 ASAP의 **beat 정렬 정보**로, beat 단위 연주 해석 특징을 계산한다. 이 문서는 Dynamics(음량 표현)와 Pedaling(페달 표현) 두 특징을 **무엇을 기준으로, 어떤 방법으로** 계산했는지 처음부터 설명한다.
 
 ## 0. 입력이 무엇인지부터
 
@@ -36,6 +36,19 @@ beat 시각이 `[b0, b1, b2, ..., b_{B-1}]`처럼 B개 있으면, 그 **사이 �
 이 배정은 `assign_windows(times, beats)` 한 함수가 전담한다(`np.searchsorted` 기반이라 음표·페달 이벤트가 몇 만 개여도 빠르다). 시각이 범위 밖이면 -1을 주고, Dynamics·Pedaling 모두 이 함수로 "몇 번째 구간 것인지"를 정한다.
 
 **같은 작품, 다른 연주는 구간 개수가 다를 수 있다** — 연주마다 beat를 센 결과가 다르기 때문이다. 다만 ASAP에서 `aligned=True`로 표시된 연주들은 악보 beat와 연주 beat가 1:1로 대응하도록 만들어져 있어서, 실제로는 **같은 작품의 aligned 연주들은 항상 같은 T를 가진다**(1,036개 연주 전체에서 확인함). 그래서 인덱스로 바로 비교할 수 있다.
+
+### 공통 beat-level 결과 형식
+
+Tempo·Rubato·Dynamics·Pedaling의 beat-level 값은 모두 `BeatSequence`로 제공한다.
+
+```python
+sequence.values  # (T,) NumPy 배열
+sequence.mask    # (T,) 같은 위치의 값이 유효한지를 나타내는 boolean 배열
+```
+
+두 배열은 항상 길이가 같고 생성 후에는 수정할 수 없다. 결측 위치는 숫자 배열에서
+`NaN`, mask에서 `False`로 표현한다. 단, 페달 이벤트가 없는 연주의 0은 결측이 아니라
+"페달을 사용하지 않음"이므로 값은 0이고 mask는 `True`다.
 
 ## 2. Dynamics — "이 구간을 얼마나 세게 쳤는가"
 
@@ -128,11 +141,19 @@ beat별 시퀀스 말고, 연주 하나를 대표하는 숫자 몇 개도 함께
 
 | 이름 | 계산식 | 왜 이렇게 재는가 |
 |---|---|---|
+| `overall_score_relative_tempo` | 유효한 score-relative tempo의 중앙값 | 악보 MIDI 속도에 대한 연주 전체의 빠르기 |
+| `overall_individual_tempo` | 유효한 individual tempo의 중앙값 | 같은 작품의 공통 해석에 대한 연주 전체의 속도 편차 |
+| `absolute_rubato_amount` | 유효한 absolute rubato 절댓값의 중앙값 | 연주 내부의 국소적인 빠르기 변화량 |
+| `relative_rubato_amount` | 유효한 relative rubato 절댓값의 중앙값 | 작품의 공통 Rubato를 제외한 연주자 고유 변화량 |
 | `dynamics_mean` | 유효한 구간의 Dynamics 평균 | 곡 전체의 평균 세기 |
 | `dynamics_range` | 유효한 구간의 5~95 백분위 차이 | 최댓값-최솟값 대신 백분위를 써서, 단 한 번의 실수나 이상치 음표에 흔들리지 않게 함 |
 | `pedal_depth_mean` | 유효한 구간의 `depth` 평균 | 곡 전체에서 페달을 평균적으로 얼마나 깊게 밟았는가 |
 | `pedal_usage` | 유효한 구간의 `down_ratio` 평균 | 곡 전체 시간 중 페달이 켜져 있던 비중 |
 | `pedal_change_rate` | 유효한 구간의 `changes` 평균 (구간당 평균 횟수) | 페달을 얼마나 자주 갈아 밟았는가 |
+
+네 feature 모두 `summarize_<feature>(feature)` 함수가 `dict[str, float]`를 반환한다.
+요약값을 계산할 유효 구간이 없으면 해당 값은 `NaN`이다. 계산식은 feature의 음악적
+의미에 따라 다르며, 인터페이스가 같다는 이유로 동일한 평균 방식을 강제하지 않는다.
 
 **`pedal_change_rate`를 작품 사이에서 그대로 비교하면 안 된다.** 이 값은 "beat당 평균 전환 횟수"인데, beat 하나의 길이(초)는 곡 빠르기에 따라 몇 배씩 차이가 난다. 느린 곡은 beat 하나가 몇 초씩이라 그 안에 전환이 몰릴 기회가 많아지고, 실제로 ASAP 전체에서 이 값과 beat 길이의 순위상관은 0.54로 뚜렷하다. 반면 **같은 작품 안에서 연주끼리 비교**할 때는 beat 길이가 거의 같으므로 문제가 없다(같은 작품 안에서의 순위상관은 0.12로 약함). 자세한 근거는 `reports/dynamics_pedaling/README.md`에 있다.
 
@@ -151,13 +172,21 @@ beat별 시퀀스 말고, 연주 하나를 대표하는 숫자 몇 개도 함께
 
 | 함수 | 결과 |
 |---|---|
-| `extract_dynamics(performance, beats)` | `DynamicsFeature`: `values`(평균 velocity / 127), `mask`, `onset_counts` |
-| `extract_pedaling(performance, beats)` | `PedalingFeature`: `depth`, `down_ratio`, `changes`, `mask` |
+| `extract_dynamics(performance, beats)` | `DynamicsFeature`: `sequence`(`values`는 평균 velocity / 127), `onset_counts` |
+| `extract_pedaling(performance, beats)` | `PedalingFeature`: `depth`, `down_ratio`, `changes`가 각각 `BeatSequence` |
+| `extract_piece_tempo_features(performances)` | `TempoFeature`: 공통·개별 tempo `BeatSequence`, interval별 상태와 원시값 |
+| `extract_piece_rubato_features(tempo_features)` | `RubatoFeature`: 절대·공통·상대 rubato `BeatSequence` |
+| `TempoInput.from_asap_sample(sample)` | 정렬된 `AsapSample`의 beat 정보를 Tempo 입력으로 변환 |
+| `summarize_tempo(feature)` | `overall_score_relative_tempo`, `overall_individual_tempo` |
+| `summarize_rubato(feature)` | `absolute_rubato_amount`, `relative_rubato_amount` |
 | `summarize_dynamics(feature)` | `dynamics_mean`, `dynamics_range` |
 | `summarize_pedaling(feature)` | `pedal_depth_mean`, `pedal_usage`, `pedal_change_rate` |
+| `build_beat_grid(beats)` | 공통 beat 경계, 구간 길이, 0폭 구간을 제외하는 mask |
 | `assign_windows(times, beats)` | 각 시각이 속한 구간 번호. 밖이면 -1 |
 
 `performance`는 `load_midi`가 돌려준 `MidiData`이고 `beats`는 `AsapSample.performance_beats`다.
+Tempo도 같은 beat grid와 mask를 사용하며, `bR`, suspicious, 0폭 구간은 상태와 이유를
+보존한 채 일반 통계에서 제외한다.
 
 ## 7. 아직 하지 않은 것 (알려진 한계)
 
@@ -170,9 +199,12 @@ beat별 시퀀스 말고, 연주 하나를 대표하는 숫자 몇 개도 함께
 단위 테스트는 `classicfy-ai` 디렉터리에서 실행한다.
 
 ```bash
-PYTHONPATH=src python -m unittest discover -s tests -v
+PYTHONPATH=src .venv/bin/python -m unittest discover -s tests -v
 ```
 
-`test_beat_grid.py`, `test_dynamics.py`, `test_pedaling.py`가 위에서 설명한 규칙(구간 경계, 시간 가중, 페달 없음 처리 등)을 각각 검증한다.
+`tests/unit/features`는 구간 경계, 공통 결과 형식, 네 feature의 계산식과 결측 처리를
+검증한다. `test_characterization.py`는 대표 입력에 대한 네 feature의 beat-level 값과
+summary를 한 번에 고정한다. 테스트 디렉터리의 역할과 실행 방법은 `tests/README.md`에
+정리되어 있다.
 
 ASAP 전체 1,036개 연주에 적용해 다른 방식으로 다시 계산한 값과 대조하고, 분포·이상치·같은 곡 여러 연주 비교까지 마친 결과는 `reports/dynamics_pedaling/README.md`에 있다.

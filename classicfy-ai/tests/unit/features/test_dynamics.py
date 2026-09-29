@@ -3,7 +3,8 @@ import unittest
 import numpy as np
 
 from preprocessing import MidiData, NoteEvent
-from preprocessing.features.dynamics import (
+from features import BeatSequence
+from features.dynamics import (
     MAX_VELOCITY,
     DynamicsFeature,
     extract_dynamics,
@@ -26,9 +27,9 @@ class ExtractDynamicsTest(unittest.TestCase):
 
         feature = extract_dynamics(performance, [0.0, 1.0, 2.0])
 
-        self.assertEqual(len(feature.values), 2)
-        self.assertAlmostEqual(feature.values[0], 60 / MAX_VELOCITY)
-        self.assertAlmostEqual(feature.values[1], 100 / MAX_VELOCITY)
+        self.assertEqual(len(feature.sequence), 2)
+        self.assertAlmostEqual(feature.sequence.values[0], 60 / MAX_VELOCITY)
+        self.assertAlmostEqual(feature.sequence.values[1], 100 / MAX_VELOCITY)
         self.assertEqual(feature.onset_counts.tolist(), [2, 1])
 
     def test_window_without_onset_is_masked_and_nan(self) -> None:
@@ -36,8 +37,8 @@ class ExtractDynamicsTest(unittest.TestCase):
 
         feature = extract_dynamics(performance, [0.0, 1.0, 2.0, 3.0])
 
-        self.assertEqual(feature.mask.tolist(), [True, False, True])
-        self.assertTrue(np.isnan(feature.values[1]))
+        self.assertEqual(feature.sequence.mask.tolist(), [True, False, True])
+        self.assertTrue(np.isnan(feature.sequence.values[1]))
         self.assertEqual(feature.onset_counts.tolist(), [1, 0, 1])
 
     def test_notes_outside_beat_range_are_ignored(self) -> None:
@@ -46,27 +47,37 @@ class ExtractDynamicsTest(unittest.TestCase):
         feature = extract_dynamics(performance, [0.0, 1.0])
 
         self.assertEqual(feature.onset_counts.tolist(), [1])
-        self.assertAlmostEqual(feature.values[0], 64 / MAX_VELOCITY)
+        self.assertAlmostEqual(feature.sequence.values[0], 64 / MAX_VELOCITY)
 
     def test_performance_without_notes_gives_all_masked_windows(self) -> None:
         feature = extract_dynamics(make_performance([]), [0.0, 1.0, 2.0])
 
-        self.assertEqual(feature.mask.tolist(), [False, False])
+        self.assertEqual(feature.sequence.mask.tolist(), [False, False])
 
     def test_values_stay_in_unit_range(self) -> None:
         performance = make_performance([(0.0, 1), (1.0, 127)])
 
         feature = extract_dynamics(performance, [0.0, 1.0, 2.0])
 
-        self.assertTrue(np.all(feature.values >= 0))
-        self.assertTrue(np.all(feature.values <= 1))
+        self.assertTrue(np.all(feature.sequence.values >= 0))
+        self.assertTrue(np.all(feature.sequence.values <= 1))
+
+    def test_zero_width_window_is_masked(self) -> None:
+        performance = make_performance([(0.0, 64), (1.0, 80)])
+
+        feature = extract_dynamics(performance, [0.0, 1.0, 1.0, 2.0])
+
+        self.assertEqual(feature.sequence.mask.tolist(), [True, False, True])
+        self.assertTrue(np.isnan(feature.sequence.values[1]))
 
 
 class SummarizeDynamicsTest(unittest.TestCase):
     def test_summary_ignores_masked_windows(self) -> None:
         feature = DynamicsFeature(
-            values=np.array([0.2, np.nan, 0.6]),
-            mask=np.array([True, False, True]),
+            sequence=BeatSequence(
+                values=np.array([0.2, np.nan, 0.6]),
+                mask=np.array([True, False, True]),
+            ),
             onset_counts=np.array([1, 0, 1]),
         )
 
@@ -78,7 +89,10 @@ class SummarizeDynamicsTest(unittest.TestCase):
 
     def test_summary_of_all_masked_feature_is_nan(self) -> None:
         feature = DynamicsFeature(
-            values=np.array([np.nan]), mask=np.array([False]), onset_counts=np.array([0])
+            sequence=BeatSequence(
+                values=np.array([np.nan]), mask=np.array([False])
+            ),
+            onset_counts=np.array([0]),
         )
 
         summary = summarize_dynamics(feature)

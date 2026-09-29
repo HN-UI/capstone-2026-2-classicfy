@@ -34,13 +34,13 @@ from matplotlib.lines import Line2D  # noqa: E402
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from preprocessing import ASAPLoader, load_midi  # noqa: E402
-from preprocessing.features import (  # noqa: E402
+from features import (  # noqa: E402
     extract_dynamics,
     extract_pedaling,
     summarize_dynamics,
     summarize_pedaling,
 )
+from preprocessing import ASAPLoader, load_midi  # noqa: E402
 
 SHORT_INTERVAL_RATIO = 0.05  # 중앙값 beat 간격 대비 이보다 짧으면 비정상적으로 짧은 beat로 본다
 LONG_INTERVAL_RATIO = 20.0  # 중앙값 beat 간격 대비 이보다 길면 비정상적으로 긴 beat로 본다
@@ -128,18 +128,18 @@ def analyze_sample(performance_key: str) -> dict:
         "pedal_event_count": len(pedal_values),
         "pedal_unique": len(set(pedal_values.tolist())),
         "onset_inside_ratio": float(inside.mean()),
-        "empty_beat_ratio": float((~dynamics.mask).mean()),
+        "empty_beat_ratio": float((~dynamics.sequence.mask).mean()),
         "duration": float(beats[-1] - beats[0]),
         **summarize_dynamics(dynamics),
         **summarize_pedaling(pedaling),
     }
     sequences = {
         "beats": beats,
-        "dynamics": dynamics.values.astype(np.float32),
-        "dynamics_mask": dynamics.mask,
-        "pedal_depth": pedaling.depth.astype(np.float32),
-        "pedal_down": pedaling.down_ratio.astype(np.float32),
-        "pedal_changes": pedaling.changes.astype(np.int16),
+        "dynamics": dynamics.sequence.values.astype(np.float32),
+        "dynamics_mask": dynamics.sequence.mask,
+        "pedal_depth": pedaling.depth.values.astype(np.float32),
+        "pedal_down": pedaling.down_ratio.values.astype(np.float32),
+        "pedal_changes": pedaling.changes.values.astype(np.int16),
     }
     return {"stats": stats, "sequences": sequences}
 

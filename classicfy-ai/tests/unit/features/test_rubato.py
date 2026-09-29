@@ -1,10 +1,13 @@
 import math
 import unittest
 
+import numpy as np
+
 from features import (
     TempoInput,
     extract_piece_rubato_features,
     extract_piece_tempo_features,
+    summarize_rubato,
 )
 
 
@@ -33,18 +36,17 @@ class ExtractPieceRubatoFeaturesTest(unittest.TestCase):
 
         rubato = extract_piece_rubato_features(tempo)["variable.mid"]
 
-        self.assertGreater(rubato.absolute_rubato_sequence[0], 0.0)
-        self.assertAlmostEqual(rubato.absolute_rubato_sequence[1], 0.0)
-        self.assertLess(rubato.absolute_rubato_sequence[2], 0.0)
-        for value in rubato.common_rubato_sequence:
+        self.assertGreater(rubato.absolute_rubato_sequence.values[0], 0.0)
+        self.assertAlmostEqual(rubato.absolute_rubato_sequence.values[1], 0.0)
+        self.assertLess(rubato.absolute_rubato_sequence.values[2], 0.0)
+        for value in rubato.common_rubato_sequence.values:
             self.assertAlmostEqual(value, 0.0)
-        self.assertEqual(
-            rubato.relative_rubato_sequence,
-            rubato.absolute_rubato_sequence,
+        np.testing.assert_allclose(
+            rubato.relative_rubato_sequence.values,
+            rubato.absolute_rubato_sequence.values,
         )
         self.assertAlmostEqual(
-            rubato.absolute_rubato_amount,
-            math.log2(1.2),
+            summarize_rubato(rubato)["absolute_rubato_amount"], math.log2(1.2)
         )
 
     def test_shared_local_timing_becomes_common_not_relative_rubato(self) -> None:
@@ -58,12 +60,13 @@ class ExtractPieceRubatoFeaturesTest(unittest.TestCase):
 
         rubato = extract_piece_rubato_features(tempo)["first.mid"]
 
-        self.assertGreater(rubato.absolute_rubato_amount, 0.0)
-        self.assertGreater(rubato.common_rubato_sequence[0], 0.0)
-        self.assertLess(rubato.common_rubato_sequence[2], 0.0)
-        for value in rubato.relative_rubato_sequence:
+        summary = summarize_rubato(rubato)
+        self.assertGreater(summary["absolute_rubato_amount"], 0.0)
+        self.assertGreater(rubato.common_rubato_sequence.values[0], 0.0)
+        self.assertLess(rubato.common_rubato_sequence.values[2], 0.0)
+        for value in rubato.relative_rubato_sequence.values:
             self.assertAlmostEqual(value, 0.0)
-        self.assertAlmostEqual(rubato.relative_rubato_amount, 0.0)
+        self.assertAlmostEqual(summary["relative_rubato_amount"], 0.0)
 
     def test_constant_relative_speed_has_no_rubato(self) -> None:
         tempo = extract_piece_tempo_features(
@@ -76,12 +79,13 @@ class ExtractPieceRubatoFeaturesTest(unittest.TestCase):
 
         rubato = extract_piece_rubato_features(tempo)["fast.mid"]
 
-        for value in rubato.absolute_rubato_sequence:
+        for value in rubato.absolute_rubato_sequence.values:
             self.assertAlmostEqual(value, 0.0)
-        for value in rubato.relative_rubato_sequence:
+        for value in rubato.relative_rubato_sequence.values:
             self.assertAlmostEqual(value, 0.0)
-        self.assertAlmostEqual(rubato.absolute_rubato_amount, 0.0)
-        self.assertAlmostEqual(rubato.relative_rubato_amount, 0.0)
+        summary = summarize_rubato(rubato)
+        self.assertAlmostEqual(summary["absolute_rubato_amount"], 0.0)
+        self.assertAlmostEqual(summary["relative_rubato_amount"], 0.0)
 
     def test_preserves_br_mask(self) -> None:
         tempo = extract_piece_tempo_features(
@@ -105,9 +109,8 @@ class ExtractPieceRubatoFeaturesTest(unittest.TestCase):
 
         rubato = extract_piece_rubato_features(tempo)["first.mid"]
 
-        self.assertIsNotNone(rubato.absolute_rubato_sequence[0])
-        self.assertEqual(rubato.absolute_rubato_sequence[1:], [None, None])
-        self.assertEqual(rubato.relative_rubato_sequence[1:], [None, None])
+        self.assertEqual(rubato.absolute_rubato_sequence.mask.tolist(), [True, False, False])
+        self.assertEqual(rubato.relative_rubato_sequence.mask.tolist(), [True, False, False])
 
     def test_preserves_suspicious_mask(self) -> None:
         tempo = extract_piece_tempo_features(
@@ -122,8 +125,22 @@ class ExtractPieceRubatoFeaturesTest(unittest.TestCase):
         rubato = extract_piece_rubato_features(tempo)["extreme.mid"]
 
         self.assertEqual(tempo["extreme.mid"].intervals[0].status, "suspicious")
-        self.assertIsNone(rubato.absolute_rubato_sequence[0])
-        self.assertIsNone(rubato.relative_rubato_sequence[0])
+        self.assertFalse(rubato.absolute_rubato_sequence.mask[0])
+        self.assertFalse(rubato.relative_rubato_sequence.mask[0])
+
+    def test_preserves_zero_duration_mask(self) -> None:
+        tempo = extract_piece_tempo_features(
+            [
+                self._input("zero.mid", [0.5, 0.0, 1.0]),
+                self._input("regular.mid", [0.6, 0.5, 0.5]),
+            ]
+        )
+
+        rubato = extract_piece_rubato_features(tempo)["zero.mid"]
+
+        self.assertEqual(tempo["zero.mid"].intervals[1].status, "invalid")
+        self.assertFalse(rubato.absolute_rubato_sequence.mask[1])
+        self.assertFalse(rubato.relative_rubato_sequence.mask[1])
 
     def test_requires_multiple_matching_tempo_features(self) -> None:
         tempo = extract_piece_tempo_features(
@@ -143,6 +160,24 @@ class ExtractPieceRubatoFeaturesTest(unittest.TestCase):
                     "second.mid": tempo["second.mid"],
                 }
             )
+
+    def test_summary_without_valid_values_is_nan(self) -> None:
+        inputs = [
+            TempoInput(
+                performance_key=key,
+                score_beats=[0.0, 0.5, 1.0],
+                performance_beats=[0.0, 0.5, 1.0],
+                score_beat_types=["bR", "bR", "bR"],
+                performance_beat_types=["bR", "bR", "bR"],
+            )
+            for key in ("special-1.mid", "special-2.mid")
+        ]
+        tempo = extract_piece_tempo_features(inputs)
+        rubato = extract_piece_rubato_features(tempo)["special-1.mid"]
+
+        summary = summarize_rubato(rubato)
+
+        self.assertTrue(all(np.isnan(value) for value in summary.values()))
 
 
 if __name__ == "__main__":

@@ -33,3 +33,7 @@ PYTHONPATH=src .venv/bin/python -m unittest discover -s tests -v
 ```
 
 실제 ASAP 샘플 테스트는 저장소 상위의 `datasets/ASAP`을 찾고, 데이터셋이 없으면 건너뛴다. 다른 위치에 있다면 `ASAP_ROOT` 환경 변수를 지정한다. 전체 데이터셋 순회 검증은 별도로 수행한다.
+
+로더의 단위 테스트는 `tests/unit/preprocessing`, 로더에서 feature extraction까지의
+연결 검증은 `tests/integration`에 둔다. 자세한 테스트 구조는 `tests/README.md`를
+참고한다.

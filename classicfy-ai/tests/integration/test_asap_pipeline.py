@@ -1,5 +1,6 @@
 import csv
 import json
+import math
 import os
 import tempfile
 import unittest
@@ -7,11 +8,11 @@ from pathlib import Path
 
 import pretty_midi
 
-from features import TempoInput, extract_piece_tempo_features
+from features import TempoInput, extract_piece_tempo_features, summarize_tempo
 from preprocessing import ASAPLoader, AsapSample, MidiData, load_midi
 
 
-class PreprocessingIntegrationTest(unittest.TestCase):
+class AsapPipelineIntegrationTest(unittest.TestCase):
     def test_asap_sample_paths_feed_midi_loader(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir).resolve()
@@ -61,7 +62,7 @@ class PreprocessingIntegrationTest(unittest.TestCase):
             self.assertEqual(performance.notes[0].velocity, 96)
 
     def test_real_asap_sample_when_available(self) -> None:
-        default_root = Path(__file__).resolve().parents[3] / "datasets" / "ASAP"
+        default_root = Path(__file__).resolve().parents[4] / "datasets" / "ASAP"
         root = Path(os.environ.get("ASAP_ROOT", default_root)).expanduser()
         if not (root / "metadata.csv").is_file():
             self.skipTest("ASAP dataset is not available")
@@ -76,7 +77,7 @@ class PreprocessingIntegrationTest(unittest.TestCase):
         self.assertTrue(performance.notes)
 
     def test_extracts_tempo_features_from_real_asap_piece_when_available(self) -> None:
-        default_root = Path(__file__).resolve().parents[3] / "datasets" / "ASAP"
+        default_root = Path(__file__).resolve().parents[4] / "datasets" / "ASAP"
         root = Path(os.environ.get("ASAP_ROOT", default_root)).expanduser()
         if not (root / "metadata.csv").is_file():
             self.skipTest("ASAP dataset is not available")
@@ -88,13 +89,7 @@ class PreprocessingIntegrationTest(unittest.TestCase):
             if sample.score_path == score_path
         ]
         tempo_inputs = [
-            TempoInput(
-                performance_key=sample.performance_key,
-                score_beats=sample.score_beats,
-                performance_beats=sample.performance_beats,
-                score_beat_types=sample.score_beat_types,
-                performance_beat_types=sample.performance_beat_types,
-            )
+            TempoInput.from_asap_sample(sample)
             for sample in samples
         ]
         features = extract_piece_tempo_features(tempo_inputs)
@@ -103,7 +98,9 @@ class PreprocessingIntegrationTest(unittest.TestCase):
         for sample in samples:
             feature = features[sample.performance_key]
             self.assertEqual(len(feature.intervals), len(sample.score_beats) - 1)
-            self.assertIsNotNone(feature.overall_individual_tempo)
+            self.assertFalse(
+                math.isnan(summarize_tempo(feature)["overall_individual_tempo"])
+            )
 
 
 if __name__ == "__main__":

@@ -9,21 +9,31 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from ..midi_loader import MidiData
-from .beat_grid import as_beat_array, assign_windows
+from preprocessing import MidiData
+from .beat_grid import assign_windows, build_beat_grid
+from .models import BeatSequence
 
 MAX_PEDAL_VALUE = 127
 PEDAL_ON_THRESHOLD = 64  # MIDI 규격에서 CC64가 64 이상이면 페달 on이다.
 
 
-@dataclass
+@dataclass(frozen=True)
 class PedalingFeature:
     """beat 구간별 페달 사용 정도를 담는다."""
 
-    depth: np.ndarray  # (T,) 구간 안 페달 깊이(값 / 127)의 시간 가중 평균
-    down_ratio: np.ndarray  # (T,) 구간 안에서 페달이 on(값 >= 64)이었던 시간 비율
-    changes: np.ndarray  # (T,) 구간에서 일어난 페달 on/off 전환 횟수
-    mask: np.ndarray  # (T,) 구간 폭이 0보다 크면 True
+    depth: BeatSequence  # 구간 안 페달 깊이(값 / 127)의 시간 가중 평균
+    down_ratio: BeatSequence  # 구간 안에서 페달이 on(값 >= 64)이었던 시간 비율
+    changes: BeatSequence  # 구간에서 일어난 페달 on/off 전환 횟수
+
+    def __post_init__(self) -> None:
+        sequences = (self.depth, self.down_ratio, self.changes)
+        if len({len(sequence) for sequence in sequences}) != 1:
+            raise ValueError("Pedaling sequences must have the same length")
+        if any(
+            not np.array_equal(self.depth.mask, sequence.mask)
+            for sequence in sequences[1:]
+        ):
+            raise ValueError("Pedaling sequences must use the same mask")
 
 
 def _step_integral(times: np.ndarray, values: np.ndarray, at: np.ndarray) -> np.ndarray:
@@ -37,10 +47,11 @@ def _step_integral(times: np.ndarray, values: np.ndarray, at: np.ndarray) -> np.
 
 def extract_pedaling(performance: MidiData, beats: Sequence[float]) -> PedalingFeature:
     """beat 구간별 페달 깊이, on 비율, 전환 횟수를 구한다."""
-    edges = as_beat_array(beats)
-    window_count = len(edges) - 1
-    widths = np.diff(edges)
-    mask = widths > 0
+    grid = build_beat_grid(beats)
+    edges = grid.edges
+    window_count = len(grid.durations)
+    widths = grid.durations
+    mask = grid.mask
 
     depth = np.zeros(window_count)
     down_ratio = np.zeros(window_count)
@@ -58,7 +69,11 @@ def extract_pedaling(performance: MidiData, beats: Sequence[float]) -> PedalingF
         windows = assign_windows(times[is_down != previous], edges)
         changes = np.bincount(windows[windows >= 0], minlength=window_count)
 
-    return PedalingFeature(depth=depth, down_ratio=down_ratio, changes=changes, mask=mask)
+    return PedalingFeature(
+        depth=BeatSequence(values=depth, mask=mask),
+        down_ratio=BeatSequence(values=down_ratio, mask=mask),
+        changes=BeatSequence(values=changes, mask=mask),
+    )
 
 
 def summarize_pedaling(feature: PedalingFeature) -> dict[str, float]:
@@ -66,7 +81,7 @@ def summarize_pedaling(feature: PedalingFeature) -> dict[str, float]:
 
     beat 하나의 길이는 작품마다 달라서(느린 곡은 beat가 몇 초), 작품 사이에서 이 값을 그대로 비교하면 안 된다.
     """
-    valid = feature.mask
+    valid = feature.depth.mask
     if not valid.any():
         return {
             "pedal_depth_mean": float("nan"),
@@ -74,7 +89,7 @@ def summarize_pedaling(feature: PedalingFeature) -> dict[str, float]:
             "pedal_change_rate": float("nan"),
         }
     return {
-        "pedal_depth_mean": float(feature.depth[valid].mean()),
-        "pedal_usage": float(feature.down_ratio[valid].mean()),
-        "pedal_change_rate": float(feature.changes[valid].mean()),
+        "pedal_depth_mean": float(feature.depth.values[valid].mean()),
+        "pedal_usage": float(feature.down_ratio.values[valid].mean()),
+        "pedal_change_rate": float(feature.changes.values[valid].mean()),
     }
