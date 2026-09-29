@@ -12,7 +12,7 @@ from features import TempoInput, extract_piece_tempo_features, summarize_tempo
 from preprocessing import ASAPLoader, AsapSample, MidiData, load_midi
 
 
-class PreprocessingIntegrationTest(unittest.TestCase):
+class AsapPipelineIntegrationTest(unittest.TestCase):
     def test_asap_sample_paths_feed_midi_loader(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir).resolve()
@@ -62,7 +62,7 @@ class PreprocessingIntegrationTest(unittest.TestCase):
             self.assertEqual(performance.notes[0].velocity, 96)
 
     def test_real_asap_sample_when_available(self) -> None:
-        default_root = Path(__file__).resolve().parents[3] / "datasets" / "ASAP"
+        default_root = Path(__file__).resolve().parents[4] / "datasets" / "ASAP"
         root = Path(os.environ.get("ASAP_ROOT", default_root)).expanduser()
         if not (root / "metadata.csv").is_file():
             self.skipTest("ASAP dataset is not available")
@@ -77,7 +77,7 @@ class PreprocessingIntegrationTest(unittest.TestCase):
         self.assertTrue(performance.notes)
 
     def test_extracts_tempo_features_from_real_asap_piece_when_available(self) -> None:
-        default_root = Path(__file__).resolve().parents[3] / "datasets" / "ASAP"
+        default_root = Path(__file__).resolve().parents[4] / "datasets" / "ASAP"
         root = Path(os.environ.get("ASAP_ROOT", default_root)).expanduser()
         if not (root / "metadata.csv").is_file():
             self.skipTest("ASAP dataset is not available")

@@ -199,9 +199,12 @@ Tempo도 같은 beat grid와 mask를 사용하며, `bR`, suspicious, 0폭 구간
 단위 테스트는 `classicfy-ai` 디렉터리에서 실행한다.
 
 ```bash
-PYTHONPATH=src python -m unittest discover -s tests -v
+PYTHONPATH=src .venv/bin/python -m unittest discover -s tests -v
 ```
 
-`test_beat_grid.py`, `test_feature_models.py`, `test_dynamics.py`, `test_pedaling.py`가 위에서 설명한 규칙(구간 경계, 공통 결과 형식, 시간 가중, 페달 없음 처리 등)을 각각 검증한다.
+`tests/unit/features`는 구간 경계, 공통 결과 형식, 네 feature의 계산식과 결측 처리를
+검증한다. `test_characterization.py`는 대표 입력에 대한 네 feature의 beat-level 값과
+summary를 한 번에 고정한다. 테스트 디렉터리의 역할과 실행 방법은 `tests/README.md`에
+정리되어 있다.
 
 ASAP 전체 1,036개 연주에 적용해 다른 방식으로 다시 계산한 값과 대조하고, 분포·이상치·같은 곡 여러 연주 비교까지 마친 결과는 `reports/dynamics_pedaling/README.md`에 있다.
