@@ -47,6 +47,8 @@ class ASAPLoaderTest(unittest.TestCase):
             "score_and_performance_aligned": aligned,
             "midi_score_beats": [0.5, 1.0],
             "performance_beats": [1.1, 2.2],
+            "midi_score_beats_type": {"0.5": "db", "1.0": "bR"},
+            "performance_beats_type": {"1.1": "db", "2.2": "bR"},
             "midi_score_downbeats": [0.5],
             "performance_downbeats": [1.1],
             "midi_score_time_signatures": {"0.5": ["4/4", 4]},
@@ -67,6 +69,8 @@ class ASAPLoaderTest(unittest.TestCase):
         self.assertEqual(sample.score_path, self.root / self.score_key)
         self.assertEqual(sample.performance_path, self.root / self.performance_keys[0])
         self.assertEqual(sample.score_beats, [0.5, 1.0])
+        self.assertEqual(sample.score_beat_types, ["db", "bR"])
+        self.assertEqual(sample.performance_beat_types, ["db", "bR"])
         self.assertEqual(sample.performance_downbeats, [1.1])
         self.assertEqual(sample.score_time_signatures, {"0.5": ["4/4", 4]})
         self.assertEqual(len(list(loader.iter_samples())), 2)
@@ -118,6 +122,20 @@ class ASAPLoaderTest(unittest.TestCase):
         del self.annotations[self.performance_keys[0]]["performance_beats"]
         self._write_annotations()
         with self.assertRaisesRegex(ValueError, "Invalid performance_beats"):
+            ASAPLoader(self.root).get_sample(self.performance_keys[0])
+
+    def test_missing_beat_type_raises(self) -> None:
+        del self.annotations[self.performance_keys[0]]["performance_beats_type"]["2.2"]
+        self._write_annotations()
+
+        with self.assertRaisesRegex(ValueError, "Missing performance_beats_type"):
+            ASAPLoader(self.root).get_sample(self.performance_keys[0])
+
+    def test_unknown_beat_type_raises(self) -> None:
+        self.annotations[self.performance_keys[0]]["performance_beats_type"]["2.2"] = "x"
+        self._write_annotations()
+
+        with self.assertRaisesRegex(ValueError, "Invalid performance_beats_type"):
             ASAPLoader(self.root).get_sample(self.performance_keys[0])
 
 

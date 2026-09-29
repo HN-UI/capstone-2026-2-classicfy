@@ -7,6 +7,7 @@ from pathlib import Path
 
 import pretty_midi
 
+from features import TempoInput, extract_piece_tempo_features
 from preprocessing import ASAPLoader, AsapSample, MidiData, load_midi
 
 
@@ -36,6 +37,8 @@ class PreprocessingIntegrationTest(unittest.TestCase):
                     "score_and_performance_aligned": True,
                     "midi_score_beats": [0.5],
                     "performance_beats": [0.5],
+                    "midi_score_beats_type": {"0.5": "db"},
+                    "performance_beats_type": {"0.5": "db"},
                     "midi_score_downbeats": [0.5],
                     "performance_downbeats": [0.5],
                     "midi_score_time_signatures": {"0.5": ["4/4", 4]},
@@ -71,6 +74,36 @@ class PreprocessingIntegrationTest(unittest.TestCase):
         self.assertEqual(len(sample.score_beats), len(sample.performance_beats))
         self.assertTrue(score.notes)
         self.assertTrue(performance.notes)
+
+    def test_extracts_tempo_features_from_real_asap_piece_when_available(self) -> None:
+        default_root = Path(__file__).resolve().parents[3] / "datasets" / "ASAP"
+        root = Path(os.environ.get("ASAP_ROOT", default_root)).expanduser()
+        if not (root / "metadata.csv").is_file():
+            self.skipTest("ASAP dataset is not available")
+
+        score_path = (root / "Bach/Fugue/bwv_848/midi_score.mid").resolve()
+        samples = [
+            sample
+            for sample in ASAPLoader(root).iter_samples(aligned_only=True)
+            if sample.score_path == score_path
+        ]
+        tempo_inputs = [
+            TempoInput(
+                performance_key=sample.performance_key,
+                score_beats=sample.score_beats,
+                performance_beats=sample.performance_beats,
+                score_beat_types=sample.score_beat_types,
+                performance_beat_types=sample.performance_beat_types,
+            )
+            for sample in samples
+        ]
+        features = extract_piece_tempo_features(tempo_inputs)
+
+        self.assertEqual(len(features), len(samples))
+        for sample in samples:
+            feature = features[sample.performance_key]
+            self.assertEqual(len(feature.intervals), len(sample.score_beats) - 1)
+            self.assertIsNotNone(feature.overall_individual_tempo)
 
 
 if __name__ == "__main__":

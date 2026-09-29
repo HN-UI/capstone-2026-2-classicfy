@@ -4,7 +4,12 @@ import csv
 import json
 from collections.abc import Iterator
 from dataclasses import dataclass
+from math import isfinite
 from pathlib import Path
+from typing import Literal
+
+
+BeatType = Literal["b", "db", "bR"]
 
 
 @dataclass
@@ -19,6 +24,8 @@ class AsapSample:
     aligned: bool
     score_beats: list[float]
     performance_beats: list[float]
+    score_beat_types: list[BeatType]
+    performance_beat_types: list[BeatType]
     score_downbeats: list[float]
     performance_downbeats: list[float]
     score_time_signatures: dict[str, list[str | int]]
@@ -37,6 +44,36 @@ def _read_times(annotation: dict, field: str, performance_key: str) -> list[floa
     if not isinstance(value, list) or any(type(time) not in (int, float) for time in value):
         raise ValueError(f"Invalid {field} for {performance_key}")
     return [float(time) for time in value]
+
+
+def _read_beat_types(
+    annotation: dict,
+    beats: list[float],
+    field: str,
+    performance_key: str,
+) -> list[BeatType]:
+    value = annotation.get(field)
+    if not isinstance(value, dict):
+        raise ValueError(f"Invalid {field} for {performance_key}")
+
+    types_by_time: dict[float, BeatType] = {}
+    for time, beat_type in value.items():
+        if not isinstance(time, str) or beat_type not in {"b", "db", "bR"}:
+            raise ValueError(f"Invalid {field} for {performance_key}")
+        try:
+            parsed_time = float(time)
+        except ValueError as exc:
+            raise ValueError(f"Invalid {field} for {performance_key}") from exc
+        if not isfinite(parsed_time) or parsed_time in types_by_time:
+            raise ValueError(f"Invalid {field} for {performance_key}")
+        types_by_time[parsed_time] = beat_type
+
+    beat_types = []
+    for time in beats:
+        if time not in types_by_time:
+            raise ValueError(f"Missing {field} at {time} for {performance_key}")
+        beat_types.append(types_by_time[time])
+    return beat_types
 
 
 def _read_time_signatures(
@@ -117,6 +154,12 @@ class ASAPLoader:
 
         score_beats = _read_times(annotation, "midi_score_beats", performance_key)
         performance_beats = _read_times(annotation, "performance_beats", performance_key)
+        score_beat_types = _read_beat_types(
+            annotation, score_beats, "midi_score_beats_type", performance_key
+        )
+        performance_beat_types = _read_beat_types(
+            annotation, performance_beats, "performance_beats_type", performance_key
+        )
         score_downbeats = _read_times(annotation, "midi_score_downbeats", performance_key)
         performance_downbeats = _read_times(annotation, "performance_downbeats", performance_key)
         if aligned and (
@@ -135,6 +178,8 @@ class ASAPLoader:
             aligned=aligned,
             score_beats=score_beats,
             performance_beats=performance_beats,
+            score_beat_types=score_beat_types,
+            performance_beat_types=performance_beat_types,
             score_downbeats=score_downbeats,
             performance_downbeats=performance_downbeats,
             score_time_signatures=_read_time_signatures(
