@@ -12,9 +12,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
@@ -22,13 +28,20 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.classicfy.app.R
 import com.classicfy.app.ui.screen.login.LoginScreen
+import com.classicfy.app.ui.screen.my.MyPageScreen
 import com.classicfy.app.ui.screen.performance.PerformanceSelectionScreen
+import com.classicfy.app.ui.screen.performance.PerformanceDetailScreen
+import com.classicfy.app.ui.screen.performance.initialTastePerformanceIds
+import com.classicfy.app.ui.screen.performance.mockTastePerformances
 import com.classicfy.app.ui.screen.preference.PreferenceScreen
 import com.classicfy.app.ui.screen.preference.PreferenceResultScreen
 import com.classicfy.app.ui.screen.search.WorkSearchScreen
 import com.classicfy.app.ui.screen.signup.SignUpScreen
 import com.classicfy.app.ui.screen.splash.SplashScreen
+import com.classicfy.app.ui.screen.taste.TastePerformanceListScreen
+import com.classicfy.app.ui.screen.taste.TasteScreen
 import kotlinx.coroutines.delay
 
 @Composable
@@ -36,6 +49,47 @@ fun ClassicFyApp() {
     val navController = rememberNavController()
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val layoutDirection = LocalLayoutDirection.current
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val openEmptyWorkSearch: () -> Unit = {
+        focusManager.clearFocus(force = true)
+        keyboardController?.hide()
+        navController.navigate(ClassicFyDestination.WORK_SEARCH) {
+            popUpTo(ClassicFyDestination.WORK_SEARCH) { inclusive = true }
+            launchSingleTop = true
+        }
+    }
+    val openTaste: () -> Unit = {
+        focusManager.clearFocus(force = true)
+        keyboardController?.hide()
+        navController.navigate(ClassicFyDestination.TASTE) {
+            popUpTo(ClassicFyDestination.WORK_SEARCH) { inclusive = false }
+            launchSingleTop = true
+        }
+    }
+    val openMyPage: () -> Unit = {
+        focusManager.clearFocus(force = true)
+        keyboardController?.hide()
+        navController.navigate(ClassicFyDestination.MY_PAGE) {
+            popUpTo(ClassicFyDestination.WORK_SEARCH) { inclusive = false }
+            launchSingleTop = true
+        }
+    }
+    val initialNickname = stringResource(R.string.my_mock_nickname)
+    val initialId = stringResource(R.string.my_mock_id)
+    var savedNickname by rememberSaveable { mutableStateOf(initialNickname) }
+    var savedId by rememberSaveable { mutableStateOf(initialId) }
+    var favoritePerformanceIds by rememberSaveable {
+        mutableStateOf(initialTastePerformanceIds)
+    }
+    val tastePerformances = mockTastePerformances(favoritePerformanceIds)
+    val toggleFavorite: (String) -> Unit = { id ->
+        favoritePerformanceIds = if (id in favoritePerformanceIds) {
+            favoritePerformanceIds - id
+        } else {
+            favoritePerformanceIds + id
+        }
+    }
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         NavHost(
@@ -49,7 +103,11 @@ fun ClassicFyApp() {
                     end = innerPadding.calculateEndPadding(layoutDirection),
                     bottom = if (currentBackStackEntry?.destination?.route in setOf(
                             ClassicFyDestination.WORK_SEARCH,
-                            ClassicFyDestination.PERFORMANCE_SELECTION
+                            ClassicFyDestination.TASTE,
+                            ClassicFyDestination.TASTE_PERFORMANCE_LIST,
+                            ClassicFyDestination.MY_PAGE,
+                            ClassicFyDestination.PERFORMANCE_SELECTION,
+                            ClassicFyDestination.PERFORMANCE_DETAIL
                         )
                     ) {
                         0.dp
@@ -109,6 +167,9 @@ fun ClassicFyApp() {
             }
             composable(ClassicFyDestination.WORK_SEARCH) {
                 WorkSearchScreen(
+                    onSearchTabClick = openEmptyWorkSearch,
+                    onTasteTabClick = openTaste,
+                    onMyTabClick = openMyPage,
                     onWorkClick = { workId ->
                         navController.navigate(ClassicFyDestination.performanceSelection(workId)) {
                             launchSingleTop = true
@@ -123,11 +184,109 @@ fun ClassicFyApp() {
                 PerformanceSelectionScreen(
                     workId = requireNotNull(backStackEntry.arguments?.getString("workId")),
                     onBackClick = { navController.popBackStack() },
-                    onPerformanceClick = {
-                        navController.navigate(ClassicFyDestination.DETAIL) {
+                    onPerformanceClick = { performanceId ->
+                        navController.navigate(ClassicFyDestination.performanceDetail(performanceId)) {
                             launchSingleTop = true
                         }
-                    }
+                    },
+                    favoriteIds = favoritePerformanceIds,
+                    onFavoriteToggle = toggleFavorite,
+                    onSearchTabClick = openEmptyWorkSearch,
+                    onTasteTabClick = openTaste,
+                    onMyTabClick = openMyPage
+                )
+            }
+            composable(ClassicFyDestination.TASTE) {
+                TasteScreen(
+                    performances = tastePerformances,
+                    onViewAllClick = {
+                        navController.navigate(ClassicFyDestination.TASTE_PERFORMANCE_LIST) {
+                            launchSingleTop = true
+                        }
+                    },
+                    onPerformanceClick = { performanceId ->
+                        navController.navigate(ClassicFyDestination.performanceDetail(performanceId)) {
+                            launchSingleTop = true
+                        }
+                    },
+                    onSearchTabClick = openEmptyWorkSearch,
+                    onMyTabClick = openMyPage
+                )
+            }
+            composable(ClassicFyDestination.TASTE_PERFORMANCE_LIST) {
+                TastePerformanceListScreen(
+                    performances = tastePerformances,
+                    onBackClick = { navController.popBackStack() },
+                    onPerformanceClick = { performanceId ->
+                        navController.navigate(ClassicFyDestination.performanceDetail(performanceId)) {
+                            launchSingleTop = true
+                        }
+                    },
+                    onRemoveFavorite = { id ->
+                        favoritePerformanceIds = favoritePerformanceIds - id
+                    },
+                    onRestoreFavorite = { id ->
+                        favoritePerformanceIds = favoritePerformanceIds + id
+                    },
+                    onSearchTabClick = openEmptyWorkSearch,
+                    onTasteTabClick = {
+                        navController.popBackStack(ClassicFyDestination.TASTE, false)
+                    },
+                    onMyTabClick = openMyPage
+                )
+            }
+            composable(ClassicFyDestination.MY_PAGE) {
+                MyPageScreen(
+                    savedNickname = savedNickname,
+                    savedId = savedId,
+                    onSave = { nickname, id ->
+                        savedNickname = nickname
+                        savedId = id
+                    },
+                    onLogoutClick = {
+                        focusManager.clearFocus(force = true)
+                        keyboardController?.hide()
+                        savedNickname = initialNickname
+                        savedId = initialId
+                        favoritePerformanceIds = initialTastePerformanceIds
+                        navController.navigate(ClassicFyDestination.LOGIN) {
+                            popUpTo(ClassicFyDestination.LOGIN) { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    },
+                    onSearchTabClick = openEmptyWorkSearch,
+                    onTasteTabClick = openTaste
+                )
+            }
+            composable(
+                route = ClassicFyDestination.PERFORMANCE_DETAIL,
+                arguments = listOf(navArgument("performanceId") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val performanceId = requireNotNull(backStackEntry.arguments?.getString("performanceId"))
+                val openedFromTaste = navController.previousBackStackEntry?.destination?.route in setOf(
+                    ClassicFyDestination.TASTE,
+                    ClassicFyDestination.TASTE_PERFORMANCE_LIST
+                )
+                PerformanceDetailScreen(
+                    performanceId = performanceId,
+                    isFavorite = performanceId in favoritePerformanceIds,
+                    onFavoriteToggle = { toggleFavorite(performanceId) },
+                    onBackClick = { navController.popBackStack() },
+                    onSearchClick = openEmptyWorkSearch,
+                    activeBottomDestination = if (openedFromTaste) {
+                        ClassicFyBottomDestination.TASTE
+                    } else {
+                        ClassicFyBottomDestination.SEARCH
+                    },
+                    onTasteClick = if (openedFromTaste) {
+                        {
+                            navController.popBackStack(ClassicFyDestination.TASTE, false)
+                            Unit
+                        }
+                    } else {
+                        openTaste
+                    },
+                    onMyClick = openMyPage
                 )
             }
             composable(ClassicFyDestination.DETAIL) {

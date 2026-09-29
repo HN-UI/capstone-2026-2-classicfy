@@ -54,6 +54,9 @@ import com.classicfy.app.ui.navigation.ClassicFyBottomDestination
 @Composable
 fun WorkSearchScreen(
     onWorkClick: (String) -> Unit,
+    onSearchTabClick: () -> Unit,
+    onTasteTabClick: () -> Unit,
+    onMyTabClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var query by rememberSaveable(stateSaver = TextFieldValue.Saver) {
@@ -137,8 +140,8 @@ fun WorkSearchScreen(
                 Spacer(Modifier.height(28.dp))
                 Text(
                     text = stringResource(R.string.work_search_results_title),
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.onBackground
                 )
             }
@@ -217,7 +220,9 @@ fun WorkSearchScreen(
 
         ClassicFyBottomBar(
             activeDestination = ClassicFyBottomDestination.SEARCH,
-            onSearchClick = {}
+            onSearchClick = onSearchTabClick,
+            onTasteClick = onTasteTabClick,
+            onMyClick = onMyTabClick
         )
     }
 }
