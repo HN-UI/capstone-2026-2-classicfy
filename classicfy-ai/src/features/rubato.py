@@ -35,8 +35,8 @@ def extract_piece_rubato_features(
     뺀 국소 변화다. 공통 Rubato는 같은 score 위치의 절대적 Rubato 중앙값이며,
     상대적 Rubato는 절대적 Rubato에서 공통 Rubato를 뺀 연주자 고유 편차다.
 
-    ``bR`` 및 suspicious interval처럼 Tempo에서 일반 통계에서 제외된 위치는
-    모든 Rubato sequence에서 ``None``을 유지한다.
+    ``bR``, suspicious 및 0폭 interval처럼 Tempo mask에서 제외된 위치는 모든
+    Rubato sequence에서 ``None``을 유지한다.
     """
     if len(tempo_features) < 2:
         raise ValueError("At least two tempo features are required for piece comparison")
@@ -58,7 +58,7 @@ def extract_piece_rubato_features(
 
         score_relative = [
             interval.score_relative_tempo
-            if interval.status == "regular"
+            if interval.mask
             else None
             for interval in feature.intervals
         ]

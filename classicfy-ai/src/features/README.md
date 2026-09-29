@@ -155,9 +155,12 @@ beat별 시퀀스 말고, 연주 하나를 대표하는 숫자 몇 개도 함께
 | `extract_pedaling(performance, beats)` | `PedalingFeature`: `depth`, `down_ratio`, `changes`, `mask` |
 | `summarize_dynamics(feature)` | `dynamics_mean`, `dynamics_range` |
 | `summarize_pedaling(feature)` | `pedal_depth_mean`, `pedal_usage`, `pedal_change_rate` |
+| `build_beat_grid(beats)` | 공통 beat 경계, 구간 길이, 0폭 구간을 제외하는 mask |
 | `assign_windows(times, beats)` | 각 시각이 속한 구간 번호. 밖이면 -1 |
 
 `performance`는 `load_midi`가 돌려준 `MidiData`이고 `beats`는 `AsapSample.performance_beats`다.
+Tempo도 같은 beat grid와 mask를 사용하며, `bR`, suspicious, 0폭 구간은 상태와 이유를
+보존한 채 일반 통계에서 제외한다.
 
 ## 7. 아직 하지 않은 것 (알려진 한계)
 

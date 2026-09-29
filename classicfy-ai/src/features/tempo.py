@@ -2,13 +2,15 @@
 
 from collections.abc import Sequence
 from dataclasses import dataclass, replace
-from math import isclose, isfinite, log2
+from math import isclose, log2
 from statistics import median
 from typing import Literal
 
+from preprocessing import BeatType
 
-BeatType = Literal["b", "db", "bR"]
-TempoIntervalStatus = Literal["regular", "special", "suspicious"]
+from .beat_grid import as_beat_array, build_beat_grid
+
+TempoIntervalStatus = Literal["regular", "special", "suspicious", "invalid"]
 SUSPICIOUS_LOG2_DEVIATION = 3.0
 MIN_PEER_SUPPORT_FOR_SUSPICION = 3
 
@@ -33,6 +35,7 @@ class TempoInterval:
     performance_duration: float
     score_relative_tempo: float | None
     peer_log2_deviation: float | None
+    mask: bool
     status: TempoIntervalStatus
     status_reason: str | None
 
@@ -49,22 +52,6 @@ class TempoFeature:
     overall_individual_tempo: float | None
 
 
-def _validate_times(times: Sequence[float], field: str) -> list[float]:
-    validated = []
-    for index, time in enumerate(times):
-        if isinstance(time, bool) or not isinstance(time, (int, float)) or not isfinite(time):
-            raise ValueError(f"{field}[{index}] must be a finite number: {time!r}")
-        validated.append(float(time))
-
-    for index, (current, following) in enumerate(zip(validated, validated[1:])):
-        if following <= current:
-            raise ValueError(
-                f"{field} must be strictly increasing: "
-                f"index {index}={current}, index {index + 1}={following}"
-            )
-    return validated
-
-
 def _validate_beat_types(
     beat_types: Sequence[BeatType], expected_length: int, field: str
 ) -> list[BeatType]:
@@ -76,50 +63,59 @@ def _validate_beat_types(
 
 
 def _calculate_intervals(tempo_input: TempoInput) -> list[TempoInterval]:
-    score_beats = _validate_times(tempo_input.score_beats, "score_beats")
-    performance_beats = _validate_times(
+    score_grid = build_beat_grid(tempo_input.score_beats, "score_beats")
+    performance_grid = build_beat_grid(
         tempo_input.performance_beats, "performance_beats"
     )
-    if len(score_beats) != len(performance_beats):
+    if len(score_grid.edges) != len(performance_grid.edges):
         raise ValueError(
             f"Mismatched aligned beats for {tempo_input.performance_key}: "
-            f"score={len(score_beats)}, performance={len(performance_beats)}"
-        )
-    if len(score_beats) < 2:
-        raise ValueError(
-            f"At least two aligned beats are required for {tempo_input.performance_key}"
+            f"score={len(score_grid.edges)}, performance={len(performance_grid.edges)}"
         )
 
     score_beat_types = _validate_beat_types(
-        tempo_input.score_beat_types, len(score_beats), "score_beat_types"
+        tempo_input.score_beat_types, len(score_grid.edges), "score_beat_types"
     )
     performance_beat_types = _validate_beat_types(
         tempo_input.performance_beat_types,
-        len(performance_beats),
+        len(performance_grid.edges),
         "performance_beat_types",
     )
 
     intervals = []
-    for index in range(len(score_beats) - 1):
-        score_duration = score_beats[index + 1] - score_beats[index]
-        performance_duration = performance_beats[index + 1] - performance_beats[index]
+    for index, (score_duration, performance_duration) in enumerate(
+        zip(score_grid.durations, performance_grid.durations)
+    ):
+        interval_mask = bool(score_grid.mask[index] and performance_grid.mask[index])
         contains_br = "bR" in {
             score_beat_types[index],
             score_beat_types[index + 1],
             performance_beat_types[index],
             performance_beat_types[index + 1],
         }
+        status: TempoIntervalStatus = "regular"
+        status_reason = None
+        if not interval_mask:
+            status = "invalid"
+            status_reason = "zero_duration"
+        elif contains_br:
+            status = "special"
+            status_reason = "contains_bR"
+
         intervals.append(
             TempoInterval(
                 beat_index=index,
-                score_duration=score_duration,
-                performance_duration=performance_duration,
+                score_duration=float(score_duration),
+                performance_duration=float(performance_duration),
                 score_relative_tempo=(
-                    None if contains_br else log2(score_duration / performance_duration)
+                    None
+                    if not interval_mask or contains_br
+                    else log2(score_duration / performance_duration)
                 ),
                 peer_log2_deviation=None,
-                status="special" if contains_br else "regular",
-                status_reason="contains_bR" if contains_br else None,
+                mask=interval_mask and not contains_br,
+                status=status,
+                status_reason=status_reason,
             )
         )
     return intervals
@@ -136,15 +132,15 @@ def extract_piece_tempo_features(
 
     ``bR``이 시작 또는 끝에 포함된 interval은 삭제하지 않고 ``special`` 상태로
     보존한다. Score와 최소 3개 peer에서 모두 8배 이상 벗어난 극단 구간도 원시값을
-    보존한 채 ``suspicious``로 구분한다. 두 상태 모두 tempo sequence에서는
-    ``None``으로 표시한다.
+    보존한 채 ``suspicious``로 구분한다. 길이가 0인 구간은 ``invalid``로 보존한다.
+    세 상태 모두 mask에서 제외하고 tempo sequence에서는 ``None``으로 표시한다.
     """
     if len(performances) < 2:
         raise ValueError("At least two performances are required for piece comparison")
 
     intervals_by_key: dict[str, list[TempoInterval]] = {}
     first_input = performances[0]
-    first_score_beats = list(first_input.score_beats)
+    first_score_beats = as_beat_array(first_input.score_beats, "score_beats").tolist()
     first_score_beat_types = list(first_input.score_beat_types)
 
     for tempo_input in performances:
@@ -152,9 +148,12 @@ def extract_piece_tempo_features(
             raise ValueError(
                 f"Missing or duplicate performance key: {tempo_input.performance_key!r}"
             )
-        if len(tempo_input.score_beats) != len(first_score_beats) or any(
+        current_score_beats = as_beat_array(
+            tempo_input.score_beats, "score_beats"
+        ).tolist()
+        if len(current_score_beats) != len(first_score_beats) or any(
             not isclose(float(current), float(reference), rel_tol=1e-9, abs_tol=1e-9)
-            for current, reference in zip(tempo_input.score_beats, first_score_beats)
+            for current, reference in zip(current_score_beats, first_score_beats)
         ):
             raise ValueError("All performances must use the same score beat positions")
         if list(tempo_input.score_beat_types) != first_score_beat_types:
@@ -165,13 +164,13 @@ def extract_piece_tempo_features(
     for index in range(interval_count):
         for performance_key, intervals in intervals_by_key.items():
             interval = intervals[index]
-            if interval.status != "regular":
+            if not interval.mask:
                 continue
             peer_durations = [
                 peer_intervals[index].performance_duration
                 for peer_key, peer_intervals in intervals_by_key.items()
                 if peer_key != performance_key
-                and peer_intervals[index].status == "regular"
+                and peer_intervals[index].mask
             ]
             if len(peer_durations) < MIN_PEER_SUPPORT_FOR_SUSPICION:
                 continue
@@ -185,6 +184,7 @@ def extract_piece_tempo_features(
             intervals[index] = replace(
                 interval,
                 peer_log2_deviation=peer_deviation,
+                mask=not suspicious,
                 status="suspicious" if suspicious else "regular",
                 status_reason=(
                     "extreme_score_and_peer_deviation" if suspicious else None
@@ -197,7 +197,7 @@ def extract_piece_tempo_features(
         values = [
             intervals[index].score_relative_tempo
             for intervals in intervals_by_key.values()
-            if intervals[index].status == "regular"
+            if intervals[index].mask
             and intervals[index].score_relative_tempo is not None
         ]
         common_tempo_support.append(len(values))
@@ -208,7 +208,7 @@ def extract_piece_tempo_features(
         individual_sequence = [
             (
                 None
-                if interval.status != "regular"
+                if not interval.mask
                 or interval.score_relative_tempo is None
                 or common is None
                 else interval.score_relative_tempo - common

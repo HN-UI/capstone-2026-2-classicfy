@@ -61,6 +61,14 @@ class ExtractDynamicsTest(unittest.TestCase):
         self.assertTrue(np.all(feature.values >= 0))
         self.assertTrue(np.all(feature.values <= 1))
 
+    def test_zero_width_window_is_masked(self) -> None:
+        performance = make_performance([(0.0, 64), (1.0, 80)])
+
+        feature = extract_dynamics(performance, [0.0, 1.0, 1.0, 2.0])
+
+        self.assertEqual(feature.mask.tolist(), [True, False, True])
+        self.assertTrue(np.isnan(feature.values[1]))
+
 
 class SummarizeDynamicsTest(unittest.TestCase):
     def test_summary_ignores_masked_windows(self) -> None:

@@ -1,6 +1,6 @@
 """연주 해석 feature의 공개 인터페이스."""
 
-from .beat_grid import as_beat_array, assign_windows
+from .beat_grid import BeatGrid, as_beat_array, assign_windows, build_beat_grid
 from .dynamics import DynamicsFeature, extract_dynamics, summarize_dynamics
 from .pedaling import PedalingFeature, extract_pedaling, summarize_pedaling
 from .rubato import RubatoFeature, extract_piece_rubato_features
@@ -12,6 +12,7 @@ from .tempo import (
 )
 
 __all__ = [
+    "BeatGrid",
     "DynamicsFeature",
     "PedalingFeature",
     "RubatoFeature",
@@ -20,6 +21,7 @@ __all__ = [
     "TempoInterval",
     "as_beat_array",
     "assign_windows",
+    "build_beat_grid",
     "extract_dynamics",
     "extract_pedaling",
     "extract_piece_rubato_features",

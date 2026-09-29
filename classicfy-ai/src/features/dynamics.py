@@ -9,7 +9,7 @@ from dataclasses import dataclass
 import numpy as np
 
 from preprocessing import MidiData
-from .beat_grid import as_beat_array, assign_windows
+from .beat_grid import assign_windows, build_beat_grid
 
 MAX_VELOCITY = 127
 
@@ -25,18 +25,18 @@ class DynamicsFeature:
 
 def extract_dynamics(performance: MidiData, beats: Sequence[float]) -> DynamicsFeature:
     """구간에서 시작한 음의 평균 velocity를 0~1 범위로 구한다."""
-    edges = as_beat_array(beats)
-    window_count = len(edges) - 1
+    grid = build_beat_grid(beats)
+    window_count = len(grid.durations)
 
     onsets = [note.start for note in performance.notes]
     velocities = np.array([note.velocity for note in performance.notes], dtype=float)
-    windows = assign_windows(onsets, edges)
+    windows = assign_windows(onsets, grid.edges)
     inside = windows >= 0
 
     counts = np.bincount(windows[inside], minlength=window_count)
     totals = np.bincount(windows[inside], weights=velocities[inside], minlength=window_count)
 
-    mask = counts > 0
+    mask = (counts > 0) & grid.mask
     values = np.full(window_count, np.nan)
     values[mask] = totals[mask] / counts[mask] / MAX_VELOCITY
     return DynamicsFeature(values=values, mask=mask, onset_counts=counts)

@@ -125,6 +125,20 @@ class ExtractPieceRubatoFeaturesTest(unittest.TestCase):
         self.assertIsNone(rubato.absolute_rubato_sequence[0])
         self.assertIsNone(rubato.relative_rubato_sequence[0])
 
+    def test_preserves_zero_duration_mask(self) -> None:
+        tempo = extract_piece_tempo_features(
+            [
+                self._input("zero.mid", [0.5, 0.0, 1.0]),
+                self._input("regular.mid", [0.6, 0.5, 0.5]),
+            ]
+        )
+
+        rubato = extract_piece_rubato_features(tempo)["zero.mid"]
+
+        self.assertEqual(tempo["zero.mid"].intervals[1].status, "invalid")
+        self.assertIsNone(rubato.absolute_rubato_sequence[1])
+        self.assertIsNone(rubato.relative_rubato_sequence[1])
+
     def test_requires_multiple_matching_tempo_features(self) -> None:
         tempo = extract_piece_tempo_features(
             [

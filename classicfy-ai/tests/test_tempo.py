@@ -60,6 +60,7 @@ class ExtractPieceTempoFeaturesTest(unittest.TestCase):
         self.assertEqual(first.intervals[0].status, "regular")
         self.assertEqual(first.intervals[1].status, "special")
         self.assertEqual(first.intervals[1].status_reason, "contains_bR")
+        self.assertFalse(first.intervals[1].mask)
         self.assertIsNone(first.intervals[1].score_relative_tempo)
         self.assertEqual(first.common_tempo_sequence[1:], [None, None])
         self.assertEqual(first.individual_tempo_sequence[1:], [None, None])
@@ -100,6 +101,7 @@ class ExtractPieceTempoFeaturesTest(unittest.TestCase):
         interval = features["extreme.mid"].intervals[0]
         self.assertEqual(interval.status, "suspicious")
         self.assertEqual(interval.status_reason, "extreme_score_and_peer_deviation")
+        self.assertFalse(interval.mask)
         self.assertIsNotNone(interval.score_relative_tempo)
         self.assertGreater(interval.peer_log2_deviation, 3.0)
         self.assertIsNone(features["extreme.mid"].individual_tempo_sequence[0])
@@ -120,6 +122,24 @@ class ExtractPieceTempoFeaturesTest(unittest.TestCase):
                 for interval in features["first.mid"].intervals
             )
         )
+
+    def test_masks_zero_duration_interval_without_shifting_sequence(self) -> None:
+        features = extract_piece_tempo_features(
+            [
+                self._input("duplicate.mid", [0.0, 0.5, 0.5, 1.5]),
+                self._input("regular.mid", [0.0, 0.6, 1.1, 1.6]),
+            ]
+        )
+
+        duplicate = features["duplicate.mid"]
+        interval = duplicate.intervals[1]
+        self.assertFalse(interval.mask)
+        self.assertEqual(interval.status, "invalid")
+        self.assertEqual(interval.status_reason, "zero_duration")
+        self.assertIsNone(interval.score_relative_tempo)
+        self.assertIsNotNone(duplicate.individual_tempo_sequence[0])
+        self.assertIsNone(duplicate.individual_tempo_sequence[1])
+        self.assertIsNotNone(duplicate.individual_tempo_sequence[2])
 
     def test_requires_multiple_performances_of_the_same_score(self) -> None:
         with self.assertRaisesRegex(ValueError, "At least two performances"):
@@ -144,7 +164,7 @@ class ExtractPieceTempoFeaturesTest(unittest.TestCase):
 
     def test_rejects_invalid_beat_data(self) -> None:
         invalid_inputs = [
-            self._input("duplicate.mid", [0.0, 0.5, 0.5, 1.5]),
+            self._input("decreasing.mid", [0.0, 0.5, 0.4, 1.5]),
             self._input("nan.mid", [0.0, 0.5, math.nan, 1.5]),
             self._input(
                 "short-types.mid", [0.0, 0.5, 1.0, 1.5], ["db", "b"]

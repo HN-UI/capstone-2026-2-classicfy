@@ -10,7 +10,7 @@ from dataclasses import dataclass
 import numpy as np
 
 from preprocessing import MidiData
-from .beat_grid import as_beat_array, assign_windows
+from .beat_grid import assign_windows, build_beat_grid
 
 MAX_PEDAL_VALUE = 127
 PEDAL_ON_THRESHOLD = 64  # MIDI 규격에서 CC64가 64 이상이면 페달 on이다.
@@ -37,10 +37,11 @@ def _step_integral(times: np.ndarray, values: np.ndarray, at: np.ndarray) -> np.
 
 def extract_pedaling(performance: MidiData, beats: Sequence[float]) -> PedalingFeature:
     """beat 구간별 페달 깊이, on 비율, 전환 횟수를 구한다."""
-    edges = as_beat_array(beats)
-    window_count = len(edges) - 1
-    widths = np.diff(edges)
-    mask = widths > 0
+    grid = build_beat_grid(beats)
+    edges = grid.edges
+    window_count = len(grid.durations)
+    widths = grid.durations
+    mask = grid.mask
 
     depth = np.zeros(window_count)
     down_ratio = np.zeros(window_count)

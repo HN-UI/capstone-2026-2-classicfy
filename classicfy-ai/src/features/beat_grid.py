@@ -6,18 +6,42 @@ i번째 구간은 [beats[i], beats[i + 1])이다. 첫 beat 이전과 마지막 b
 """
 
 from collections.abc import Sequence
+from dataclasses import dataclass
 
 import numpy as np
 
 
-def as_beat_array(beats: Sequence[float]) -> np.ndarray:
+@dataclass(frozen=True)
+class BeatGrid:
+    """beat 경계와 각 구간의 길이 및 유효 여부를 담는다."""
+
+    edges: np.ndarray
+    durations: np.ndarray
+    mask: np.ndarray
+
+
+def as_beat_array(beats: Sequence[float], field: str = "beats") -> np.ndarray:
     """beat 시각을 float 배열로 바꾸고 구간을 만들 수 없는 입력이면 ValueError를 낸다."""
-    array = np.asarray(beats, dtype=float)
-    if array.ndim != 1 or len(array) < 2:
-        raise ValueError("At least two beats are required")
+    try:
+        raw = np.asarray(beats)
+    except (TypeError, ValueError) as exc:
+        raise ValueError(f"Invalid {field}") from exc
+    if raw.ndim != 1 or len(raw) < 2:
+        raise ValueError(f"At least two {field} are required")
+    if raw.dtype.kind not in "iuf":
+        raise ValueError(f"{field} must contain numbers")
+
+    array = raw.astype(float)
     if not np.all(np.isfinite(array)) or np.any(np.diff(array) < 0):
-        raise ValueError("Beats must be finite and non-decreasing")
+        raise ValueError(f"{field} must be finite and non-decreasing")
     return array
+
+
+def build_beat_grid(beats: Sequence[float], field: str = "beats") -> BeatGrid:
+    """beat 경계에서 구간 길이와 0폭 구간을 제외하는 mask를 만든다."""
+    edges = as_beat_array(beats, field)
+    durations = np.diff(edges)
+    return BeatGrid(edges=edges, durations=durations, mask=durations > 0)
 
 
 def assign_windows(times: Sequence[float], beats: Sequence[float]) -> np.ndarray:

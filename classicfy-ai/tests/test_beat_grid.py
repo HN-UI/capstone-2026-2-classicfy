@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from features.beat_grid import as_beat_array, assign_windows
+from features.beat_grid import as_beat_array, assign_windows, build_beat_grid
 
 
 class BeatGridTest(unittest.TestCase):
@@ -26,7 +26,14 @@ class BeatGridTest(unittest.TestCase):
         self.assertEqual(windows.tolist(), [2])
 
     def test_as_beat_array_rejects_unusable_beats(self) -> None:
-        for beats in ([1.0], [2.0, 1.0], [0.0, float("nan")], [[0.0, 1.0]]):
+        for beats in (
+            [1.0],
+            [2.0, 1.0],
+            [0.0, float("nan")],
+            [[0.0, 1.0]],
+            [False, True],
+            ["0.0", "1.0"],
+        ):
             with self.subTest(beats=beats):
                 with self.assertRaises(ValueError):
                     as_beat_array(beats)
@@ -36,6 +43,12 @@ class BeatGridTest(unittest.TestCase):
 
         self.assertIsInstance(array, np.ndarray)
         self.assertEqual(array.dtype, float)
+
+    def test_build_beat_grid_masks_zero_width_interval(self) -> None:
+        grid = build_beat_grid([1.0, 2.0, 2.0, 4.0])
+
+        self.assertEqual(grid.durations.tolist(), [1.0, 0.0, 2.0])
+        self.assertEqual(grid.mask.tolist(), [True, False, True])
 
 
 if __name__ == "__main__":
