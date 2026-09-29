@@ -4,6 +4,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from statistics import median
 
+from .sequence_stats import median_sequence_with_support
 from .tempo import TempoFeature
 
 
@@ -71,16 +72,9 @@ def extract_piece_rubato_features(
         ]
 
     assert interval_count is not None
-    common_sequence: list[float | None] = []
-    common_support: list[int] = []
-    for index in range(interval_count):
-        values = [
-            sequence[index]
-            for sequence in absolute_by_key.values()
-            if sequence[index] is not None
-        ]
-        common_support.append(len(values))
-        common_sequence.append(median(values) if len(values) >= 2 else None)
+    common_sequence, common_support = median_sequence_with_support(
+        absolute_by_key.values()
+    )
 
     features = {}
     for performance_key, absolute_sequence in absolute_by_key.items():

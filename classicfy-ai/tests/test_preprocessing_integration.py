@@ -88,13 +88,7 @@ class PreprocessingIntegrationTest(unittest.TestCase):
             if sample.score_path == score_path
         ]
         tempo_inputs = [
-            TempoInput(
-                performance_key=sample.performance_key,
-                score_beats=sample.score_beats,
-                performance_beats=sample.performance_beats,
-                score_beat_types=sample.score_beat_types,
-                performance_beat_types=sample.performance_beat_types,
-            )
+            TempoInput.from_asap_sample(sample)
             for sample in samples
         ]
         features = extract_piece_tempo_features(tempo_inputs)

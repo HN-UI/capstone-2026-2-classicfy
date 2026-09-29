@@ -1,14 +1,17 @@
 """동일 작품의 score와 여러 performance에서 상대 tempo를 추출한다."""
 
+from __future__ import annotations
+
 from collections.abc import Sequence
 from dataclasses import dataclass, replace
 from math import isclose, log2
 from statistics import median
 from typing import Literal
 
-from preprocessing import BeatType
+from preprocessing import AsapSample, BeatType
 
 from .beat_grid import as_beat_array, build_beat_grid
+from .sequence_stats import median_sequence_with_support
 
 TempoIntervalStatus = Literal["regular", "special", "suspicious", "invalid"]
 SUSPICIOUS_LOG2_DEVIATION = 3.0
@@ -24,6 +27,19 @@ class TempoInput:
     performance_beats: Sequence[float]
     score_beat_types: Sequence[BeatType]
     performance_beat_types: Sequence[BeatType]
+
+    @classmethod
+    def from_asap_sample(cls, sample: AsapSample) -> TempoInput:
+        """정렬된 ASAP 샘플의 beat 정보를 Tempo 입력으로 변환한다."""
+        if not sample.aligned:
+            raise ValueError(f"Performance is not aligned: {sample.performance_key}")
+        return cls(
+            performance_key=sample.performance_key,
+            score_beats=sample.score_beats.copy(),
+            performance_beats=sample.performance_beats.copy(),
+            score_beat_types=sample.score_beat_types.copy(),
+            performance_beat_types=sample.performance_beat_types.copy(),
+        )
 
 
 @dataclass(frozen=True)
@@ -191,17 +207,16 @@ def extract_piece_tempo_features(
                 ),
             )
 
-    common_tempo_sequence: list[float | None] = []
-    common_tempo_support: list[int] = []
-    for index in range(interval_count):
-        values = [
-            intervals[index].score_relative_tempo
-            for intervals in intervals_by_key.values()
-            if intervals[index].mask
-            and intervals[index].score_relative_tempo is not None
+    score_relative_sequences = [
+        [
+            interval.score_relative_tempo if interval.mask else None
+            for interval in intervals
         ]
-        common_tempo_support.append(len(values))
-        common_tempo_sequence.append(median(values) if len(values) >= 2 else None)
+        for intervals in intervals_by_key.values()
+    ]
+    common_tempo_sequence, common_tempo_support = median_sequence_with_support(
+        score_relative_sequences
+    )
 
     features = {}
     for performance_key, intervals in intervals_by_key.items():

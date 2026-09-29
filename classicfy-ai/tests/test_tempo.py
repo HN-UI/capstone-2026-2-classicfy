@@ -1,7 +1,10 @@
 import math
 import unittest
+from dataclasses import replace
+from pathlib import Path
 
 from features import TempoInput, extract_piece_tempo_features
+from preprocessing import AsapSample
 
 
 class ExtractPieceTempoFeaturesTest(unittest.TestCase):
@@ -19,6 +22,41 @@ class ExtractPieceTempoFeaturesTest(unittest.TestCase):
             score_beat_types=["db", "b", "b", "db"],
             performance_beat_types=types,
         )
+
+    @staticmethod
+    def _sample(aligned: bool = True) -> AsapSample:
+        return AsapSample(
+            performance_key="piece/performance.mid",
+            composer="Composer",
+            title="Piece",
+            score_path=Path("piece/score.mid"),
+            performance_path=Path("piece/performance.mid"),
+            aligned=aligned,
+            score_beats=[0.0, 0.5, 1.0],
+            performance_beats=[0.0, 0.6, 1.2],
+            score_beat_types=["db", "b", "b"],
+            performance_beat_types=["db", "b", "b"],
+            score_downbeats=[0.0],
+            performance_downbeats=[0.0],
+            score_time_signatures={},
+            performance_time_signatures={},
+        )
+
+    def test_builds_input_from_aligned_asap_sample(self) -> None:
+        sample = self._sample()
+
+        tempo_input = TempoInput.from_asap_sample(sample)
+
+        self.assertEqual(tempo_input.performance_key, sample.performance_key)
+        self.assertEqual(tempo_input.score_beats, sample.score_beats)
+        self.assertEqual(tempo_input.performance_beats, sample.performance_beats)
+        self.assertIsNot(tempo_input.score_beats, sample.score_beats)
+
+    def test_rejects_unaligned_asap_sample(self) -> None:
+        sample = replace(self._sample(), aligned=False)
+
+        with self.assertRaisesRegex(ValueError, "not aligned"):
+            TempoInput.from_asap_sample(sample)
 
     def test_extracts_score_common_and_individual_tempo(self) -> None:
         features = extract_piece_tempo_features(

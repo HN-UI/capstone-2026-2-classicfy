@@ -153,6 +153,7 @@ beat별 시퀀스 말고, 연주 하나를 대표하는 숫자 몇 개도 함께
 |---|---|
 | `extract_dynamics(performance, beats)` | `DynamicsFeature`: `values`(평균 velocity / 127), `mask`, `onset_counts` |
 | `extract_pedaling(performance, beats)` | `PedalingFeature`: `depth`, `down_ratio`, `changes`, `mask` |
+| `TempoInput.from_asap_sample(sample)` | 정렬된 `AsapSample`의 beat 정보를 Tempo 입력으로 변환 |
 | `summarize_dynamics(feature)` | `dynamics_mean`, `dynamics_range` |
 | `summarize_pedaling(feature)` | `pedal_depth_mean`, `pedal_usage`, `pedal_change_rate` |
 | `build_beat_grid(beats)` | 공통 beat 경계, 구간 길이, 0폭 구간을 제외하는 mask |
