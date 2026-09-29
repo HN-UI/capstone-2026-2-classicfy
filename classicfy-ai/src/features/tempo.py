@@ -68,7 +68,6 @@ class TempoFeature:
     common_tempo_sequence: BeatSequence
     common_tempo_support: np.ndarray
     individual_tempo_sequence: BeatSequence
-    overall_individual_tempo: float | None
 
     def __post_init__(self) -> None:
         intervals = tuple(self.intervals)
@@ -247,17 +246,31 @@ def extract_piece_tempo_features(
             )
             for interval, common in zip(intervals, common_tempo_sequence)
         ]
-        valid_individual_values = [
-            value for value in individual_sequence if value is not None
-        ]
         features[performance_key] = TempoFeature(
             performance_key=performance_key,
             intervals=tuple(intervals),
             common_tempo_sequence=BeatSequence.from_optional(common_tempo_sequence),
             common_tempo_support=common_tempo_support,
             individual_tempo_sequence=BeatSequence.from_optional(individual_sequence),
-            overall_individual_tempo=(
-                median(valid_individual_values) if valid_individual_values else None
-            ),
         )
     return features
+
+
+def summarize_tempo(feature: TempoFeature) -> dict[str, float]:
+    """연주의 score 대비 전체 속도와 작품 공통 해석 대비 전체 편차를 요약한다."""
+    score_relative = [
+        interval.score_relative_tempo
+        for interval in feature.intervals
+        if interval.mask and interval.score_relative_tempo is not None
+    ]
+    individual = feature.individual_tempo_sequence.values[
+        feature.individual_tempo_sequence.mask
+    ]
+    return {
+        "overall_score_relative_tempo": (
+            float(median(score_relative)) if score_relative else float("nan")
+        ),
+        "overall_individual_tempo": (
+            float(median(individual)) if len(individual) else float("nan")
+        ),
+    }

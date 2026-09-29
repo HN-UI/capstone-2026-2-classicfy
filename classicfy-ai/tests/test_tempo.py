@@ -5,7 +5,7 @@ from pathlib import Path
 
 import numpy as np
 
-from features import TempoInput, extract_piece_tempo_features
+from features import TempoInput, extract_piece_tempo_features, summarize_tempo
 from preprocessing import AsapSample
 
 
@@ -79,8 +79,38 @@ class ExtractPieceTempoFeaturesTest(unittest.TestCase):
         np.testing.assert_allclose(
             middle.individual_tempo_sequence.values, [0.0, 0.0, 0.0]
         )
-        self.assertGreater(fast.overall_individual_tempo, 0.0)
-        self.assertLess(slow.overall_individual_tempo, 0.0)
+        self.assertGreater(summarize_tempo(fast)["overall_individual_tempo"], 0.0)
+        self.assertLess(summarize_tempo(slow)["overall_individual_tempo"], 0.0)
+
+    def test_summary_uses_medians_and_reports_missing_values_as_nan(self) -> None:
+        regular = extract_piece_tempo_features(
+            [
+                self._input("first.mid", [0.0, 0.4, 0.8, 1.2]),
+                self._input("second.mid", [0.0, 0.5, 1.0, 1.5]),
+            ]
+        )["first.mid"]
+
+        summary = summarize_tempo(regular)
+
+        self.assertAlmostEqual(
+            summary["overall_score_relative_tempo"], math.log2(1.25)
+        )
+        self.assertGreater(summary["overall_individual_tempo"], 0.0)
+
+        special_inputs = [
+            TempoInput(
+                performance_key=key,
+                score_beats=[0.0, 0.5, 1.0],
+                performance_beats=[0.0, 0.5, 1.0],
+                score_beat_types=["bR", "bR", "bR"],
+                performance_beat_types=["bR", "bR", "bR"],
+            )
+            for key in ("special-1.mid", "special-2.mid")
+        ]
+        missing = summarize_tempo(
+            extract_piece_tempo_features(special_inputs)["special-1.mid"]
+        )
+        self.assertTrue(all(np.isnan(value) for value in missing.values()))
 
     def test_preserves_intervals_touching_br_as_special(self) -> None:
         features = extract_piece_tempo_features(

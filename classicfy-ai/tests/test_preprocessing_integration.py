@@ -1,5 +1,6 @@
 import csv
 import json
+import math
 import os
 import tempfile
 import unittest
@@ -7,7 +8,7 @@ from pathlib import Path
 
 import pretty_midi
 
-from features import TempoInput, extract_piece_tempo_features
+from features import TempoInput, extract_piece_tempo_features, summarize_tempo
 from preprocessing import ASAPLoader, AsapSample, MidiData, load_midi
 
 
@@ -97,7 +98,9 @@ class PreprocessingIntegrationTest(unittest.TestCase):
         for sample in samples:
             feature = features[sample.performance_key]
             self.assertEqual(len(feature.intervals), len(sample.score_beats) - 1)
-            self.assertIsNotNone(feature.overall_individual_tempo)
+            self.assertFalse(
+                math.isnan(summarize_tempo(feature)["overall_individual_tempo"])
+            )
 
 
 if __name__ == "__main__":

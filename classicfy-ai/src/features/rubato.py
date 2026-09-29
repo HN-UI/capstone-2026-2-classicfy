@@ -16,13 +16,10 @@ class RubatoFeature:
     """한 연주의 절대적·상대적 beat-level Rubato."""
 
     performance_key: str
-    overall_score_relative_tempo: float | None
     absolute_rubato_sequence: BeatSequence
     common_rubato_sequence: BeatSequence
     common_rubato_support: np.ndarray
     relative_rubato_sequence: BeatSequence
-    absolute_rubato_amount: float | None
-    relative_rubato_amount: float | None
 
     def __post_init__(self) -> None:
         support = readonly_array(self.common_rubato_support, dtype=int)
@@ -35,11 +32,6 @@ class RubatoFeature:
         if len(lengths) != 1:
             raise ValueError("Rubato sequences must have the same length")
         object.__setattr__(self, "common_rubato_support", support)
-
-
-def _amount(sequence: list[float | None]) -> float | None:
-    values = [abs(value) for value in sequence if value is not None]
-    return median(values) if values else None
 
 
 def extract_piece_rubato_features(
@@ -59,7 +51,6 @@ def extract_piece_rubato_features(
 
     interval_count: int | None = None
     absolute_by_key: dict[str, list[float | None]] = {}
-    baseline_by_key: dict[str, float | None] = {}
 
     for performance_key, feature in tempo_features.items():
         if performance_key != feature.performance_key:
@@ -80,7 +71,6 @@ def extract_piece_rubato_features(
         ]
         valid_values = [value for value in score_relative if value is not None]
         baseline = median(valid_values) if valid_values else None
-        baseline_by_key[performance_key] = baseline
         absolute_by_key[performance_key] = [
             None if value is None or baseline is None else value - baseline
             for value in score_relative
@@ -101,12 +91,22 @@ def extract_piece_rubato_features(
         ]
         features[performance_key] = RubatoFeature(
             performance_key=performance_key,
-            overall_score_relative_tempo=baseline_by_key[performance_key],
             absolute_rubato_sequence=BeatSequence.from_optional(absolute_sequence),
             common_rubato_sequence=BeatSequence.from_optional(common_sequence),
             common_rubato_support=common_support,
             relative_rubato_sequence=BeatSequence.from_optional(relative_sequence),
-            absolute_rubato_amount=_amount(absolute_sequence),
-            relative_rubato_amount=_amount(relative_sequence),
         )
     return features
+
+
+def summarize_rubato(feature: RubatoFeature) -> dict[str, float]:
+    """절대적·상대적 Rubato의 beat별 편차 크기를 절댓값 중앙값으로 요약한다."""
+
+    def amount(sequence: BeatSequence) -> float:
+        values = np.abs(sequence.values[sequence.mask])
+        return float(median(values)) if len(values) else float("nan")
+
+    return {
+        "absolute_rubato_amount": amount(feature.absolute_rubato_sequence),
+        "relative_rubato_amount": amount(feature.relative_rubato_sequence),
+    }

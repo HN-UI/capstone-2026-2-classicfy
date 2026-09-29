@@ -141,11 +141,19 @@ beat별 시퀀스 말고, 연주 하나를 대표하는 숫자 몇 개도 함께
 
 | 이름 | 계산식 | 왜 이렇게 재는가 |
 |---|---|---|
+| `overall_score_relative_tempo` | 유효한 score-relative tempo의 중앙값 | 악보 MIDI 속도에 대한 연주 전체의 빠르기 |
+| `overall_individual_tempo` | 유효한 individual tempo의 중앙값 | 같은 작품의 공통 해석에 대한 연주 전체의 속도 편차 |
+| `absolute_rubato_amount` | 유효한 absolute rubato 절댓값의 중앙값 | 연주 내부의 국소적인 빠르기 변화량 |
+| `relative_rubato_amount` | 유효한 relative rubato 절댓값의 중앙값 | 작품의 공통 Rubato를 제외한 연주자 고유 변화량 |
 | `dynamics_mean` | 유효한 구간의 Dynamics 평균 | 곡 전체의 평균 세기 |
 | `dynamics_range` | 유효한 구간의 5~95 백분위 차이 | 최댓값-최솟값 대신 백분위를 써서, 단 한 번의 실수나 이상치 음표에 흔들리지 않게 함 |
 | `pedal_depth_mean` | 유효한 구간의 `depth` 평균 | 곡 전체에서 페달을 평균적으로 얼마나 깊게 밟았는가 |
 | `pedal_usage` | 유효한 구간의 `down_ratio` 평균 | 곡 전체 시간 중 페달이 켜져 있던 비중 |
 | `pedal_change_rate` | 유효한 구간의 `changes` 평균 (구간당 평균 횟수) | 페달을 얼마나 자주 갈아 밟았는가 |
+
+네 feature 모두 `summarize_<feature>(feature)` 함수가 `dict[str, float]`를 반환한다.
+요약값을 계산할 유효 구간이 없으면 해당 값은 `NaN`이다. 계산식은 feature의 음악적
+의미에 따라 다르며, 인터페이스가 같다는 이유로 동일한 평균 방식을 강제하지 않는다.
 
 **`pedal_change_rate`를 작품 사이에서 그대로 비교하면 안 된다.** 이 값은 "beat당 평균 전환 횟수"인데, beat 하나의 길이(초)는 곡 빠르기에 따라 몇 배씩 차이가 난다. 느린 곡은 beat 하나가 몇 초씩이라 그 안에 전환이 몰릴 기회가 많아지고, 실제로 ASAP 전체에서 이 값과 beat 길이의 순위상관은 0.54로 뚜렷하다. 반면 **같은 작품 안에서 연주끼리 비교**할 때는 beat 길이가 거의 같으므로 문제가 없다(같은 작품 안에서의 순위상관은 0.12로 약함). 자세한 근거는 `reports/dynamics_pedaling/README.md`에 있다.
 
@@ -169,6 +177,8 @@ beat별 시퀀스 말고, 연주 하나를 대표하는 숫자 몇 개도 함께
 | `extract_piece_tempo_features(performances)` | `TempoFeature`: 공통·개별 tempo `BeatSequence`, interval별 상태와 원시값 |
 | `extract_piece_rubato_features(tempo_features)` | `RubatoFeature`: 절대·공통·상대 rubato `BeatSequence` |
 | `TempoInput.from_asap_sample(sample)` | 정렬된 `AsapSample`의 beat 정보를 Tempo 입력으로 변환 |
+| `summarize_tempo(feature)` | `overall_score_relative_tempo`, `overall_individual_tempo` |
+| `summarize_rubato(feature)` | `absolute_rubato_amount`, `relative_rubato_amount` |
 | `summarize_dynamics(feature)` | `dynamics_mean`, `dynamics_range` |
 | `summarize_pedaling(feature)` | `pedal_depth_mean`, `pedal_usage`, `pedal_change_rate` |
 | `build_beat_grid(beats)` | 공통 beat 경계, 구간 길이, 0폭 구간을 제외하는 mask |
