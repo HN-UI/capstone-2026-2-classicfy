@@ -72,28 +72,21 @@ fun SignUpScreen(
     var password by remember { mutableStateOf("") }
     var nickname by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
-    var signUpAttempted by remember { mutableStateOf(false) }
     val trimmedId = id.trim()
     val idTaken = trimmedId.isNotEmpty() && isMockIdTaken(trimmedId)
     val canSignUp = trimmedId.isNotEmpty() && !idTaken &&
         password.length >= MIN_PASSWORD_LENGTH && nickname.isNotBlank()
     val idStatus = when {
-        trimmedId.isEmpty() && signUpAttempted -> R.string.login_id_required
         trimmedId.isEmpty() -> null
         idTaken -> R.string.my_id_duplicate
         else -> R.string.my_id_available
     }
     val passwordStatus = when {
-        password.isEmpty() && signUpAttempted ->
-            stringResource(R.string.login_password_required)
         password.isEmpty() -> null
         password.length < MIN_PASSWORD_LENGTH ->
             stringResource(R.string.password_change_min_length, MIN_PASSWORD_LENGTH)
         else -> null
     }
-    val nicknameStatus = if (signUpAttempted && nickname.isBlank()) {
-        R.string.sign_up_nickname_placeholder
-    } else null
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -202,7 +195,7 @@ fun SignUpScreen(
                     placeholder = stringResource(R.string.sign_up_nickname_placeholder),
                     value = nickname,
                     onValueChange = { nickname = it },
-                    statusMessage = nicknameStatus?.let { stringResource(it) },
+                    statusMessage = null,
                     keyboardOptions = KeyboardOptions(
                         autoCorrectEnabled = false,
                         imeAction = ImeAction.Done
@@ -219,10 +212,7 @@ fun SignUpScreen(
                     onClick = {
                         keyboardController?.hide()
                         focusManager.clearFocus()
-                        signUpAttempted = true
-                        if (canSignUp) {
-                            onSignUpClick(nickname.trim())
-                        }
+                        onSignUpClick(nickname.trim())
                     },
                     enabled = canSignUp,
                     modifier = Modifier
