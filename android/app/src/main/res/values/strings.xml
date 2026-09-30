@@ -8,12 +8,19 @@
     <string name="login_sign_up">회원가입</string>
     <string name="login_show_password">비밀번호 표시</string>
     <string name="login_hide_password">비밀번호 숨기기</string>
+    <string name="login_id_required">아이디를 입력해주세요</string>
+    <string name="login_password_required">비밀번호를 입력해주세요</string>
+    <string name="login_invalid_credentials">아이디 또는 비밀번호를 확인해주세요</string>
     <string name="sign_up_title">회원가입</string>
     <string name="sign_up_id_placeholder">아이디를 입력해주세요</string>
     <string name="sign_up_password_placeholder">비밀번호를 입력해주세요</string>
     <string name="sign_up_nickname_label">닉네임</string>
     <string name="sign_up_nickname_placeholder">닉네임을 입력해주세요</string>
     <string name="sign_up_button">가입하기</string>
+    <string name="sign_up_complete_title">환영합니다!</string>
+    <string name="sign_up_complete_message">회원가입이 완료되었습니다.</string>
+    <string name="sign_up_complete_nickname_message">%1$s님, 취향에 맞는 연주를 찾아보세요!</string>
+    <string name="sign_up_complete_start">시작하기</string>
     <string name="preference_title">취향 분석</string>
     <string name="preference_heading_accent">좋아하는 연주</string>
     <string name="preference_heading_rest">를 선택해주세요</string>
@@ -71,6 +78,15 @@
     <string name="my_mock_nickname">클래식팬</string>
     <string name="my_mock_id">classicfy_user</string>
     <string name="my_save">저장하기</string>
+    <string name="my_change_password">비밀번호 변경 &gt;</string>
+    <string name="password_change_back">마이 페이지로 돌아가기</string>
+    <string name="password_change_new_label">새 비밀번호</string>
+    <string name="password_change_new_placeholder">새 비밀번호를 입력해주세요</string>
+    <string name="password_change_min_length">비밀번호는 %1$d자 이상 입력해주세요</string>
+    <string name="password_change_confirm_label">비밀번호 확인</string>
+    <string name="password_change_confirm_placeholder">비밀번호를 한 번 더 입력해주세요</string>
+    <string name="password_change_match">비밀번호가 일치합니다</string>
+    <string name="password_change_mismatch">비밀번호가 일치하지 않습니다</string>
     <string name="my_id_duplicate">이미 사용 중인 아이디입니다</string>
     <string name="my_id_available">사용 가능한 아이디입니다</string>
 </resources>

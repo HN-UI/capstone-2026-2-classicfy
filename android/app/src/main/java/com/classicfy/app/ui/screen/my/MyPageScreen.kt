@@ -3,10 +3,12 @@ package com.classicfy.app.ui.screen.my
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -37,10 +39,9 @@ import androidx.compose.ui.unit.dp
 import com.classicfy.app.R
 import com.classicfy.app.ui.navigation.ClassicFyBottomBar
 import com.classicfy.app.ui.navigation.ClassicFyBottomDestination
+import com.classicfy.app.ui.validation.isMockIdTaken
 
 private enum class IdValidation { DEFAULT, DUPLICATE, AVAILABLE }
-
-private val existingMockIds = setOf("admin", "classicfy", "user123")
 
 @Composable
 fun MyPageScreen(
@@ -48,6 +49,7 @@ fun MyPageScreen(
     savedId: String,
     onSave: (String, String) -> Unit,
     onLogoutClick: () -> Unit,
+    onPasswordChangeClick: () -> Unit,
     onSearchTabClick: () -> Unit,
     onTasteTabClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -58,7 +60,7 @@ fun MyPageScreen(
     val idValidation = when {
         trimmedId.isEmpty() || trimmedId.equals(savedId, ignoreCase = true) ->
             IdValidation.DEFAULT
-        existingMockIds.any { it.equals(trimmedId, ignoreCase = true) } ->
+        isMockIdTaken(trimmedId) ->
             IdValidation.DUPLICATE
         else -> IdValidation.AVAILABLE
     }
@@ -175,7 +177,21 @@ fun MyPageScreen(
                         fontWeight = FontWeight.Bold
                     )
                 }
-                Spacer(Modifier.height(40.dp))
+                Spacer(Modifier.height(8.dp))
+                TextButton(
+                    onClick = onPasswordChangeClick,
+                    modifier = Modifier
+                        .align(Alignment.End)
+                        .heightIn(min = 48.dp),
+                    contentPadding = PaddingValues(horizontal = 12.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.my_change_password),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                }
+                Spacer(Modifier.height(24.dp))
             }
         }
         ClassicFyBottomBar(

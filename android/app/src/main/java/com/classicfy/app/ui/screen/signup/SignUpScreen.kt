@@ -57,18 +57,43 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.classicfy.app.R
 import com.classicfy.app.ui.theme.ClassicFyTheme
+import com.classicfy.app.ui.validation.isMockIdTaken
+import com.classicfy.app.ui.validation.MIN_PASSWORD_LENGTH
 
 @Composable
 fun SignUpScreen(
-    onSignUpClick: () -> Unit,
+    onSignUpClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var id by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var nickname by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
+    var signUpAttempted by remember { mutableStateOf(false) }
+    val trimmedId = id.trim()
+    val idTaken = trimmedId.isNotEmpty() && isMockIdTaken(trimmedId)
+    val canSignUp = trimmedId.isNotEmpty() && !idTaken &&
+        password.length >= MIN_PASSWORD_LENGTH && nickname.isNotBlank()
+    val idStatus = when {
+        trimmedId.isEmpty() && signUpAttempted -> R.string.login_id_required
+        trimmedId.isEmpty() -> null
+        idTaken -> R.string.my_id_duplicate
+        else -> R.string.my_id_available
+    }
+    val passwordStatus = when {
+        password.isEmpty() && signUpAttempted ->
+            stringResource(R.string.login_password_required)
+        password.isEmpty() -> null
+        password.length < MIN_PASSWORD_LENGTH ->
+            stringResource(R.string.password_change_min_length, MIN_PASSWORD_LENGTH)
+        else -> null
+    }
+    val nicknameStatus = if (signUpAttempted && nickname.isBlank()) {
+        R.string.sign_up_nickname_placeholder
+    } else null
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -77,7 +102,7 @@ fun SignUpScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        val logoSize = minOf(maxWidth * 0.25f, 96.dp)
+        val logoSize = minOf(maxWidth * 0.30f, 112.dp)
         val headerBottomSpacing = minOf(maxHeight * 0.06f, 48.dp)
         val buttonTopSpacing = minOf(maxHeight * 0.08f, 64.dp)
 
@@ -85,7 +110,7 @@ fun SignUpScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 28.dp),
+                .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(Modifier.height(8.dp))
@@ -99,6 +124,7 @@ fun SignUpScreen(
                 Text(
                     text = stringResource(R.string.sign_up_title),
                     style = MaterialTheme.typography.headlineLarge,
+                    fontSize = 32.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground
                 )
@@ -125,6 +151,7 @@ fun SignUpScreen(
                     placeholder = stringResource(R.string.sign_up_id_placeholder),
                     value = id,
                     onValueChange = { id = it },
+                    statusMessage = idStatus?.let { stringResource(it) },
                     keyboardOptions = KeyboardOptions(
                         autoCorrectEnabled = false,
                         imeAction = ImeAction.Next
@@ -133,12 +160,13 @@ fun SignUpScreen(
                         onNext = { focusManager.moveFocus(FocusDirection.Down) }
                     )
                 )
-                Spacer(Modifier.height(32.dp))
+                Spacer(Modifier.height(40.dp))
                 SignUpInput(
                     label = stringResource(R.string.login_password_label),
                     placeholder = stringResource(R.string.sign_up_password_placeholder),
                     value = password,
                     onValueChange = { password = it },
+                    statusMessage = passwordStatus,
                     visualTransformation = if (passwordVisible) {
                         VisualTransformation.None
                     } else {
@@ -168,12 +196,13 @@ fun SignUpScreen(
                         }
                     }
                 )
-                Spacer(Modifier.height(32.dp))
+                Spacer(Modifier.height(40.dp))
                 SignUpInput(
                     label = stringResource(R.string.sign_up_nickname_label),
                     placeholder = stringResource(R.string.sign_up_nickname_placeholder),
                     value = nickname,
                     onValueChange = { nickname = it },
+                    statusMessage = nicknameStatus?.let { stringResource(it) },
                     keyboardOptions = KeyboardOptions(
                         autoCorrectEnabled = false,
                         imeAction = ImeAction.Done
@@ -190,16 +219,21 @@ fun SignUpScreen(
                     onClick = {
                         keyboardController?.hide()
                         focusManager.clearFocus()
-                        onSignUpClick()
+                        signUpAttempted = true
+                        if (canSignUp) {
+                            onSignUpClick(nickname.trim())
+                        }
                     },
+                    enabled = canSignUp,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .heightIn(min = 56.dp),
+                        .heightIn(min = 60.dp),
                     shape = RoundedCornerShape(14.dp)
                 ) {
                     Text(
                         text = stringResource(R.string.sign_up_button),
                         style = MaterialTheme.typography.titleMedium,
+                        fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
                 }
@@ -221,6 +255,7 @@ private fun SignUpInput(
     placeholder: String,
     value: String,
     onValueChange: (String) -> Unit,
+    statusMessage: String?,
     keyboardOptions: KeyboardOptions,
     keyboardActions: KeyboardActions,
     visualTransformation: VisualTransformation = VisualTransformation.None,
@@ -233,6 +268,7 @@ private fun SignUpInput(
             text = label,
             color = MaterialTheme.colorScheme.onBackground,
             style = MaterialTheme.typography.bodyLarge,
+            fontSize = 18.sp,
             fontWeight = FontWeight.Medium
         )
         Column {
@@ -253,7 +289,8 @@ private fun SignUpInput(
                     keyboardOptions = keyboardOptions,
                     keyboardActions = keyboardActions,
                     textStyle = MaterialTheme.typography.bodyLarge.copy(
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontSize = 17.sp
                     ),
                     cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
                     decorationBox = { innerTextField ->
@@ -265,6 +302,7 @@ private fun SignUpInput(
                                 Text(
                                     text = placeholder,
                                     style = MaterialTheme.typography.bodyLarge,
+                                    fontSize = 17.sp,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
@@ -279,6 +317,15 @@ private fun SignUpInput(
                 else MaterialTheme.colorScheme.outline,
                 thickness = if (focused) 2.dp else 1.dp
             )
+            if (statusMessage != null) {
+                Text(
+                    text = statusMessage,
+                    style = MaterialTheme.typography.bodySmall,
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(start = 2.dp, top = 4.dp)
+                )
+            }
         }
     }
 }

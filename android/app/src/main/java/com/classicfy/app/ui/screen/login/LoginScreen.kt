@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.exclude
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
@@ -56,23 +58,33 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.classicfy.app.R
 import com.classicfy.app.ui.theme.ClassicFyTheme
+
+private const val MOCK_LOGIN_ID = "classicfy"
+internal const val MOCK_LOGIN_PASSWORD = "1234"
 
 @Composable
 fun LoginScreen(
     onLoginClick: () -> Unit,
     modifier: Modifier = Modifier,
-    onSignUpClick: () -> Unit = {}
+    onSignUpClick: () -> Unit = {},
+    validPassword: String = MOCK_LOGIN_PASSWORD
 ) {
     var id by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var showIdRequired by remember { mutableStateOf(false) }
+    var showPasswordRequired by remember { mutableStateOf(false) }
+    var showInvalidCredentials by remember { mutableStateOf(false) }
     var passwordVisible by remember { mutableStateOf(false) }
     var passwordFocused by remember { mutableStateOf(false) }
     var viewportHeight by remember { mutableIntStateOf(0) }
@@ -83,7 +95,16 @@ fun LoginScreen(
     val submit = {
         keyboardController?.hide()
         focusManager.clearFocus()
-        onLoginClick()
+        showIdRequired = id.isEmpty()
+        showPasswordRequired = password.isEmpty()
+        showInvalidCredentials = false
+        if (!showIdRequired && !showPasswordRequired) {
+            if (id == MOCK_LOGIN_ID && password == validPassword) {
+                onLoginClick()
+            } else {
+                showInvalidCredentials = true
+            }
+        }
     }
 
     // Retry after IME layout changes, rather than only at the initial focus event.
@@ -98,9 +119,10 @@ fun LoginScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        val logoSize = minOf(maxWidth * 0.64f, maxHeight * 0.27f, 235.dp)
-        val topSpacing = maxHeight * 0.08f
-        val logoBottomSpacing = minOf(maxHeight * 0.012f, 12.dp)
+        val logoSize = minOf(maxWidth * 0.70f, maxHeight * 0.325f, 275.dp) * 0.84f
+        val topSpacing = maxHeight * 0.12f
+        // Account for the cropped logo box while keeping the form close to the artwork.
+        val logoBottomSpacing = 16.dp + logoSize * 0.08f
 
         Column(
             modifier = Modifier
@@ -109,7 +131,7 @@ fun LoginScreen(
                 .windowInsetsPadding(WindowInsets.ime.exclude(WindowInsets.navigationBars))
                 .onSizeChanged { viewportHeight = it.height }
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 28.dp),
+                .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(Modifier.height(topSpacing))
@@ -135,7 +157,14 @@ fun LoginScreen(
                     label = stringResource(R.string.login_id_label),
                     placeholder = stringResource(R.string.login_id_placeholder),
                     value = id,
-                    onValueChange = { id = it },
+                    onValueChange = {
+                        id = it
+                        if (it.isNotEmpty()) showIdRequired = false
+                        showInvalidCredentials = false
+                    },
+                    errorText = if (showIdRequired) {
+                        stringResource(R.string.login_id_required)
+                    } else null,
                     keyboardOptions = KeyboardOptions(
                         autoCorrectEnabled = false,
                         imeAction = ImeAction.Next
@@ -144,7 +173,7 @@ fun LoginScreen(
                         onNext = { focusManager.moveFocus(FocusDirection.Down) }
                     )
                 )
-                Spacer(Modifier.height(24.dp))
+                Spacer(Modifier.height(32.dp))
                 Column(
                     modifier = Modifier.bringIntoViewRequester(passwordActionsRequester)
                 ) {
@@ -152,7 +181,14 @@ fun LoginScreen(
                         label = stringResource(R.string.login_password_label),
                         placeholder = stringResource(R.string.login_password_placeholder),
                         value = password,
-                        onValueChange = { password = it },
+                        onValueChange = {
+                            password = it
+                            if (it.isNotEmpty()) showPasswordRequired = false
+                            showInvalidCredentials = false
+                        },
+                        errorText = if (showPasswordRequired) {
+                            stringResource(R.string.login_password_required)
+                        } else null,
                         visualTransformation = if (passwordVisible) {
                             VisualTransformation.None
                         } else {
@@ -176,34 +212,51 @@ fun LoginScreen(
                                         if (passwordVisible) R.string.login_hide_password
                                         else R.string.login_show_password
                                     ),
+                                    modifier = Modifier.size(24.dp),
                                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
                         }
                     )
-                    Spacer(Modifier.height(32.dp))
+                    if (showInvalidCredentials) {
+                        Text(
+                            text = stringResource(R.string.login_invalid_credentials),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 8.dp),
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium,
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                    Spacer(Modifier.height(44.dp))
                     Button(
                         onClick = submit,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .heightIn(min = 56.dp),
+                            .height(58.dp),
                         shape = RoundedCornerShape(14.dp)
                     ) {
                         Text(
                             text = stringResource(R.string.login_button),
                             style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
+                            fontSize = 19.sp,
+                            fontWeight = FontWeight.SemiBold
                         )
                     }
                 }
-                Spacer(Modifier.height(8.dp))
+                Spacer(Modifier.height(14.dp))
                 TextButton(
                     onClick = onSignUpClick,
-                    modifier = Modifier.align(Alignment.End)
+                    modifier = Modifier.align(Alignment.End),
+                    contentPadding = PaddingValues(0.dp)
                 ) {
                     Text(
                         text = stringResource(R.string.login_sign_up),
-                        color = MaterialTheme.colorScheme.onBackground
+                        color = MaterialTheme.colorScheme.onBackground,
+                        fontSize = 16.sp,
+                        textDecoration = TextDecoration.Underline
                     )
                 }
                 Spacer(Modifier.height(32.dp))
@@ -218,27 +271,31 @@ private fun LoginInput(
     placeholder: String,
     value: String,
     onValueChange: (String) -> Unit,
+    errorText: String?,
     keyboardOptions: KeyboardOptions,
     keyboardActions: KeyboardActions,
     modifier: Modifier = Modifier,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     trailingIcon: @Composable (() -> Unit)? = null
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    Column {
         Text(
             text = label,
             color = MaterialTheme.colorScheme.onBackground,
             style = MaterialTheme.typography.bodyLarge,
+            fontSize = 18.sp,
             fontWeight = FontWeight.Medium
         )
+        Spacer(Modifier.height(8.dp))
         TextField(
             value = value,
             onValueChange = onValueChange,
             modifier = modifier
                 .fillMaxWidth()
-                .heightIn(min = 56.dp)
+                .height(58.dp)
                 .semantics { contentDescription = label },
-            placeholder = { Text(placeholder) },
+            placeholder = { Text(placeholder, fontSize = 16.sp) },
+            textStyle = MaterialTheme.typography.bodyLarge.copy(fontSize = 16.sp),
             singleLine = true,
             shape = RoundedCornerShape(14.dp),
             visualTransformation = visualTransformation,
@@ -246,16 +303,25 @@ private fun LoginInput(
             keyboardOptions = keyboardOptions,
             keyboardActions = keyboardActions,
             colors = TextFieldDefaults.colors(
-                focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                focusedContainerColor = Color(0xFF464646),
+                unfocusedContainerColor = Color(0xFF464646),
                 focusedTextColor = MaterialTheme.colorScheme.onSurface,
                 unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
-                focusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                focusedPlaceholderColor = Color(0xFFD9D9D9),
+                unfocusedPlaceholderColor = Color(0xFFD9D9D9),
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent
             )
         )
+        if (errorText != null) {
+            Text(
+                text = errorText,
+                modifier = Modifier.padding(start = 12.dp, top = 4.dp),
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium
+            )
+        }
     }
 }
 
