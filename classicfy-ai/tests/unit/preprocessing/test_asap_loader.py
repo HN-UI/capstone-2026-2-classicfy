@@ -139,5 +139,112 @@ class ASAPLoaderTest(unittest.TestCase):
             ASAPLoader(self.root).get_sample(self.performance_keys[0])
 
 
+    def _write_note_alignment_root(self, rows: list[dict[str, str]]) -> Path:
+        root = self.root / "nasap"
+        root.mkdir(exist_ok=True)
+        with (root / "metadata.csv").open("w", encoding="utf-8", newline="") as file:
+            writer = csv.DictWriter(
+                file, fieldnames=["midi_performance", "robust_note_alignment", "match_file"]
+            )
+            writer.writeheader()
+            for row in rows:
+                writer.writerow(row)
+                if row["match_file"]:
+                    match_path = root / row["match_file"]
+                    match_path.parent.mkdir(parents=True, exist_ok=True)
+                    match_path.touch()
+        return root
+
+    def test_note_alignment_fields_are_empty_without_note_alignment_root(self) -> None:
+        sample = ASAPLoader(self.root).get_sample(self.performance_keys[0])
+
+        self.assertIsNone(sample.note_alignment_path)
+        self.assertIsNone(sample.robust_note_alignment)
+
+    def test_note_alignment_uses_same_key_or_moved_sibling_folder(self) -> None:
+        nasap_root = self._write_note_alignment_root(
+            [
+                {
+                    "midi_performance": "Bach/Fugue/first.mid",
+                    "robust_note_alignment": "1.0",
+                    "match_file": "Bach/Fugue/first.match",
+                },
+                {
+                    "midi_performance": "Bach/Fugue_no_repeat/second.mid",
+                    "robust_note_alignment": "0.0",
+                    "match_file": "Bach/Fugue_no_repeat/second.match",
+                },
+            ]
+        )
+        loader = ASAPLoader(self.root, nasap_root)
+
+        first = loader.get_sample(self.performance_keys[0])
+        second = loader.get_sample(self.performance_keys[1])
+
+        self.assertEqual(first.note_alignment_path, nasap_root / "Bach/Fugue/first.match")
+        self.assertTrue(first.robust_note_alignment)
+        self.assertEqual(
+            second.note_alignment_path, nasap_root / "Bach/Fugue_no_repeat/second.match"
+        )
+        self.assertFalse(second.robust_note_alignment)
+
+    def test_ambiguous_moved_folder_or_missing_match_file_gives_no_alignment(self) -> None:
+        nasap_root = self._write_note_alignment_root(
+            [
+                {
+                    "midi_performance": "Bach/Fugue/first.mid",
+                    "robust_note_alignment": "",
+                    "match_file": "",
+                },
+                {
+                    "midi_performance": "Bach/Fugue_no_repeat/second.mid",
+                    "robust_note_alignment": "1.0",
+                    "match_file": "Bach/Fugue_no_repeat/second.match",
+                },
+                {
+                    "midi_performance": "Bach/Fugue_extra_repeat/second.mid",
+                    "robust_note_alignment": "1.0",
+                    "match_file": "Bach/Fugue_extra_repeat/second.match",
+                },
+            ]
+        )
+        loader = ASAPLoader(self.root, nasap_root)
+
+        first = loader.get_sample(self.performance_keys[0])
+        second = loader.get_sample(self.performance_keys[1])
+
+        self.assertIsNone(first.note_alignment_path)
+        self.assertIsNone(first.robust_note_alignment)
+        self.assertIsNone(second.note_alignment_path)
+
+    def test_different_performance_midi_in_note_alignment_root_raises(self) -> None:
+        nasap_root = self._write_note_alignment_root(
+            [
+                {
+                    "midi_performance": "Bach/Fugue/first.mid",
+                    "robust_note_alignment": "1.0",
+                    "match_file": "Bach/Fugue/first.match",
+                }
+            ]
+        )
+        (nasap_root / "Bach/Fugue/first.mid").write_bytes(b"different")
+
+        with self.assertRaisesRegex(ValueError, r"differs from \(n\)ASAP"):
+            ASAPLoader(self.root, nasap_root).get_sample(self.performance_keys[0])
+
+    def test_invalid_robust_flag_raises(self) -> None:
+        nasap_root = self._write_note_alignment_root(
+            [
+                {
+                    "midi_performance": "Bach/Fugue/first.mid",
+                    "robust_note_alignment": "maybe",
+                    "match_file": "",
+                }
+            ]
+        )
+
+        with self.assertRaisesRegex(ValueError, "Invalid robust_note_alignment"):
+            ASAPLoader(self.root, nasap_root)
+
 if __name__ == "__main__":
     unittest.main()
