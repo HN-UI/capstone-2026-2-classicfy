@@ -22,10 +22,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.classicfy.app.R
 import com.classicfy.app.ui.navigation.ClassicFyBottomBar
 import com.classicfy.app.ui.navigation.ClassicFyBottomDestination
@@ -71,15 +69,13 @@ internal fun TasteScreen(
                     Text(
                         text = stringResource(R.string.taste_title),
                         style = MaterialTheme.typography.headlineLarge,
-                        fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onBackground
                     )
                 }
-                Spacer(Modifier.height(28.dp))
+                Spacer(Modifier.height(12.dp))
                 Text(
                     text = stringResource(R.string.taste_analysis_heading),
                     style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onBackground
                 )
                 Spacer(Modifier.height(16.dp))
@@ -114,8 +110,7 @@ internal fun TasteScreen(
                 ) {
                     Text(
                         text = stringResource(R.string.taste_representatives),
-                        style = MaterialTheme.typography.titleLarge.copy(fontSize = 20.sp),
-                        fontWeight = FontWeight.Medium,
+                        style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.onBackground,
                         modifier = Modifier.weight(1f)
                     )
@@ -123,7 +118,7 @@ internal fun TasteScreen(
                         Text(
                             text = stringResource(R.string.taste_view_all),
                             style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurface
+                            color = MaterialTheme.colorScheme.primary
                         )
                     }
                 }

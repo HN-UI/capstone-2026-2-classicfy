@@ -21,13 +21,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,21 +37,29 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.classicfy.app.R
+import com.classicfy.app.ui.component.FavoriteRemovalNotice
 import com.classicfy.app.ui.navigation.ClassicFyBottomBar
 import com.classicfy.app.ui.navigation.ClassicFyBottomDestination
 import com.classicfy.app.ui.screen.performance.PerformanceItem
+import java.text.Collator
+import java.util.Locale
 
+private enum class TasteSortCriterion { ADDED_DATE, COMPOSER, WORK_TITLE }
+private enum class TasteSortDirection { ASCENDING, DESCENDING }
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun TastePerformanceListScreen(
     performances: List<PerformanceItem>,
+    addedAtById: Map<String, Long>,
     onBackClick: () -> Unit,
     onPerformanceClick: (String) -> Unit,
     onRemoveFavorite: (String) -> Unit,
@@ -62,6 +71,9 @@ internal fun TastePerformanceListScreen(
 ) {
     var query by rememberSaveable { mutableStateOf("") }
     var pendingRemovedId by rememberSaveable { mutableStateOf<String?>(null) }
+    var sortCriterion by rememberSaveable { mutableStateOf(TasteSortCriterion.ADDED_DATE) }
+    var sortDirection by rememberSaveable { mutableStateOf(TasteSortDirection.DESCENDING) }
+    var showSortSheet by rememberSaveable { mutableStateOf(false) }
     val filteredPerformances = remember(query, performances) {
         val term = query.trim()
         if (term.isEmpty()) performances else performances.filter { performance ->
@@ -69,6 +81,39 @@ internal fun TastePerformanceListScreen(
                 performance.work.contains(term, ignoreCase = true) ||
                 performance.performer.contains(term, ignoreCase = true)
         }
+    }
+    val sortedPerformances = remember(filteredPerformances, addedAtById, sortCriterion, sortDirection) {
+        val collator = Collator.getInstance(Locale.KOREAN)
+        val ascending: Comparator<PerformanceItem> = when (sortCriterion) {
+            TasteSortCriterion.ADDED_DATE ->
+                compareBy<PerformanceItem>({ addedAtById[it.id] ?: 0L }, { it.id })
+            TasteSortCriterion.COMPOSER -> Comparator { first, second ->
+                val composerOrder = collator.compare(first.composer, second.composer)
+                val workOrder = if (composerOrder == 0) collator.compare(first.work, second.work)
+                else composerOrder
+                if (workOrder == 0) first.id.compareTo(second.id) else workOrder
+            }
+            TasteSortCriterion.WORK_TITLE -> Comparator { first, second ->
+                val workOrder = collator.compare(first.work, second.work)
+                val composerOrder = if (workOrder == 0) collator.compare(first.composer, second.composer)
+                else workOrder
+                if (composerOrder == 0) first.id.compareTo(second.id) else composerOrder
+            }
+        }
+        filteredPerformances.sortedWith(
+            if (sortDirection == TasteSortDirection.ASCENDING) ascending else ascending.reversed()
+        )
+    }
+    val sortLabelRes = when (sortCriterion) {
+        TasteSortCriterion.ADDED_DATE -> if (sortDirection == TasteSortDirection.DESCENDING) {
+            R.string.taste_sort_recent
+        } else R.string.taste_sort_oldest
+        TasteSortCriterion.COMPOSER -> if (sortDirection == TasteSortDirection.ASCENDING) {
+            R.string.taste_sort_composer_ascending
+        } else R.string.taste_sort_composer_descending
+        TasteSortCriterion.WORK_TITLE -> if (sortDirection == TasteSortDirection.ASCENDING) {
+            R.string.taste_sort_work_ascending
+        } else R.string.taste_sort_work_descending
     }
     val undoRemoval = {
         pendingRemovedId?.let(onRestoreFavorite)
@@ -94,12 +139,40 @@ internal fun TastePerformanceListScreen(
         Spacer(Modifier.height(12.dp))
         TasteSearchField(query = query, onQueryChange = { query = it })
         Spacer(Modifier.height(28.dp))
-        Text(
-            text = stringResource(R.string.taste_performance_count, filteredPerformances.size),
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onBackground,
-            modifier = Modifier.padding(horizontal = 24.dp)
-        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(R.string.taste_performance_count, filteredPerformances.size),
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            if (filteredPerformances.isNotEmpty()) {
+                Row(
+                    modifier = Modifier
+                        .clickable { showSortSheet = true }
+                        .padding(vertical = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(sortLabelRes),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Icon(
+                        painter = painterResource(R.drawable.ic_chevron_right),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.size(16.dp).rotate(90f)
+                    )
+                }
+            }
+        }
         LazyColumn(
             modifier = Modifier
                 .weight(1f)
@@ -118,7 +191,7 @@ internal fun TastePerformanceListScreen(
                     )
                 }
             } else {
-                items(filteredPerformances, key = { it.id }) { performance ->
+                items(sortedPerformances, key = { it.id }) { performance ->
                     TastePerformanceRow(
                         performance = performance,
                         onClick = { onPerformanceClick(performance.id) },
@@ -138,57 +211,106 @@ internal fun TastePerformanceListScreen(
         )
     }
 
-    if (pendingRemovedId != null) {
-        AlertDialog(
-            onDismissRequest = undoRemoval,
-            title = {
+    if (showSortSheet) {
+        ModalBottomSheet(
+            onDismissRequest = { showSortSheet = false },
+            sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp)
+                    .padding(bottom = 32.dp)
+            ) {
                 Text(
-                    text = stringResource(R.string.taste_remove_title),
-                    color = MaterialTheme.colorScheme.onSurface,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
+                    text = stringResource(R.string.taste_sort_criterion),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.85f)
                 )
-            },
-            text = {
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    Text(
-                        text = stringResource(R.string.taste_remove_message),
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Spacer(Modifier.height(20.dp))
-                    HorizontalDivider(
-                        color = MaterialTheme.colorScheme.outline.copy(alpha = 0.2f)
+                Spacer(Modifier.height(8.dp))
+                listOf(
+                    TasteSortCriterion.ADDED_DATE to R.string.taste_sort_added_date,
+                    TasteSortCriterion.COMPOSER to R.string.taste_sort_composer,
+                    TasteSortCriterion.WORK_TITLE to R.string.taste_sort_work
+                ).forEach { (criterion, labelRes) ->
+                    TasteSortOption(
+                        label = stringResource(labelRes),
+                        selected = sortCriterion == criterion,
+                        onClick = {
+                            if (sortCriterion != criterion) {
+                                sortCriterion = criterion
+                                sortDirection = if (criterion == TasteSortCriterion.ADDED_DATE) {
+                                    TasteSortDirection.DESCENDING
+                                } else TasteSortDirection.ASCENDING
+                            }
+                        }
                     )
                 }
-            },
-            confirmButton = {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(24.dp, Alignment.CenterHorizontally),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    TextButton(onClick = undoRemoval) {
-                        Text(
-                            text = stringResource(R.string.taste_remove_undo),
-                            style = MaterialTheme.typography.labelLarge,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                    }
-                    TextButton(onClick = { pendingRemovedId = null }) {
-                        Text(
-                            text = stringResource(R.string.taste_remove_confirm),
-                            style = MaterialTheme.typography.labelLarge,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    }
+                Spacer(Modifier.height(24.dp))
+                HorizontalDivider(
+                    thickness = 1.dp,
+                    color = MaterialTheme.colorScheme.outline.copy(alpha = 0.2f)
+                )
+                Spacer(Modifier.height(24.dp))
+                Text(
+                    text = stringResource(R.string.taste_sort_direction),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.85f)
+                )
+                Spacer(Modifier.height(8.dp))
+                val directions = if (sortCriterion == TasteSortCriterion.ADDED_DATE) {
+                    listOf(
+                        TasteSortDirection.DESCENDING to R.string.taste_sort_recent,
+                        TasteSortDirection.ASCENDING to R.string.taste_sort_oldest
+                    )
+                } else {
+                    listOf(
+                        TasteSortDirection.ASCENDING to R.string.taste_sort_ascending,
+                        TasteSortDirection.DESCENDING to R.string.taste_sort_descending
+                    )
                 }
-            },
-            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-            shape = RoundedCornerShape(20.dp)
+                directions.forEach { (direction, labelRes) ->
+                    TasteSortOption(
+                        label = stringResource(labelRes),
+                        selected = sortDirection == direction,
+                        onClick = {
+                            sortDirection = direction
+                            showSortSheet = false
+                        }
+                    )
+                }
+            }
+        }
+    }
+
+    if (pendingRemovedId != null) {
+        FavoriteRemovalNotice(
+            onUndo = undoRemoval,
+            onConfirm = { pendingRemovedId = null }
         )
+    }
+}
+
+@Composable
+private fun TasteSortOption(label: String, selected: Boolean, onClick: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(min = 48.dp)
+            .clickable(onClick = onClick),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyLarge,
+            color = if (selected) MaterialTheme.colorScheme.primary
+            else MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.weight(1f)
+        )
+        if (selected) {
+            Text(text = "✓", color = MaterialTheme.colorScheme.primary)
+        }
     }
 }
 

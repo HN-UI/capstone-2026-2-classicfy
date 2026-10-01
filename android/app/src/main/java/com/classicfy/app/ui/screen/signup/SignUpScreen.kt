@@ -26,7 +26,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -50,15 +49,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.classicfy.app.R
+import com.classicfy.app.ui.theme.ClassicFyPrimaryButton
 import com.classicfy.app.ui.theme.ClassicFyTheme
 import com.classicfy.app.ui.validation.isMockIdTaken
 import com.classicfy.app.ui.validation.MIN_PASSWORD_LENGTH
@@ -117,8 +115,6 @@ fun SignUpScreen(
                 Text(
                     text = stringResource(R.string.sign_up_title),
                     style = MaterialTheme.typography.headlineLarge,
-                    fontSize = 32.sp,
-                    fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground
                 )
                 Image(
@@ -208,7 +204,7 @@ fun SignUpScreen(
                     )
                 )
                 Spacer(Modifier.height(buttonTopSpacing))
-                Button(
+                ClassicFyPrimaryButton(
                     onClick = {
                         keyboardController?.hide()
                         focusManager.clearFocus()
@@ -222,9 +218,7 @@ fun SignUpScreen(
                 ) {
                     Text(
                         text = stringResource(R.string.sign_up_button),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
+                        style = MaterialTheme.typography.labelLarge
                     )
                 }
                 Spacer(Modifier.height(32.dp))
@@ -257,9 +251,7 @@ private fun SignUpInput(
         Text(
             text = label,
             color = MaterialTheme.colorScheme.onBackground,
-            style = MaterialTheme.typography.bodyLarge,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Medium
+            style = MaterialTheme.typography.titleMedium
         )
         Column {
             Row(
@@ -279,8 +271,7 @@ private fun SignUpInput(
                     keyboardOptions = keyboardOptions,
                     keyboardActions = keyboardActions,
                     textStyle = MaterialTheme.typography.bodyLarge.copy(
-                        color = MaterialTheme.colorScheme.onSurface,
-                        fontSize = 17.sp
+                        color = MaterialTheme.colorScheme.onSurface
                     ),
                     cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
                     decorationBox = { innerTextField ->
@@ -292,7 +283,6 @@ private fun SignUpInput(
                                 Text(
                                     text = placeholder,
                                     style = MaterialTheme.typography.bodyLarge,
-                                    fontSize = 17.sp,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
@@ -310,8 +300,7 @@ private fun SignUpInput(
             if (statusMessage != null) {
                 Text(
                     text = statusMessage,
-                    style = MaterialTheme.typography.bodySmall,
-                    fontSize = 14.sp,
+                    style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.padding(start = 2.dp, top = 4.dp)
                 )

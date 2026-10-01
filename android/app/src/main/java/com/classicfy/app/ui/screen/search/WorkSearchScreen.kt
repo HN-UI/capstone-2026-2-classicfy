@@ -35,13 +35,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
@@ -66,6 +66,8 @@ fun WorkSearchScreen(
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val submitSearch = {
+        keyboardController?.hide()
+        focusManager.clearFocus()
         query = query.copy(selection = TextRange(query.text.length))
         submittedQuery = query.text.trim().takeIf { it.isNotEmpty() }
     }
@@ -76,7 +78,21 @@ fun WorkSearchScreen(
                 work.title.contains(searchTerm, ignoreCase = true)
         }
     }
-    val isInitial = query.text.isBlank() && submittedQuery == null
+    val suggestions = remember(query.text) {
+        val term = query.text.trim()
+        if (term.isEmpty()) emptyList() else mockWorks
+            .flatMap { work -> listOf(work.composer, work.title) }
+            .distinctBy { it.lowercase() }
+            .filter { it.contains(term, ignoreCase = true) }
+            .sortedBy { suggestion ->
+                when {
+                    suggestion.equals(term, ignoreCase = true) -> 0
+                    suggestion.startsWith(term, ignoreCase = true) -> 1
+                    else -> 2
+                }
+            }
+            .take(6)
+    }
     val isTyping = !query.text.isBlank() && submittedQuery == null
     val hasSubmittedResults = submittedQuery != null && matchingWorks.isNotEmpty()
 
@@ -115,7 +131,6 @@ fun WorkSearchScreen(
                 Text(
                     text = stringResource(R.string.work_search_title),
                     style = MaterialTheme.typography.headlineLarge,
-                    fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.padding(start = 24.dp)
                 )
@@ -136,12 +151,14 @@ fun WorkSearchScreen(
                 onSearch = submitSearch,
                 modifier = Modifier.fillMaxWidth()
             )
-            if (!isInitial) {
+            if (isTyping || submittedQuery != null) {
                 Spacer(Modifier.height(28.dp))
                 Text(
-                    text = stringResource(R.string.work_search_results_title),
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Medium,
+                    text = stringResource(
+                        if (isTyping) R.string.work_search_suggestions_title
+                        else R.string.work_search_results_title
+                    ),
+                    style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onBackground
                 )
             }
@@ -154,7 +171,7 @@ fun WorkSearchScreen(
             contentPadding = PaddingValues(horizontal = 24.dp, vertical = 16.dp)
         ) {
             if (isTyping) {
-                if (matchingWorks.isEmpty()) {
+                if (suggestions.isEmpty()) {
                     item {
                         Text(
                             text = stringResource(R.string.work_search_no_suggestions),
@@ -167,16 +184,17 @@ fun WorkSearchScreen(
                         )
                     }
                 } else {
-                    items(matchingWorks.take(3), key = { it.id }) { work ->
-                        WorkSearchRow(
-                            work = work,
-                            isSuggestion = true,
+                    items(suggestions, key = { it }) { suggestion ->
+                        WorkSuggestionRow(
+                            suggestion = suggestion,
                             onClick = {
+                                keyboardController?.hide()
+                                focusManager.clearFocus()
                                 query = TextFieldValue(
-                                    text = work.title,
-                                    selection = TextRange(work.title.length)
+                                    text = suggestion,
+                                    selection = TextRange(suggestion.length)
                                 )
-                                submittedQuery = work.title
+                                submittedQuery = suggestion
                             }
                         )
                     }
@@ -185,7 +203,6 @@ fun WorkSearchScreen(
                 items(matchingWorks, key = { it.id }) { work ->
                     WorkSearchRow(
                         work = work,
-                        isSuggestion = false,
                         onClick = {
                             query = query.copy(selection = TextRange(query.text.length))
                             onWorkClick(work.id)
@@ -204,7 +221,6 @@ fun WorkSearchScreen(
                         Text(
                             text = stringResource(R.string.work_search_no_results_title),
                             style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onBackground
                         )
                         Text(
@@ -281,9 +297,44 @@ private fun WorkSearchField(
 }
 
 @Composable
+private fun WorkSuggestionRow(
+    suggestion: String,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(min = 52.dp)
+            .clickable(onClick = onClick),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.ic_search),
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.size(18.dp)
+        )
+        Text(
+            text = suggestion,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurface,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(1f)
+        )
+        Icon(
+            painter = painterResource(R.drawable.ic_arrow_back),
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.size(16.dp).rotate(45f)
+        )
+    }
+}
+
+@Composable
 private fun WorkSearchRow(
     work: Work,
-    isSuggestion: Boolean,
     onClick: () -> Unit
 ) {
     Row(
@@ -294,40 +345,20 @@ private fun WorkSearchRow(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(
-            painter = painterResource(
-                if (isSuggestion) R.drawable.ic_search else R.drawable.ic_music_note
-            ),
-            contentDescription = null,
-            tint = if (isSuggestion) MaterialTheme.colorScheme.onSurfaceVariant
-            else MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.size(22.dp)
-        )
         Text(
             text = "${work.composer}: ${work.title}",
-            style = if (isSuggestion) MaterialTheme.typography.bodyLarge
-            else MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurface,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.weight(1f)
         )
-        if (isSuggestion) {
-            Text(
-                text = "↖",
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
-                textAlign = TextAlign.Center,
-                modifier = Modifier.width(20.dp)
-            )
-        } else {
-            Icon(
-                painter = painterResource(R.drawable.ic_chevron_right),
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.size(20.dp)
-            )
-        }
+        Icon(
+            painter = painterResource(R.drawable.ic_chevron_right),
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.size(20.dp)
+        )
     }
     HorizontalDivider(
         thickness = 1.dp,

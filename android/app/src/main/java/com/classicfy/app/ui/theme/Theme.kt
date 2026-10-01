@@ -5,16 +5,16 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 
 private val ClassicFyColorScheme = darkColorScheme(
-    primary = ClassicFyAccent,
+    primary = ClassicFyActiveAccent,
     onPrimary = ClassicFyOnAccent,
     primaryContainer = ClassicFySurfaceVariant,
     onPrimaryContainer = ClassicFyTextPrimary,
-    inversePrimary = ClassicFyAccent,
-    secondary = ClassicFyAccent,
+    inversePrimary = ClassicFyActiveAccent,
+    secondary = ClassicFyActiveAccent,
     onSecondary = ClassicFyOnAccent,
     secondaryContainer = ClassicFySurfaceVariant,
     onSecondaryContainer = ClassicFyTextPrimary,
-    tertiary = ClassicFyAccent,
+    tertiary = ClassicFyActiveAccent,
     onTertiary = ClassicFyOnAccent,
     tertiaryContainer = ClassicFySurfaceVariant,
     onTertiaryContainer = ClassicFyTextPrimary,
@@ -24,7 +24,7 @@ private val ClassicFyColorScheme = darkColorScheme(
     onSurface = ClassicFyTextPrimary,
     surfaceVariant = ClassicFySurfaceVariant,
     onSurfaceVariant = ClassicFyTextSecondary,
-    surfaceTint = ClassicFyAccent,
+    surfaceTint = ClassicFyActiveAccent,
     outline = ClassicFyTextSecondary
 )
 

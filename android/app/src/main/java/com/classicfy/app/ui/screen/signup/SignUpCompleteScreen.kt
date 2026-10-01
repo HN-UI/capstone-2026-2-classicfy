@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.classicfy.app.R
+import com.classicfy.app.ui.theme.ClassicFyPrimaryButton
 import com.classicfy.app.ui.theme.ClassicFyTheme
 
 @Composable
@@ -74,7 +74,7 @@ fun SignUpCompleteScreen(
                 textAlign = TextAlign.Center
             )
             Spacer(Modifier.height(56.dp))
-            Button(
+            ClassicFyPrimaryButton(
                 onClick = onStartClick,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -83,9 +83,7 @@ fun SignUpCompleteScreen(
             ) {
                 Text(
                     text = stringResource(R.string.sign_up_complete_start),
-                    style = MaterialTheme.typography.titleMedium,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
+                    style = MaterialTheme.typography.labelLarge
                 )
             }
         }

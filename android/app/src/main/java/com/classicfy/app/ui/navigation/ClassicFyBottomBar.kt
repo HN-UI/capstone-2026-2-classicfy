@@ -66,7 +66,9 @@ fun ClassicFyBottomBar(
                 icon = {
                     Icon(painterResource(R.drawable.ic_search), contentDescription = null)
                 },
-                label = { Text(stringResource(R.string.bottom_search)) },
+                label = {
+                    Text(stringResource(R.string.bottom_search), style = MaterialTheme.typography.labelMedium)
+                },
                 colors = itemColors
             )
             NavigationBarItem(
@@ -76,7 +78,9 @@ fun ClassicFyBottomBar(
                 icon = {
                     Icon(painterResource(R.drawable.ic_taste), contentDescription = null)
                 },
-                label = { Text(stringResource(R.string.bottom_taste)) },
+                label = {
+                    Text(stringResource(R.string.bottom_taste), style = MaterialTheme.typography.labelMedium)
+                },
                 colors = itemColors
             )
             NavigationBarItem(
@@ -86,7 +90,9 @@ fun ClassicFyBottomBar(
                 icon = {
                     Icon(painterResource(R.drawable.ic_person), contentDescription = null)
                 },
-                label = { Text(stringResource(R.string.bottom_my)) },
+                label = {
+                    Text(stringResource(R.string.bottom_my), style = MaterialTheme.typography.labelMedium)
+                },
                 colors = itemColors
             )
         }

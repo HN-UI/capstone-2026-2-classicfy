@@ -26,7 +26,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -51,6 +50,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.classicfy.app.R
+import com.classicfy.app.ui.theme.ClassicFyPrimaryButton
 
 private data class Performance(
     val id: String,
@@ -134,7 +134,7 @@ fun PreferenceScreen(
             }
         }
 
-        Button(
+        ClassicFyPrimaryButton(
             onClick = onAnalyzeClick,
             enabled = selectedIds.size >= 3,
             shape = RoundedCornerShape(16.dp),
@@ -145,8 +145,7 @@ fun PreferenceScreen(
         ) {
             Text(
                 text = stringResource(R.string.preference_analyze_button),
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
+                style = MaterialTheme.typography.labelLarge
             )
         }
     }
@@ -166,7 +165,6 @@ private fun PreferenceHeader(
         Text(
             text = stringResource(R.string.preference_title),
             style = MaterialTheme.typography.headlineLarge,
-            fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground
         )
         Spacer(Modifier.height(28.dp))
@@ -236,7 +234,6 @@ private fun PreferenceHeader(
         Text(
             text = stringResource(R.string.preference_selection_count, selectedCount),
             style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.SemiBold,
             color = MaterialTheme.colorScheme.onBackground
         )
         Spacer(Modifier.height(8.dp))

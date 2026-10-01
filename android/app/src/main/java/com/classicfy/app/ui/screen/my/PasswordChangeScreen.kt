@@ -16,7 +16,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -37,15 +36,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.classicfy.app.R
+import com.classicfy.app.ui.theme.ClassicFyPrimaryButton
 import com.classicfy.app.ui.theme.ClassicFyTheme
 import com.classicfy.app.ui.validation.MIN_PASSWORD_LENGTH
 
@@ -110,8 +108,7 @@ fun PasswordChangeScreen(
                         MIN_PASSWORD_LENGTH
                     ),
                     color = MaterialTheme.colorScheme.primary,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium,
+                    style = MaterialTheme.typography.labelSmall,
                     modifier = Modifier.padding(start = 12.dp, top = 4.dp)
                 )
             }
@@ -139,14 +136,13 @@ fun PasswordChangeScreen(
                             else R.string.password_change_mismatch
                         ),
                         color = MaterialTheme.colorScheme.primary,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Medium,
+                        style = MaterialTheme.typography.labelSmall,
                         modifier = Modifier.padding(start = 12.dp, top = 4.dp)
                     )
                 }
             }
             Spacer(Modifier.height(32.dp))
-            Button(
+            ClassicFyPrimaryButton(
                 onClick = { onSaveClick(newPassword) },
                 enabled = canSave,
                 modifier = Modifier
@@ -156,8 +152,7 @@ fun PasswordChangeScreen(
             ) {
                 Text(
                     text = stringResource(R.string.my_save),
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
+                    style = MaterialTheme.typography.labelLarge
                 )
             }
             Spacer(Modifier.height(32.dp))
@@ -179,7 +174,6 @@ private fun PasswordChangeField(
     Text(
         text = label,
         style = MaterialTheme.typography.titleMedium,
-        fontWeight = FontWeight.Medium,
         color = MaterialTheme.colorScheme.onBackground,
         modifier = Modifier.padding(start = 12.dp)
     )
@@ -191,8 +185,8 @@ private fun PasswordChangeField(
             .fillMaxWidth()
             .height(58.dp)
             .semantics { contentDescription = label },
-        placeholder = { Text(placeholder, fontSize = 16.sp) },
-        textStyle = MaterialTheme.typography.bodyLarge.copy(fontSize = 16.sp),
+        placeholder = { Text(placeholder, style = MaterialTheme.typography.bodyLarge) },
+        textStyle = MaterialTheme.typography.bodyLarge,
         singleLine = true,
         shape = RoundedCornerShape(14.dp),
         visualTransformation = if (visible) VisualTransformation.None

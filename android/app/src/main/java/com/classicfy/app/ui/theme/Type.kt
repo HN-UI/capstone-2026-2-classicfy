@@ -54,11 +54,31 @@ val ClassicFyTypography = Typography(
     displayLarge = MaterialDefaults.displayLarge.copy(fontFamily = ActiveFontFamily),
     displayMedium = MaterialDefaults.displayMedium.copy(fontFamily = ActiveFontFamily),
     displaySmall = MaterialDefaults.displaySmall.copy(fontFamily = ActiveFontFamily),
-    headlineLarge = MaterialDefaults.headlineLarge.copy(fontFamily = ActiveFontFamily),
+    // Screen title
+    headlineLarge = MaterialDefaults.headlineLarge.copy(
+        fontFamily = ActiveFontFamily,
+        fontSize = 28.sp,
+        fontWeight = FontWeight.Bold,
+        lineHeight = 34.sp,
+        letterSpacing = 0.sp
+    ),
     headlineMedium = MaterialDefaults.headlineMedium.copy(fontFamily = ActiveFontFamily),
     headlineSmall = MaterialDefaults.headlineSmall.copy(fontFamily = ActiveFontFamily),
-    titleLarge = MaterialDefaults.titleLarge.copy(fontFamily = ActiveFontFamily),
-    titleMedium = MaterialDefaults.titleMedium.copy(fontFamily = ActiveFontFamily),
+    // Section title and primary list item
+    titleLarge = MaterialDefaults.titleLarge.copy(
+        fontFamily = ActiveFontFamily,
+        fontSize = 20.sp,
+        fontWeight = FontWeight.Bold,
+        lineHeight = 26.sp,
+        letterSpacing = 0.sp
+    ),
+    titleMedium = MaterialDefaults.titleMedium.copy(
+        fontFamily = ActiveFontFamily,
+        fontSize = 17.sp,
+        fontWeight = FontWeight.SemiBold,
+        lineHeight = 24.sp,
+        letterSpacing = 0.sp
+    ),
     titleSmall = MaterialDefaults.titleSmall.copy(fontFamily = ActiveFontFamily),
     bodyLarge = TextStyle(
         fontFamily = ActiveFontFamily,
@@ -67,9 +87,40 @@ val ClassicFyTypography = Typography(
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     ),
-    bodyMedium = MaterialDefaults.bodyMedium.copy(fontFamily = ActiveFontFamily),
-    bodySmall = MaterialDefaults.bodySmall.copy(fontFamily = ActiveFontFamily),
-    labelLarge = MaterialDefaults.labelLarge.copy(fontFamily = ActiveFontFamily),
-    labelMedium = MaterialDefaults.labelMedium.copy(fontFamily = ActiveFontFamily),
-    labelSmall = MaterialDefaults.labelSmall.copy(fontFamily = ActiveFontFamily)
+    bodyMedium = MaterialDefaults.bodyMedium.copy(
+        fontFamily = ActiveFontFamily,
+        fontSize = 14.sp,
+        fontWeight = FontWeight.Normal,
+        lineHeight = 20.sp,
+        letterSpacing = 0.sp
+    ),
+    bodySmall = MaterialDefaults.bodySmall.copy(
+        fontFamily = ActiveFontFamily,
+        fontSize = 14.sp,
+        fontWeight = FontWeight.Normal,
+        lineHeight = 20.sp,
+        letterSpacing = 0.sp
+    ),
+    // Major actions, navigation captions, and validation messages
+    labelLarge = MaterialDefaults.labelLarge.copy(
+        fontFamily = ActiveFontFamily,
+        fontSize = 16.sp,
+        fontWeight = FontWeight.SemiBold,
+        lineHeight = 22.sp,
+        letterSpacing = 0.sp
+    ),
+    labelMedium = MaterialDefaults.labelMedium.copy(
+        fontFamily = ActiveFontFamily,
+        fontSize = 12.sp,
+        fontWeight = FontWeight.Medium,
+        lineHeight = 16.sp,
+        letterSpacing = 0.sp
+    ),
+    labelSmall = MaterialDefaults.labelSmall.copy(
+        fontFamily = ActiveFontFamily,
+        fontSize = 14.sp,
+        fontWeight = FontWeight.Medium,
+        lineHeight = 20.sp,
+        letterSpacing = 0.sp
+    )
 )

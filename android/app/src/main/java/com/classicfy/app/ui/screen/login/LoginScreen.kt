@@ -25,7 +25,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -55,7 +54,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.input.ImeAction
@@ -64,8 +62,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.classicfy.app.R
+import com.classicfy.app.ui.theme.ClassicFyPrimaryButton
 import com.classicfy.app.ui.theme.ClassicFyTheme
 
 private const val MOCK_LOGIN_ID = "classicfy"
@@ -223,13 +221,12 @@ fun LoginScreen(
                                 .fillMaxWidth()
                                 .padding(top = 8.dp),
                             color = MaterialTheme.colorScheme.primary,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Medium,
+                            style = MaterialTheme.typography.labelSmall,
                             textAlign = TextAlign.Center
                         )
                     }
                     Spacer(Modifier.height(44.dp))
-                    Button(
+                    ClassicFyPrimaryButton(
                         onClick = submit,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -238,9 +235,7 @@ fun LoginScreen(
                     ) {
                         Text(
                             text = stringResource(R.string.login_button),
-                            style = MaterialTheme.typography.titleMedium,
-                            fontSize = 19.sp,
-                            fontWeight = FontWeight.SemiBold
+                            style = MaterialTheme.typography.labelLarge
                         )
                     }
                 }
@@ -253,7 +248,7 @@ fun LoginScreen(
                     Text(
                         text = stringResource(R.string.login_sign_up),
                         color = MaterialTheme.colorScheme.onBackground,
-                        fontSize = 16.sp,
+                        style = MaterialTheme.typography.bodyLarge,
                         textDecoration = TextDecoration.Underline
                     )
                 }
@@ -280,9 +275,7 @@ private fun LoginInput(
         Text(
             text = label,
             color = MaterialTheme.colorScheme.onBackground,
-            style = MaterialTheme.typography.bodyLarge,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Medium
+            style = MaterialTheme.typography.titleMedium
         )
         Spacer(Modifier.height(8.dp))
         TextField(
@@ -292,8 +285,8 @@ private fun LoginInput(
                 .fillMaxWidth()
                 .height(58.dp)
                 .semantics { contentDescription = label },
-            placeholder = { Text(placeholder, fontSize = 16.sp) },
-            textStyle = MaterialTheme.typography.bodyLarge.copy(fontSize = 16.sp),
+            placeholder = { Text(placeholder, style = MaterialTheme.typography.bodyLarge) },
+            textStyle = MaterialTheme.typography.bodyLarge,
             singleLine = true,
             shape = RoundedCornerShape(14.dp),
             visualTransformation = visualTransformation,
@@ -316,8 +309,7 @@ private fun LoginInput(
                 text = errorText,
                 modifier = Modifier.padding(start = 12.dp, top = 4.dp),
                 color = MaterialTheme.colorScheme.primary,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Medium
+                style = MaterialTheme.typography.labelSmall
             )
         }
     }

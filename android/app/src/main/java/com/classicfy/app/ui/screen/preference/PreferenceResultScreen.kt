@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -27,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.classicfy.app.R
+import com.classicfy.app.ui.theme.ClassicFyPrimaryButton
 
 private data class PreferenceReportItem(
     val feature: String,
@@ -64,7 +64,6 @@ fun PreferenceResultScreen(
             Text(
                 text = stringResource(R.string.preference_title),
                 style = MaterialTheme.typography.headlineLarge,
-                fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground
             )
             Spacer(Modifier.height(28.dp))
@@ -93,7 +92,6 @@ fun PreferenceResultScreen(
             Text(
                 text = stringResource(R.string.preference_result_report_title),
                 style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground
             )
             Spacer(Modifier.height(12.dp))
@@ -102,7 +100,7 @@ fun PreferenceResultScreen(
             }
         }
 
-        Button(
+        ClassicFyPrimaryButton(
             onClick = onSearchClick,
             shape = RoundedCornerShape(16.dp),
             modifier = Modifier
@@ -112,8 +110,7 @@ fun PreferenceResultScreen(
         ) {
             Text(
                 text = stringResource(R.string.preference_result_search_button),
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
+                style = MaterialTheme.typography.labelLarge
             )
         }
     }

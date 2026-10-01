@@ -17,7 +17,11 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -26,6 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.classicfy.app.R
+import com.classicfy.app.ui.component.FavoriteRemovalNotice
 import com.classicfy.app.ui.navigation.ClassicFyBottomBar
 import com.classicfy.app.ui.navigation.ClassicFyBottomDestination
 
@@ -33,7 +38,9 @@ import com.classicfy.app.ui.navigation.ClassicFyBottomDestination
 fun PerformanceDetailScreen(
     performanceId: String,
     isFavorite: Boolean,
+    showUndoOnRemoval: Boolean,
     onFavoriteToggle: () -> Unit,
+    onRestoreFavorite: () -> Unit,
     onBackClick: () -> Unit,
     onSearchClick: () -> Unit,
     activeBottomDestination: ClassicFyBottomDestination,
@@ -43,6 +50,13 @@ fun PerformanceDetailScreen(
 ) {
     val performance = remember(performanceId) {
         requireNotNull(mockPerformanceById(performanceId))
+    }
+    var showRemovalNotice by rememberSaveable(performanceId, showUndoOnRemoval) {
+        mutableStateOf(false)
+    }
+    val undoRemoval = {
+        onRestoreFavorite()
+        showRemovalNotice = false
     }
 
     Column(
@@ -89,7 +103,12 @@ fun PerformanceDetailScreen(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
-                    IconButton(onClick = onFavoriteToggle) {
+                    IconButton(onClick = {
+                        onFavoriteToggle()
+                        if (isFavorite && showUndoOnRemoval) {
+                            showRemovalNotice = true
+                        }
+                    }) {
                         Icon(
                             painter = painterResource(
                                 if (isFavorite) R.drawable.ic_favorite_filled
@@ -132,6 +151,13 @@ fun PerformanceDetailScreen(
             onSearchClick = onSearchClick,
             onTasteClick = onTasteClick,
             onMyClick = onMyClick
+        )
+    }
+
+    if (showUndoOnRemoval && showRemovalNotice) {
+        FavoriteRemovalNotice(
+            onUndo = undoRemoval,
+            onConfirm = { showRemovalNotice = false }
         )
     }
 }

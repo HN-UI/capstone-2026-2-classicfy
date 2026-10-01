@@ -150,7 +150,6 @@ fun PerformanceSelectionScreen(
             Text(
                 text = stringResource(R.string.performance_selected_work),
                 style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground
             )
             Spacer(Modifier.height(12.dp))
@@ -163,8 +162,7 @@ fun PerformanceSelectionScreen(
             Spacer(Modifier.height(32.dp))
             Text(
                 text = stringResource(R.string.performance_recommendations),
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Medium,
+                style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onBackground
             )
         }
@@ -367,7 +365,6 @@ private fun PerformanceRow(
                 Text(
                     text = stringResource(R.string.performance_reason_rank, performance.rank),
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(Modifier.height(12.dp))

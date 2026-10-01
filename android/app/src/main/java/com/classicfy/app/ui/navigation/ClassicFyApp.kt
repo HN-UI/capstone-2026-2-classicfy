@@ -85,11 +85,23 @@ fun ClassicFyApp() {
     var favoritePerformanceIds by rememberSaveable {
         mutableStateOf(initialTastePerformanceIds)
     }
+    val initialFavoriteAddedAt = remember {
+        val now = System.currentTimeMillis()
+        initialTastePerformanceIds.mapIndexed { index, id ->
+            id to now - (initialTastePerformanceIds.size - index) * 1_000L
+        }.toMap()
+    }
+    var favoriteAddedAtById by rememberSaveable { mutableStateOf(initialFavoriteAddedAt) }
     val tastePerformances = mockTastePerformances(favoritePerformanceIds)
     val toggleFavorite: (String) -> Unit = { id ->
         favoritePerformanceIds = if (id in favoritePerformanceIds) {
             favoritePerformanceIds - id
         } else {
+            val addedAt = maxOf(
+                System.currentTimeMillis(),
+                (favoriteAddedAtById.values.maxOrNull() ?: 0L) + 1L
+            )
+            favoriteAddedAtById = favoriteAddedAtById + (id to addedAt)
             favoritePerformanceIds + id
         }
     }
@@ -227,6 +239,7 @@ fun ClassicFyApp() {
             composable(ClassicFyDestination.TASTE_PERFORMANCE_LIST) {
                 TastePerformanceListScreen(
                     performances = tastePerformances,
+                    addedAtById = favoriteAddedAtById,
                     onBackClick = { navController.popBackStack() },
                     onPerformanceClick = { performanceId ->
                         navController.navigate(ClassicFyDestination.performanceDetail(performanceId)) {
@@ -260,6 +273,7 @@ fun ClassicFyApp() {
                         savedNickname = initialNickname
                         savedId = initialId
                         favoritePerformanceIds = initialTastePerformanceIds
+                        favoriteAddedAtById = initialFavoriteAddedAt
                         navController.navigate(ClassicFyDestination.LOGIN) {
                             popUpTo(ClassicFyDestination.LOGIN) { inclusive = true }
                             launchSingleTop = true
@@ -296,7 +310,11 @@ fun ClassicFyApp() {
                 PerformanceDetailScreen(
                     performanceId = performanceId,
                     isFavorite = performanceId in favoritePerformanceIds,
+                    showUndoOnRemoval = openedFromTaste,
                     onFavoriteToggle = { toggleFavorite(performanceId) },
+                    onRestoreFavorite = {
+                        favoritePerformanceIds = favoritePerformanceIds + performanceId
+                    },
                     onBackClick = { navController.popBackStack() },
                     onSearchClick = openEmptyWorkSearch,
                     activeBottomDestination = if (openedFromTaste) {

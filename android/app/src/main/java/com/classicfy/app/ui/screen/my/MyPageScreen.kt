@@ -17,7 +17,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -33,10 +32,10 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.classicfy.app.R
+import com.classicfy.app.ui.theme.ClassicFyPrimaryButton
 import com.classicfy.app.ui.navigation.ClassicFyBottomBar
 import com.classicfy.app.ui.navigation.ClassicFyBottomDestination
 import com.classicfy.app.ui.validation.isMockIdTaken
@@ -90,7 +89,6 @@ fun MyPageScreen(
                 Text(
                     text = stringResource(R.string.my_page_title),
                     style = MaterialTheme.typography.headlineLarge,
-                    fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.padding(start = 24.dp)
                 )
@@ -112,7 +110,6 @@ fun MyPageScreen(
                 Text(
                     text = stringResource(R.string.my_nickname_label),
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.onBackground
                 )
                 Spacer(Modifier.height(12.dp))
@@ -128,7 +125,6 @@ fun MyPageScreen(
                 Text(
                     text = stringResource(R.string.my_id_label),
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.onBackground
                 )
                 Spacer(Modifier.height(12.dp))
@@ -153,13 +149,13 @@ fun MyPageScreen(
                                 R.string.my_id_available
                             }
                         ),
-                        style = MaterialTheme.typography.labelMedium,
+                        style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.padding(start = 16.dp)
                     )
                 }
                 Spacer(Modifier.height(56.dp))
-                Button(
+                ClassicFyPrimaryButton(
                     onClick = {
                         focusManager.clearFocus()
                         keyboardController?.hide()
@@ -173,8 +169,7 @@ fun MyPageScreen(
                 ) {
                     Text(
                         text = stringResource(R.string.my_save),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
+                        style = MaterialTheme.typography.labelLarge
                     )
                 }
                 Spacer(Modifier.height(8.dp))
