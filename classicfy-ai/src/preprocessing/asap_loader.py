@@ -1,6 +1,7 @@
 """ASAP의 악보-연주 짝과 정렬 정보를 읽는다."""
 
 import csv
+import filecmp
 import json
 from collections.abc import Iterator
 from dataclasses import dataclass
@@ -30,6 +31,16 @@ class AsapSample:
     performance_downbeats: list[float]
     score_time_signatures: dict[str, list[str | int]]
     performance_time_signatures: dict[str, list[str | int]]
+    # (n)ASAP 루트를 함께 준 경우에만 채운다. 정렬 파일이 없는 연주는 None이다.
+    note_alignment_path: Path | None = None
+    robust_note_alignment: bool | None = None
+
+
+@dataclass(frozen=True)
+class _NoteAlignmentEntry:
+    key: str
+    match_path: Path | None
+    robust: bool | None
 
 
 def _require_file(path: Path) -> None:
@@ -92,10 +103,97 @@ def _read_time_signatures(
     return {time: signature.copy() for time, signature in value.items()}
 
 
+def _require_directory(value: str | Path) -> Path:
+    path = Path(value).expanduser().resolve()
+    if not path.exists():
+        raise FileNotFoundError(path)
+    if not path.is_dir():
+        raise ValueError(f"Not a directory: {path}")
+    return path
+
+
+def _parse_robust_flag(value: str | None, performance_key: str) -> bool | None:
+    text = (value or "").strip()
+    if not text:
+        return None
+    try:
+        number = float(text)
+    except ValueError as exc:
+        raise ValueError(f"Invalid robust_note_alignment for {performance_key}") from exc
+    if number not in (0.0, 1.0):
+        raise ValueError(f"Invalid robust_note_alignment for {performance_key}")
+    return number == 1.0
+
+
+def _read_note_alignment_entries(root: Path) -> dict[str, _NoteAlignmentEntry]:
+    """(n)ASAP metadata.csv에서 연주별 match 파일과 robust 표시를 읽는다."""
+    metadata_path = root / "metadata.csv"
+    _require_file(metadata_path)
+    entries: dict[str, _NoteAlignmentEntry] = {}
+    with metadata_path.open(encoding="utf-8-sig", newline="") as metadata_file:
+        reader = csv.DictReader(metadata_file)
+        if not {"midi_performance", "match_file"}.issubset(reader.fieldnames or []):
+            raise ValueError(f"Missing note alignment columns in {metadata_path}")
+        for row in reader:
+            key = row["midi_performance"]
+            if not key or key in entries:
+                raise ValueError(f"Missing or duplicate performance key in {metadata_path}")
+
+            match_path = None
+            if row["match_file"]:
+                relative_path = Path(row["match_file"])
+                candidate = (root / relative_path).resolve()
+                if relative_path.is_absolute() or not candidate.is_relative_to(root):
+                    raise ValueError(f"Match path is outside (n)ASAP root: {row['match_file']}")
+                # metadata에는 있지만 저장소에 파일이 없는 연주가 있다(3개).
+                if candidate.is_file():
+                    match_path = candidate
+            entries[key] = _NoteAlignmentEntry(
+                key=key,
+                match_path=match_path,
+                robust=_parse_robust_flag(row.get("robust_note_alignment"), key),
+            )
+    return entries
+
+
+def _map_note_alignments(
+    rows: dict[str, dict[str, str]], entries: dict[str, _NoteAlignmentEntry]
+) -> dict[str, _NoteAlignmentEntry]:
+    """ASAP 연주 키를 (n)ASAP 정렬 항목에 대응시킨다.
+
+    (n)ASAP은 반복을 다르게 연주한 일부 연주를 ``<작품>_no_repeat``나
+    ``<작품>_extra_repeat`` 같은 형제 폴더로 옮겼다. 같은 키가 없으면, 파일 이름이 같고
+    폴더 이름이 ``<원래 폴더>_``로 시작하는 항목이 정확히 하나일 때만 대응시킨다.
+    """
+    by_parent_and_name: dict[tuple[str, str], list[_NoteAlignmentEntry]] = {}
+    for key, entry in entries.items():
+        path = Path(key)
+        by_parent_and_name.setdefault(
+            (path.parent.parent.as_posix(), path.name), []
+        ).append(entry)
+
+    mapping = {}
+    for key in rows:
+        if key in entries:
+            mapping[key] = entries[key]
+            continue
+        path = Path(key)
+        candidates = [
+            entry
+            for entry in by_parent_and_name.get((path.parent.parent.as_posix(), path.name), [])
+            if Path(entry.key).parent.name.startswith(f"{path.parent.name}_")
+        ]
+        if len(candidates) == 1:
+            mapping[key] = candidates[0]
+    return mapping
+
+
 class ASAPLoader:
     """메타데이터와 annotation을 한 번 읽고 샘플별 정보를 제공한다."""
 
-    def __init__(self, root: str | Path) -> None:
+    def __init__(
+        self, root: str | Path, note_alignment_root: str | Path | None = None
+    ) -> None:
         self.root = Path(root).expanduser().resolve()
         if not self.root.exists():
             raise FileNotFoundError(self.root)
@@ -126,6 +224,14 @@ class ASAPLoader:
             raise ValueError(f"Invalid ASAP annotations: {annotations_path}") from exc
         if not isinstance(self._annotations, dict):
             raise ValueError(f"Invalid ASAP annotations: {annotations_path}")
+
+        self.note_alignment_root: Path | None = None
+        self._note_alignments: dict[str, _NoteAlignmentEntry] = {}
+        if note_alignment_root is not None:
+            self.note_alignment_root = _require_directory(note_alignment_root)
+            self._note_alignments = _map_note_alignments(
+                self._rows, _read_note_alignment_entries(self.note_alignment_root)
+            )
 
     def _resolve_midi_path(self, value: str | None) -> Path:
         if not value:
@@ -168,13 +274,18 @@ class ASAPLoader:
         ):
             raise ValueError(f"Mismatched aligned beats for {performance_key}")
 
+        performance_path = self._resolve_midi_path(row["midi_performance"])
+        entry = self._note_alignments.get(performance_key)
+        if entry is not None:
+            self._check_same_performance(performance_path, entry)
+
         # ASAP의 박자표 값은 시각 문자열을 키로 하는 원본 형식을 유지한다.
         return AsapSample(
             performance_key=performance_key,
             composer=row.get("composer") or "",
             title=row.get("title") or "",
             score_path=self._resolve_midi_path(row["midi_score"]),
-            performance_path=self._resolve_midi_path(row["midi_performance"]),
+            performance_path=performance_path,
             aligned=aligned,
             score_beats=score_beats,
             performance_beats=performance_beats,
@@ -188,7 +299,18 @@ class ASAPLoader:
             performance_time_signatures=_read_time_signatures(
                 annotation, "perf_time_signatures", performance_key
             ),
+            note_alignment_path=entry.match_path if entry else None,
+            robust_note_alignment=entry.robust if entry else None,
         )
+
+    def _check_same_performance(self, performance_path: Path, entry: _NoteAlignmentEntry) -> None:
+        """(n)ASAP 쪽에도 연주 MIDI가 있으면 같은 파일인지 확인한다."""
+        assert self.note_alignment_root is not None
+        other_path = self.note_alignment_root / entry.key
+        if other_path.is_file() and not filecmp.cmp(performance_path, other_path, shallow=False):
+            raise ValueError(
+                f"Performance MIDI differs from (n)ASAP: {performance_path} != {other_path}"
+            )
 
     def iter_samples(self, aligned_only: bool = False) -> Iterator[AsapSample]:
         """메타데이터 순서로 샘플을 순회하며 필요하면 미정렬 샘플을 제외한다."""

@@ -1,0 +1,261 @@
+{
+  "performances": 1036,
+  "works": 234,
+  "robust_performances": 833,
+  "matched_notes": 3239711,
+  "deleted_notes": 202981,
+  "inserted_notes": 183351,
+  "timing_agreement_min": 0.9703,
+  "timing_agreement_mean": 0.99993,
+  "tempo_map_dropped_ratio": 0.01415,
+  "used_note_ratio": 0.9925,
+  "excluded_ratio": {
+    "grace": 0.0055,
+    "ornament": 0.0003,
+    "outside_tempo_map": 0.0016,
+    "non_positive": 0.0001
+  },
+  "beat_coverage_median": 0.9934,
+  "beat_coverage_min": 0.0,
+  "note_quantiles": {
+    "p5": -2.819,
+    "p25": -1.669,
+    "p50": -0.759,
+    "p75": -0.053,
+    "p95": 0.659
+  },
+  "note_share_below_-3": 0.0361,
+  "note_share_above_2": 0.0061,
+  "corr_note_value_vs_log2_expected_seconds": -0.348,
+  "pedal_at_release": {
+    "short_up": {
+      "notes": 1088730,
+      "median": -0.75
+    },
+    "short_down": {
+      "notes": 1701769,
+      "median": -0.737
+    },
+    "long_up": {
+      "notes": 85830,
+      "median": -0.254
+    },
+    "long_down": {
+      "notes": 339086,
+      "median": -0.957
+    }
+  },
+  "marking_medians": {
+    "accent": {
+      "notes": 10841,
+      "median": -1.152
+    },
+    "fermata": {
+      "notes": 430,
+      "median": -0.589
+    },
+    "none": {
+      "notes": 3110697,
+      "median": -0.722
+    },
+    "staccatissimo": {
+      "notes": 16192,
+      "median": -2.37
+    },
+    "staccato": {
+      "notes": 75299,
+      "median": -1.946
+    },
+    "tenuto": {
+      "notes": 1956,
+      "median": -1.046
+    }
+  },
+  "robust_vs_not": {
+    "False": {
+      "performances": 203,
+      "tempo_map_dropped_ratio": 0.02551,
+      "deletion_ratio": 0.0898,
+      "articulation_mean_median": -0.841
+    },
+    "True": {
+      "performances": 833,
+      "tempo_map_dropped_ratio": 0.01002,
+      "deletion_ratio": 0.0465,
+      "articulation_mean_median": -0.671
+    }
+  },
+  "summary_quantiles": {
+    "articulation_mean": {
+      "p5": -1.461,
+      "p25": -0.955,
+      "p50": -0.706,
+      "p75": -0.434,
+      "p95": -0.024
+    },
+    "articulation_range": {
+      "p5": 0.876,
+      "p25": 1.647,
+      "p50": 2.163,
+      "p75": 2.634,
+      "p95": 3.168
+    }
+  },
+  "composer_articulation_mean_median": {
+    "Prokofiev": -1.374,
+    "Liszt": -1.232,
+    "Balakirev": -1.186,
+    "Scriabin": -1.171,
+    "Debussy": -1.115,
+    "Ravel": -1.085,
+    "Glinka": -1.007,
+    "Rachmaninoff": -0.921,
+    "Haydn": -0.82,
+    "Mozart": -0.791,
+    "Schumann": -0.758,
+    "Schubert": -0.734,
+    "Beethoven": -0.704,
+    "Chopin": -0.594,
+    "Brahms": -0.352,
+    "Bach": -0.279
+  },
+  "eta_squared": {
+    "articulation_mean": {
+      "actual": 0.874,
+      "shuffled": 0.224
+    },
+    "articulation_range": {
+      "actual": 0.904,
+      "shuffled": 0.224
+    }
+  },
+  "same_work": {
+    "1": {
+      "works": 71,
+      "median_pair_correlation": 0.612,
+      "std_of_performance_means_median": 0.134
+    },
+    "8": {
+      "works": 71,
+      "median_pair_correlation": 0.778,
+      "std_of_performance_means_median": 0.134
+    }
+  },
+  "overall_std_of_performance_means": 0.417,
+  "flag_counts": {
+    "no_matches": 1,
+    "timing_mismatch": 12,
+    "many_dropped_tempo_points": 29,
+    "many_deletions": 7,
+    "many_excluded_notes": 14,
+    "low_beat_coverage": 8,
+    "global_outlier": 2,
+    "within_work_outlier": 10
+  },
+  "flagged_performances": 78,
+  "statistical_outliers": 12,
+  "statistical_outliers_by_composer": {
+    "Bach": 6,
+    "Beethoven": 2,
+    "Chopin": 2,
+    "Schubert": 2
+  },
+  "independent_check": [
+    {
+      "key": "Liszt/Ballade_2/Sham05.mid",
+      "tempo_map_points": 3689,
+      "reference_tempo_map_points": 3689,
+      "tempo_map_same_length": true,
+      "tempo_map_same_points": false,
+      "tempo_map_strictly_increasing": true,
+      "notes": 6784,
+      "same_note_set": true,
+      "note_max_abs_error": 9.778289289386066e-13,
+      "beat_max_abs_error": 2.9887203822909214e-13,
+      "beat_mask_mismatch": 0,
+      "lis_tie_changed_note_share": 0.02771,
+      "lis_tie_max_abs_change": 5.722
+    },
+    {
+      "key": "Chopin/Etudes_op_10/12/Staupe02.mid",
+      "tempo_map_points": 1294,
+      "reference_tempo_map_points": 1294,
+      "tempo_map_same_length": true,
+      "tempo_map_same_points": false,
+      "tempo_map_strictly_increasing": true,
+      "notes": 2041,
+      "same_note_set": true,
+      "note_max_abs_error": 0.0,
+      "beat_max_abs_error": 0.0,
+      "beat_mask_mismatch": 0,
+      "lis_tie_changed_note_share": 0.0245,
+      "lis_tie_max_abs_change": 4.044
+    },
+    {
+      "key": "Schubert/Piano_Sonatas/664-1/Lin07.mid",
+      "tempo_map_points": 1190,
+      "reference_tempo_map_points": 1190,
+      "tempo_map_same_length": true,
+      "tempo_map_same_points": false,
+      "tempo_map_strictly_increasing": true,
+      "notes": 2366,
+      "same_note_set": true,
+      "note_max_abs_error": 0.0,
+      "beat_max_abs_error": 0.0,
+      "beat_mask_mismatch": 0,
+      "lis_tie_changed_note_share": 0.00296,
+      "lis_tie_max_abs_change": 2.0
+    },
+    {
+      "key": "Chopin/Berceuse_op_57/Tario07M.mid",
+      "tempo_map_points": 946,
+      "reference_tempo_map_points": 946,
+      "tempo_map_same_length": true,
+      "tempo_map_same_points": false,
+      "tempo_map_strictly_increasing": true,
+      "notes": 1577,
+      "same_note_set": true,
+      "note_max_abs_error": 0.0,
+      "beat_max_abs_error": 0.0,
+      "beat_mask_mismatch": 0,
+      "lis_tie_changed_note_share": 0.00951,
+      "lis_tie_max_abs_change": 3.853
+    },
+    {
+      "key": "Bach/Prelude/bwv_885/Guo01M.mid",
+      "tempo_map_points": 339,
+      "reference_tempo_map_points": 339,
+      "tempo_map_same_length": true,
+      "tempo_map_same_points": true,
+      "tempo_map_strictly_increasing": true,
+      "notes": 491,
+      "same_note_set": true,
+      "note_max_abs_error": 0.0,
+      "beat_max_abs_error": 0.0,
+      "beat_mask_mismatch": 0,
+      "lis_tie_changed_note_share": 0.0,
+      "lis_tie_max_abs_change": 0.0
+    },
+    {
+      "key": "Bach/Fugue/bwv_865/Teo01M.mid",
+      "tempo_map_points": 1178,
+      "reference_tempo_map_points": 1178,
+      "tempo_map_same_length": true,
+      "tempo_map_same_points": false,
+      "tempo_map_strictly_increasing": true,
+      "notes": 2372,
+      "same_note_set": true,
+      "note_max_abs_error": 0.0,
+      "beat_max_abs_error": 0.0,
+      "beat_mask_mismatch": 0,
+      "lis_tie_changed_note_share": 0.01096,
+      "lis_tie_max_abs_change": 2.084
+    }
+  ],
+  "figure_works": [
+    "Liszt/Gran_Etudes_de_Paganini/2_La_campanella",
+    "Chopin/Etudes_op_10/8",
+    "Beethoven/Piano_Sonatas/21-1_no_repeat"
+  ],
+  "extraction_check_key": "Liszt/Gran_Etudes_de_Paganini/2_La_campanella/Kolessova07.mid"
+}

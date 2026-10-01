@@ -1,15 +1,15 @@
-# Classicfy AI features — Dynamics · Pedaling
+# Classicfy AI features — Dynamics · Pedaling · Articulation
 
-`features`는 `preprocessing`이 읽은 **연주 MIDI**와 ASAP의 **beat 정렬 정보**로, beat 단위 연주 해석 특징을 계산한다. 이 문서는 Dynamics(음량 표현)와 Pedaling(페달 표현) 두 특징을 **무엇을 기준으로, 어떤 방법으로** 계산했는지 처음부터 설명한다.
+`features`는 `preprocessing`이 읽은 **연주 MIDI**와 ASAP의 **beat 정렬 정보**로, beat 단위 연주 해석 특징을 계산한다. 이 문서는 Dynamics(음량 표현), Pedaling(페달 표현), Articulation(음을 끊고 잇는 방식) 세 특징을 **무엇을 기준으로, 어떤 방법으로** 계산했는지 처음부터 설명한다.
 
 ## 0. 입력이 무엇인지부터
 
-두 특징 모두 입력은 두 가지뿐이다.
+Dynamics와 Pedaling의 입력은 두 가지뿐이다. Articulation은 여기에 (n)ASAP의 note 단위 정렬을 더 쓴다(4절).
 
 1. **연주 MIDI** — `load_midi(performance_path)`가 돌려주는 `MidiData`. 드럼을 제외한 모든 파트의 음표(`notes`)와 서스테인 페달 이벤트(`pedals`, CC64)를 담고 있다.
 2. **연주 beat 시각** — ASAP annotation의 `performance_beats`. 사람이 직접(또는 정교한 정렬 도구로) 매긴, "이 시각이 몇 번째 박자다"라는 초 단위 시각 목록이다.
 
-**악보 MIDI는 쓰지 않는다.** ASAP의 악보 MIDI는 음표 velocity가 사실상 상수(예: 전부 64)라서 세기 정보가 없고, 음 하나하나를 연주와 대응시키는 note 단위 정렬도 이 데이터셋에 없다. 그래서 Dynamics와 Pedaling은 **연주 MIDI만으로** 계산한다. "악보 대비 얼마나 세게/많이 밟았는가"가 아니라 "이 연주 자체가 시간에 따라 얼마나 세게, 얼마나 페달을 썼는가"를 재는 특징이다.
+**Dynamics와 Pedaling은 악보를 쓰지 않는다.** ASAP의 악보 MIDI는 음표 velocity가 사실상 상수(예: 전부 64)라서 세기 정보가 없고, 원본 ASAP에는 음 하나하나를 연주와 대응시키는 note 단위 정렬도 없다. 그래서 Dynamics와 Pedaling은 **연주 MIDI만으로** 계산한다. "악보 대비 얼마나 세게/많이 밟았는가"가 아니라 "이 연주 자체가 시간에 따라 얼마나 세게, 얼마나 페달을 썼는가"를 재는 특징이다.
 
 **서스테인 페달(CC64)만 본다.** `load_midi`가 애초에 CC64 이벤트만 `PedalEvent`로 읽어 오기 때문에, 소스테누토(CC66)나 소프트 페달(CC67)은 이 특징에 반영되지 않는다.
 
@@ -39,7 +39,7 @@ beat 시각이 `[b0, b1, b2, ..., b_{B-1}]`처럼 B개 있으면, 그 **사이 �
 
 ### 공통 beat-level 결과 형식
 
-Tempo·Rubato·Dynamics·Pedaling의 beat-level 값은 모두 `BeatSequence`로 제공한다.
+Tempo·Rubato·Dynamics·Pedaling·Articulation의 beat-level 값은 모두 `BeatSequence`로 제공한다.
 
 ```python
 sequence.values  # (T,) NumPy 배열
@@ -135,7 +135,112 @@ depth = (100/127 × 0.4 + 40/127 × 0.4 + 120/127 × 0.2) / 1.0
 
 CC64 이벤트가 하나도 없는 연주는 (Bach 푸가 등 일부 곡에서 실제로 나타난다) 모든 구간의 `depth`, `down_ratio`, `changes`를 **0으로** 채운다. "측정 불가"가 아니라 "페달을 밟지 않았다"는 사실 자체이므로 `mask`는 `True`로 둔다(구간 폭이 0보다 크기만 하면 유효한 값으로 취급).
 
-## 4. 곡 전체 요약 특징
+## 4. Articulation — "악보 음가보다 건반을 얼마나 길게/짧게 눌렀는가"
+
+Articulation은 음과 음 사이를 **끊어서(스타카토) 치는지, 이어서(레가토) 치는지**를 나타낸다. 연주 MIDI만 보면 "이 음을 0.3초 눌렀다"는 것만 알 수 있다. 그 0.3초가 짧은 것인지는 **악보에 그 음이 몇 박으로 적혀 있는지, 그 순간 연주가 얼마나 빨랐는지**를 알아야 판단할 수 있다. 그래서 Articulation은 다섯 특징 중 유일하게 **음 하나하나를 악보 음과 짝지은 note 단위 정렬**을 입력으로 쓴다.
+
+### 4-1. 입력: (n)ASAP의 note 단위 정렬
+
+원본 ASAP에는 beat 단위 정렬만 있다. note 단위 정렬은 확장판인 **(n)ASAP**(`github.com/CPJKU/asap-dataset`, Peter et al., TISMIR 2023)이 연주마다 `{연주}.match` 파일로 제공한다. 불러오는 방법은 `src/preprocessing/README.md`에 정리되어 있다.
+
+```python
+loader = ASAPLoader(asap_root, note_alignment_root=nasap_root)
+sample = loader.get_sample("Bach/Fugue/bwv_846/Shi05M.mid")
+alignment = load_match(sample.note_alignment_path)   # NoteAlignment
+feature = extract_articulation(alignment, sample.performance_beats)
+```
+
+`NoteAlignment`은 세 목록으로 이루어진다.
+
+| 목록 | 뜻 | Articulation에서 |
+|---|---|---|
+| `matches` | 악보 음(`ScoreNote`)과 연주 음(`PerformedNote`)의 짝 | **이것만 쓴다** |
+| `deletions` | 연주에서 빠진 악보 음 | 연주 음이 없으므로 쓰지 않는다 |
+| `insertions` | 악보에 없는 연주 음(실수, 장식음의 나머지 음 등) | 악보 음가가 없으므로 쓰지 않는다 |
+
+한 쌍에서 쓰는 값은 다음과 같다.
+
+- 악보 음: `onset_beats`, `offset_beats`(악보 beat 단위 시작·끝 위치), `attributes`(`staccato`, `grace`, `trillmark` 등 악보 기호)
+- 연주 음: `onset`, `offset`(초). `offset`은 **건반을 뗀 시각(MIDI note-off)**이다. match 5.0 형식에는 페달로 늘어난 소리의 끝(`AdjOffset`)도 있지만 쓰지 않는다. 페달 효과는 Pedaling 특징이 따로 담당하므로, Articulation은 **손가락이 건반을 누르고 있던 시간**만 잰다.
+
+### 4-2. 정의
+
+음 하나의 articulation 값은 다음과 같다.
+
+```
+articulation = log2( 실제로 누른 시간 / 기대 길이 )
+
+실제로 누른 시간 = performed.offset − performed.onset                 (초)
+기대 길이       = T(score.offset_beats) − T(score.onset_beats)       (초)
+```
+
+`T`는 악보 위치(beat)를 그 연주의 실제 시각(초)으로 바꾸는 함수(tempo map)이고 4-3에서 만든다. 기대 길이는 "이 연주자가 실제로 연주한 빠르기에서, 악보에 적힌 음가가 차지하는 시간"이다.
+
+| 값 | 비율 | 뜻 |
+|---|---|---|
+| `+1` | 2배 | 음가의 두 배 동안 누름. 다음 음과 겹침(레가토, 손가락 페달) |
+| `0` | 1배 | 악보 음가만큼 정확히 누름 |
+| `−1` | 0.5배 | 음가의 절반만 누름 |
+| `−2` | 0.25배 | 음가의 1/4만 누름. 뚜렷한 스타카토 |
+
+**log2를 쓰는 이유**: 비율 그대로 쓰면 "두 배 길게"(2.0)와 "절반으로 짧게"(0.5)가 1.0에서 떨어진 거리가 다르다(+1.0과 −0.5). log2를 씌우면 +1과 −1로 대칭이 되어 평균·중앙값·거리 계산이 치우치지 않는다. Tempo 특징도 같은 이유로 log2 비율을 쓴다.
+
+### 4-3. 악보 위치 → 연주 시각: tempo map
+
+기대 길이를 구하려면 악보 beat를 초로 바꿔야 한다. 곡 전체의 평균 빠르기 하나로 바꾸면 rubato가 그대로 섞인다. 예를 들어 연주자가 ritardando로 그 박을 늘렸는데 손가락은 평소처럼 뗐다면, 평균 빠르기 기준으로는 "길게 눌렀다"로 잘못 잡힌다. 그래서 **그 연주 자체의 onset으로 음 위치마다 시각을 정한 tempo map**을 만든다(`build_tempo_map`).
+
+1. **꾸밈음을 뺀다.** 꾸밈음(`grace` 속성이거나 악보 길이 0)은 본음보다 앞당겨 치므로 그 위치의 시각을 대표하지 못한다.
+2. **같은 악보 위치의 음을 하나로 묶는다.** 화음은 손가락마다 수십 ms씩 어긋나므로(asynchrony), 그 위치 연주 onset들의 **중앙값**을 그 위치의 시각으로 쓴다. 예를 들어 화음 세 음을 10.00초, 10.02초, 10.04초에 쳤다면 그 위치는 10.02초다.
+3. **거꾸로 가는 점을 없앤다.** 악보 위치 순서로 늘어놓으면 시각도 계속 커져야 한다. 정렬 오류로 뒤 위치가 앞 위치보다 이른 시각에 붙은 점이 있으면, **시각이 순증가하는 가장 긴 부분열(LIS)**만 남기고 나머지를 버린다. 한 점만 튀면 그 점만 빠진다. ASAP 전체에서 버려진 위치는 1.4%다(robust 정렬 1.0%, non-robust 2.6%).
+4. **점 사이는 선형 보간한다.** `T(s) = np.interp(s, positions, times)`.
+
+예를 들어 tempo map이 다음과 같고, 연주자가 beat 1→2 사이를 두 배로 늘려 쳤다고 하자.
+
+| 악보 위치(beat) | 0 | 1 | 2 | 3 |
+|---|---|---|---|---|
+| 연주 시각(초) | 0.0 | 0.5 | 1.5 | 2.0 |
+
+beat 1에서 시작하는 한 박짜리 음을 1.0초 눌렀다면 기대 길이는 `T(2) − T(1) = 1.0초`이므로 articulation은 `log2(1.0/1.0) = 0`이다. 곡 평균 빠르기(0.667초/beat)를 썼다면 `log2(1.0/0.667) ≈ +0.58`, 즉 "길게 눌렀다"로 잘못 나온다. 늘어난 시간은 Tempo·Rubato가 이미 잡고 있으므로, Articulation에는 **음 사이를 얼마나 끊었는가**만 남기는 것이 목적이다.
+
+**ASAP beat annotation을 쓰지 않은 이유**: match 파일의 악보 위치(beat)와 ASAP의 악보 beat 시각(악보 MIDI의 초)은 단위가 달라 변환 규칙이 따로 필요하다. 또 onset 기반 tempo map은 음이 있는 모든 위치(16분음표 단위까지)에 점이 있어서 beat 안에서의 빠르기 변화까지 반영한다. tempo map은 악보 위치를 직접 초로 옮기므로 match의 beat 단위(4분음표인지 8분음표인지)에 영향을 받지 않는다.
+
+### 4-4. 계산에서 빼는 음
+
+| 제외 사유 | 이유 | ASAP 전체 비율 |
+|---|---|---|
+| 꾸밈음 (`grace` 또는 악보 길이 0) | 악보 음가가 0이라 비율을 정의할 수 없다 | 0.55% |
+| 장식음 기호 (`trillmark`, `tremolo`, `mordent`, `invertedmordent`, `turn`) | 연주에서는 여러 음으로 쪼개지고 첫 음 하나만 악보 음에 정렬되어, 그 음의 길이가 음가를 대표하지 못한다 | 0.03% |
+| tempo map 범위 밖 (`outside_tempo_map`) | 곡 마지막 화음처럼 악보상 끝 위치가 마지막 onset 위치보다 뒤라서 외삽해야 하는 음 | 0.16% |
+| 길이가 0 이하 (`non_positive`) | 기대 길이나 누른 시간이 0 이하 | 0.01% |
+
+정렬된 음의 **99.25%**가 계산에 쓰인다. 음마다의 결과와 제외 개수는 `extract_note_articulation(alignment)`가 돌려주는 `NoteArticulation`(`onsets`, `values`, `match_indices`, `excluded_counts`)에서 확인할 수 있다. `match_indices`로 원래 악보 음을 다시 찾을 수 있어서 기호별·성부별 분석에도 쓸 수 있다.
+
+### 4-5. beat 구간으로 모으기
+
+다른 특징과 시간축을 맞추기 위해 음 단위 값을 연주 beat 구간으로 모은다(`extract_articulation`).
+
+1. 각 음을 **연주 onset**으로 구간에 배정한다. Dynamics와 같은 `assign_windows(onsets, performance_beats)`를 쓴다.
+2. 구간 값은 그 구간에서 시작한 음들 값의 **중앙값**이다. 계산에 쓰인 음 개수는 `note_counts`에 남긴다.
+3. 시작한 음이 없는 구간은 `NaN + mask=False`다.
+
+```
+articulation[i] = median(articulation of notes with b_i <= performed.onset < b_{i+1})
+```
+
+**평균이 아니라 중앙값을 쓰는 이유**: 음 단위 값은 꼬리가 길다. 아주 짧게 뗀 음은 −3 아래까지 내려가고(전체 음의 3.6%), 페달을 밟은 채 일찍 뗀 긴 음도 큰 음수가 된다. 화음 중 한 음만 일찍 떼었을 때 구간 전체 값이 끌려가지 않도록 중앙값을 쓴다.
+
+예를 들어 한 구간에서 네 음이 시작했고 값이 `[0.0, −1.0, 1.0, 0.0]`이면 구간 값은 0.0이다. 첫 두 음만 있는 구간이라면 −0.5다.
+
+### 4-6. 해석할 때 알아둘 점
+
+ASAP 전체에서 확인한 값이다. 자세한 수치는 `reports/articulation/README.md`에 있다.
+
+- **값은 대부분 음수다.** 음 단위 중앙값은 −0.76(음가의 약 59%)이다. 피아니스트는 보통 다음 음을 치기 전에 건반을 뗀다.
+- **악보 기호와 순서가 맞다.** 중앙값이 staccatissimo −2.37 < staccato −1.95 < 기호 없음 −0.72 순서다. 정의가 의도한 것을 재고 있다는 근거다.
+- **페달이 섞인다.** 페달을 밟고 있으면 건반을 일찍 떼도 소리가 이어지므로, 긴 음에서 특히 값이 작아진다. 기대 길이 0.5초 이상인 음에서 떼는 순간 페달이 on이면 중앙값이 −0.96, off면 −0.25다(424,916음). 반대로 0.15~0.4초 음은 페달 off일 때 더 짧게 끊는다(−1.76 vs −1.29, 페달 없이 치는 스타카토 악구). 이 특징은 **손가락 articulation**이고 들리는 소리의 길이가 아니다. 해석할 때는 Pedaling과 함께 봐야 한다.
+- **작품이 크게 좌우한다.** 연주별 `articulation_mean` 분산의 87%를 작품이 설명한다(라벨을 섞었을 때 22%). 기대 길이가 긴 음일수록 값이 작아지는 경향(상관 −0.35)과 악보 기호가 작품마다 달라서다. 다른 특징과 마찬가지로 작품 기준 정규화가 필요하다.
+
+## 5. 곡 전체 요약 특징
 
 beat별 시퀀스 말고, 연주 하나를 대표하는 숫자 몇 개도 함께 만든다. Feature-only 베이스라인이나 이상치 점검에 쓴다.
 
@@ -150,25 +255,29 @@ beat별 시퀀스 말고, 연주 하나를 대표하는 숫자 몇 개도 함께
 | `pedal_depth_mean` | 유효한 구간의 `depth` 평균 | 곡 전체에서 페달을 평균적으로 얼마나 깊게 밟았는가 |
 | `pedal_usage` | 유효한 구간의 `down_ratio` 평균 | 곡 전체 시간 중 페달이 켜져 있던 비중 |
 | `pedal_change_rate` | 유효한 구간의 `changes` 평균 (구간당 평균 횟수) | 페달을 얼마나 자주 갈아 밟았는가 |
+| `articulation_mean` | 유효한 구간의 Articulation 평균 | 곡 전체에서 음가 대비 평균적으로 얼마나 길게/짧게 눌렀는가 |
+| `articulation_range` | 유효한 구간의 5~95 백분위 차이 | 레가토와 스타카토를 얼마나 대비시켰는가. 극단값에 흔들리지 않게 백분위를 쓴다 |
 
-네 feature 모두 `summarize_<feature>(feature)` 함수가 `dict[str, float]`를 반환한다.
+다섯 feature 모두 `summarize_<feature>(feature)` 함수가 `dict[str, float]`를 반환한다.
 요약값을 계산할 유효 구간이 없으면 해당 값은 `NaN`이다. 계산식은 feature의 음악적
 의미에 따라 다르며, 인터페이스가 같다는 이유로 동일한 평균 방식을 강제하지 않는다.
 
 **`pedal_change_rate`를 작품 사이에서 그대로 비교하면 안 된다.** 이 값은 "beat당 평균 전환 횟수"인데, beat 하나의 길이(초)는 곡 빠르기에 따라 몇 배씩 차이가 난다. 느린 곡은 beat 하나가 몇 초씩이라 그 안에 전환이 몰릴 기회가 많아지고, 실제로 ASAP 전체에서 이 값과 beat 길이의 순위상관은 0.54로 뚜렷하다. 반면 **같은 작품 안에서 연주끼리 비교**할 때는 beat 길이가 거의 같으므로 문제가 없다(같은 작품 안에서의 순위상관은 0.12로 약함). 자세한 근거는 `reports/dynamics_pedaling/README.md`에 있다.
 
-## 5. 결측·경계 상황 정리
+## 6. 결측·경계 상황 정리
 
 | 상황 | 처리 |
 |---|---|
-| 구간에 시작한 음이 없음 (Dynamics) | `NaN` + `mask=False`. 요약·비교에서 제외 |
+| 구간에 시작한 음이 없음 (Dynamics, Articulation) | `NaN` + `mask=False`. 요약·비교에서 제외 |
+| note 정렬 파일이 없거나 비어 있는 연주 (Articulation) | 파일이 없으면 `note_alignment_path`가 `None`이라 계산하지 않는다. 정렬된 음이 없으면 모든 구간이 `NaN + mask=False`다 |
+| 꾸밈음, 장식음 기호, tempo map 밖의 음 (Articulation) | 음 단위에서 제외하고 사유별 개수를 `excluded_counts`에 남긴다 (4-4) |
 | 페달 이벤트가 하나도 없는 연주 | 모든 구간 0 + `mask=True`. "안 씀"으로 취급 |
 | 첫 페달 이벤트 이전 시각 | 값 0 (페달을 밟기 전) |
 | beat 간격이 0인 구간 (같은 시각이 중복 기록된 경우) | `mask=False`로 제외 (0으로 나누기 방지) |
 | beat 범위 밖의 음·페달 이벤트 | 계산에서 제외 (`assign_windows`가 -1을 줌) |
 | beat가 2개 미만이거나 감소하는 경우 | `ValueError` (애초에 계산 불가능한 입력이므로 조용히 넘기지 않는다) |
 
-## 6. 공개 인터페이스
+## 7. 공개 인터페이스
 
 | 함수 | 결과 |
 |---|---|
@@ -181,20 +290,28 @@ beat별 시퀀스 말고, 연주 하나를 대표하는 숫자 몇 개도 함께
 | `summarize_rubato(feature)` | `absolute_rubato_amount`, `relative_rubato_amount` |
 | `summarize_dynamics(feature)` | `dynamics_mean`, `dynamics_range` |
 | `summarize_pedaling(feature)` | `pedal_depth_mean`, `pedal_usage`, `pedal_change_rate` |
+| `extract_articulation(alignment, beats)` | `ArticulationFeature`: `sequence`(`values`는 구간 음들의 log2 비율 중앙값), `note_counts` |
+| `extract_note_articulation(alignment)` | `NoteArticulation`: 음 단위 `onsets`, `values`, `match_indices`, `excluded_counts` |
+| `build_tempo_map(alignment)` | 악보 위치(beat)와 연주 시각(초)의 단조 증가 점 배열 두 개 |
+| `summarize_articulation(feature)` | `articulation_mean`, `articulation_range` |
 | `build_beat_grid(beats)` | 공통 beat 경계, 구간 길이, 0폭 구간을 제외하는 mask |
 | `assign_windows(times, beats)` | 각 시각이 속한 구간 번호. 밖이면 -1 |
 
 `performance`는 `load_midi`가 돌려준 `MidiData`이고 `beats`는 `AsapSample.performance_beats`다.
+`alignment`는 `load_match(sample.note_alignment_path)`가 돌려준 `NoteAlignment`다.
 Tempo도 같은 beat grid와 mask를 사용하며, `bR`, suspicious, 0폭 구간은 상태와 이유를
 보존한 채 일반 통계에서 제외한다.
 
-## 7. 아직 하지 않은 것 (알려진 한계)
+## 8. 아직 하지 않은 것 (알려진 한계)
 
-- **악보 대비 비교는 없다.** note 단위 score-performance 정렬이 이 데이터셋에 없어서, "악보보다 세게/여리게 쳤는가"는 지금 계산할 수 없다.
+- **Dynamics는 아직 악보 대비 비교가 없다.** 이제 (n)ASAP의 note 단위 정렬을 쓸 수 있지만, 악보 MIDI의 velocity가 상수라 "악보보다 세게/여리게"의 기준이 없다. note 단위 정렬은 현재 Articulation만 쓴다.
+- **Articulation은 건반을 뗀 시각만 본다.** 페달로 이어진 소리의 길이는 반영하지 않는다(4-6). 소리 길이 기준 articulation이 필요하면 CC64로 note-off를 늦춘 값을 따로 만들어야 한다.
+- **Articulation의 tempo map은 LIS 동점에 민감하다.** 순증가 최장 부분열이 여러 개면 어느 점을 버리느냐에 따라 음의 0~2.8%가 다른 값을 갖는다(검증 6곡 기준). beat 값은 중앙값이라 덜 흔들리지만, 음 단위 분석에서는 주의해야 한다.
+- **Articulation은 note 정렬이 있어야 계산된다.** ATEPP나 외부 입력처럼 note 정렬이 없는 데이터에는 parangonar 같은 정렬 도구를 먼저 돌려 match 파일을 만들어야 한다.
 - **소스테누토·소프트 페달은 반영되지 않는다.** 로더가 CC64만 읽기 때문이다.
 - **작품 간 정규화는 아직 없다.** `dynamics_mean` 등 요약값은 작품 자체가 분산의 85~92%를 설명한다(작품마다 원래 세기·페달 씀씀이가 다르므로). 절대값 그대로 임베딩에 넣으면 해석이 아니라 작품을 학습할 위험이 있다 — 이는 다음 단계(정규화 설계) 과제다.
 
-## 8. 테스트 · 검증
+## 9. 테스트 · 검증
 
 단위 테스트는 `classicfy-ai` 디렉터리에서 실행한다.
 
@@ -202,9 +319,10 @@ Tempo도 같은 beat grid와 mask를 사용하며, `bR`, suspicious, 0폭 구간
 PYTHONPATH=src .venv/bin/python -m unittest discover -s tests -v
 ```
 
-`tests/unit/features`는 구간 경계, 공통 결과 형식, 네 feature의 계산식과 결측 처리를
-검증한다. `test_characterization.py`는 대표 입력에 대한 네 feature의 beat-level 값과
+`tests/unit/features`는 구간 경계, 공통 결과 형식, 각 feature의 계산식과 결측 처리를
+검증한다. `test_articulation.py`는 tempo map(화음 중앙값, 꾸밈음 제외, 역행 점 제거),
+음 단위 비율, rubato 보정, 제외 규칙, 구간 중앙값을 검증한다. `test_characterization.py`는 대표 입력에 대한 네 feature의 beat-level 값과
 summary를 한 번에 고정한다. 테스트 디렉터리의 역할과 실행 방법은 `tests/README.md`에
 정리되어 있다.
 
-ASAP 전체 1,036개 연주에 적용해 다른 방식으로 다시 계산한 값과 대조하고, 분포·이상치·같은 곡 여러 연주 비교까지 마친 결과는 `reports/dynamics_pedaling/README.md`에 있다.
+ASAP 전체 1,036개 연주에 적용해 다른 방식으로 다시 계산한 값과 대조하고, 분포·이상치·같은 곡 여러 연주 비교까지 마친 결과는 `reports/dynamics_pedaling/README.md`에 있다. Articulation도 같은 방식(독립 재계산, 분포·악보 기호·페달 영향, 이상치, 같은 곡 비교, 추출 과정 그림)으로 검증했고 결과는 `reports/articulation/README.md`, 스크립트는 `scripts/validate_articulation.py`다.

@@ -8,8 +8,14 @@ from pathlib import Path
 
 import pretty_midi
 
-from features import TempoInput, extract_piece_tempo_features, summarize_tempo
-from preprocessing import ASAPLoader, AsapSample, MidiData, load_midi
+from features import (
+    TempoInput,
+    extract_articulation,
+    extract_piece_tempo_features,
+    summarize_articulation,
+    summarize_tempo,
+)
+from preprocessing import ASAPLoader, AsapSample, MidiData, load_match, load_midi
 
 
 class AsapPipelineIntegrationTest(unittest.TestCase):
@@ -102,6 +108,43 @@ class AsapPipelineIntegrationTest(unittest.TestCase):
                 math.isnan(summarize_tempo(feature)["overall_individual_tempo"])
             )
 
+
+    def test_extracts_articulation_from_real_note_alignment_when_available(self) -> None:
+        datasets = Path(__file__).resolve().parents[4] / "datasets"
+        root = Path(os.environ.get("ASAP_ROOT", datasets / "ASAP")).expanduser()
+        nasap_root = Path(os.environ.get("NASAP_ROOT", datasets / "nASAP")).expanduser()
+        if not (root / "metadata.csv").is_file() or not (nasap_root / "metadata.csv").is_file():
+            self.skipTest("ASAP or (n)ASAP dataset is not available")
+
+        loader = ASAPLoader(root, nasap_root)
+        sample = loader.get_sample("Bach/Fugue/bwv_846/Shi05M.mid")
+        self.assertIsNotNone(sample.note_alignment_path)
+        self.assertTrue(sample.robust_note_alignment)
+
+        alignment = load_match(sample.note_alignment_path)
+        performance = load_midi(sample.performance_path)
+        # match 파일의 연주 음은 연주 MIDI의 음과 음높이·시각이 같아야 한다.
+        for _, note in alignment.matches:
+            self.assertTrue(
+                any(
+                    other.pitch == note.pitch
+                    and abs(other.start - note.onset) < 0.002
+                    and abs(other.end - note.offset) < 0.002
+                    for other in performance.notes
+                ),
+                note,
+            )
+
+        feature = extract_articulation(alignment, sample.performance_beats)
+        self.assertEqual(len(feature.sequence), len(sample.performance_beats) - 1)
+        self.assertGreater(feature.sequence.mask.mean(), 0.9)
+        self.assertFalse(math.isnan(summarize_articulation(feature)["articulation_mean"]))
+
+        moved = loader.get_sample("Beethoven/Piano_Sonatas/32-1/Park01.mid")
+        self.assertEqual(
+            moved.note_alignment_path,
+            (nasap_root / "Beethoven/Piano_Sonatas/32-1_no_repeat/Park01.match").resolve(),
+        )
 
 if __name__ == "__main__":
     unittest.main()
