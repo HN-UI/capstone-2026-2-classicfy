@@ -25,3 +25,7 @@ PYTHONPATH=src .venv/bin/python -m unittest discover -s tests -v
 다른 위치를 쓰려면 `ASAP_ROOT` 환경 변수를 지정한다.
 (n)ASAP note 정렬을 쓰는 테스트는 `datasets/nASAP` 또는 `NASAP_ROOT`를 쓰고, 둘 중
 하나라도 없으면 건너뛴다.
+
+`unit/features/test_common_pattern.py`는 작품 공통 중앙값 제거와 원본 보존·support·grid
+검증을 다룬다. `integration/test_common_pattern_pipeline.py`는 세 feature의 추출부터
+공통 패턴 분리까지 MIDI와 `.match` fixture로 검증하고 실제 ASAP/(n)ASAP 테스트도 제공한다.

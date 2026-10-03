@@ -9,6 +9,7 @@ from .articulation import (
     summarize_articulation,
 )
 from .beat_grid import BeatGrid, as_beat_array, assign_windows, build_beat_grid
+from .common_pattern import PieceFeatureInput, SeparatedFeature, separate_piece_feature
 from .dynamics import DynamicsFeature, extract_dynamics, summarize_dynamics
 from .models import BeatSequence
 from .pedaling import PedalingFeature, extract_pedaling, summarize_pedaling
@@ -28,7 +29,9 @@ __all__ = [
     "DynamicsFeature",
     "NoteArticulation",
     "PedalingFeature",
+    "PieceFeatureInput",
     "RubatoFeature",
+    "SeparatedFeature",
     "TempoFeature",
     "TempoInput",
     "TempoInterval",
@@ -42,6 +45,7 @@ __all__ = [
     "extract_pedaling",
     "extract_piece_rubato_features",
     "extract_piece_tempo_features",
+    "separate_piece_feature",
     "summarize_articulation",
     "summarize_dynamics",
     "summarize_pedaling",

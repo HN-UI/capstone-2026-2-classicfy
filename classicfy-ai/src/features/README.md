@@ -302,16 +302,127 @@ beat별 시퀀스 말고, 연주 하나를 대표하는 숫자 몇 개도 함께
 Tempo도 같은 beat grid와 mask를 사용하며, `bR`, suspicious, 0폭 구간은 상태와 이유를
 보존한 채 일반 통계에서 제외한다.
 
-## 8. 아직 하지 않은 것 (알려진 한계)
+## 8. 작품 공통 패턴과 연주별 편차 분리
+
+Dynamics, Pedaling의 `depth`·`down_ratio`·`changes`, Articulation에
+`separate_piece_feature`를 동일하게 적용한다. 기존 `BeatSequence`를 보존하고 같은
+작품·같은 score beat 위치에서 입력 연주들의 중앙값을 제거한다.
+
+```text
+valid[p, i]    = raw.mask[p, i] AND isfinite(raw.values[p, i]) AND score_interval[i] > 0
+support[i]     = valid인 연주 수
+common[i]      = median(raw.values[p, i] for valid performances)
+relative[p, i] = raw.values[p, i] - common[i]
+relative.mask = valid AND support >= minimum_support
+```
+
+중앙값에는 대상 연주 자신도 포함한다. `minimum_support`는 기본 2이며 2 이상의
+정수로 변경할 수 있다. support 미달이면 common과 relative는 `NaN + mask=False`다.
+연주가 하나뿐이면 `ValueError`다. 최소 support가 전체 연주 수보다 크면 전부 결측이다.
+공통값은 **현재 입력 연주들의 중앙 패턴**이며 작품의 유일한 정답 해석이 아니다.
+연주 수가 적으면 기준이 불안정하고 후보가 바뀌면 중앙값도 달라진다.
+같은 작품·같은 유효 위치에서는 `relative_a - relative_b = raw_a - raw_b`가 성립한다.
+중앙값 제거만으로 모든 작품 정보가 없어지는 것은 아니므로 실제 효과는 별도 분석으로 확인한다.
+
+### 입력과 결과
+
+`PieceFeatureInput(performance_key, piece_key, score_beats, sequence, score_beat_types=None)`에
+기존 feature의 `BeatSequence`를 넣는다. `piece_key`는 작품과 반복 구조를 함께 식별해야 한다.
+작품 키, sequence 길이(`T = B - 1`), score beat 위치, 제공된 score beat 종류가 같아야 한다.
+beat 종류를 제공한 입력과 생략한 입력도 섞지 않는다. 위치 비교는 `rtol=atol=1e-9`다.
+연주 시각은 서로 달라도 된다. score beat는 유한·비감소여야 하며 0폭 구간은 집계에서 제외한다.
+중복 연주 키, 다른 작품·길이·grid·beat 종류는 `ValueError`다.
+
+`PieceFeatureInput.from_asap_sample(sample, sequence, piece_key=None)`는 `aligned=True`와
+양쪽 beat 수를 확인하고 score beat 종류도 복사한다. 기본 작품 키는 `score_path`다.
+(n)ASAP에서 `.match`가 다른 작품 폴더(`_no_repeat`, `_extra_repeat` 등)로 대응되면
+그 폴더 이름도 키에 포함해 원래 구조와 직접 묶이지 않게 한다. 추가 구조 구분이 필요하면
+`piece_key`를 명시한다. 정렬의 음악적 정확성까지 자동으로 검증하지는 않는다.
+
+`separate_piece_feature(inputs, minimum_support=2)`는 연주 키별 `SeparatedFeature`를 반환한다.
+
+| 필드 | 의미 |
+|---|---|
+| `raw` | 기존 값과 원본 mask를 보존한 `BeatSequence` |
+| `common` | 작품의 beat별 중앙값과 최소 support 충족 여부를 담은 `BeatSequence` |
+| `relative` | 원본에서 중앙값을 뺀 값과 해당 연주의 유효성을 담은 `BeatSequence` |
+| `common_support` | 위치별 유효 연주 수. 페달을 쓰지 않은 연주의 0도 포함 |
+| `performance_key`, `piece_key`, `score_beats`, `score_beat_types`, `minimum_support` | 계산 대상·좌표·기준 추적 정보 |
+
+원본 mask가 False이거나 값이 NaN/무한대이면 집계에서 제외하되 원본값과 mask는
+`raw`에 그대로 보존한다. 원본이 결측이어도 다른 연주가 충분하면 common은 제공되며
+그 연주의 relative만 결측이다. 입출력은 frozen dataclass와 독립된 읽기 전용 배열을 사용한다.
+Pedaling 세 지표는 독립적으로 처리하므로 위치별 support가 서로 다를 수 있다.
+
+### 사용 예시
+
+```python
+from collections import defaultdict
+import numpy as np
+from preprocessing import ASAPLoader, load_match, load_midi
+from features import (
+    BeatSequence, PieceFeatureInput, extract_articulation, extract_dynamics,
+    extract_pedaling, separate_piece_feature,
+)
+
+loader = ASAPLoader("/path/to/ASAP", note_alignment_root="/path/to/nASAP")
+target_score = (loader.root / "Bach/Fugue/bwv_848/midi_score.mid").resolve()
+include_non_robust_articulation = True  # 호출자가 정렬 품질 정책을 선택한다.
+groups = defaultdict(list)
+for sample in loader.iter_samples(aligned_only=True):
+    if sample.score_path != target_score:
+        continue
+    midi = load_midi(sample.performance_path)
+    pedal = extract_pedaling(midi, sample.performance_beats)
+    sequences = {
+        "dynamics": extract_dynamics(midi, sample.performance_beats).sequence,
+        "pedal_depth": pedal.depth,
+        "pedal_down_ratio": pedal.down_ratio,
+        "pedal_changes": pedal.changes,
+    }
+    if include_non_robust_articulation or sample.robust_note_alignment is True:
+        if sample.note_alignment_path is not None:
+            sequences["articulation"] = extract_articulation(
+                load_match(sample.note_alignment_path), sample.performance_beats,
+            ).sequence
+        else:
+            T = len(sample.performance_beats) - 1
+            sequences["articulation"] = BeatSequence(np.full(T, np.nan), np.zeros(T, dtype=bool))
+    for name, sequence in sequences.items():
+        item = PieceFeatureInput.from_asap_sample(sample, sequence)
+        groups[(item.piece_key, name)].append(item)
+
+separated = {
+    group_key: separate_piece_feature(inputs)
+    for group_key, inputs in groups.items() if len(inputs) >= 2
+}
+# separated[(piece_key, "dynamics")][performance_key].relative.values
+# separated[(piece_key, "dynamics")][performance_key].relative.mask
+```
+
+Articulation의 non-robust 포함 여부는 **호출자가 입력 집합을 구성할 때** 정한다.
+공통 제거 함수는 정렬 품질에 따라 임의로 연주를 제외하지 않는다. 정렬 파일이 없으면
+전체 `NaN + mask=False`인 sequence를 넣어 결과를 추적하거나 Articulation 입력에서 제외한다.
+
+Tempo·Rubato의 기존 `individual_tempo_sequence`·`relative_rubato_sequence`에는 이미 공통
+패턴이 제거돼 있으므로 다시 넣지 않는다. 기존 계산·상태·mask는 유지한다.
+이번 단계에는 `standardized`, scale 표준화, clipping을 제공하지 않는다.
+`changes`는 beat당 전환 횟수 그대로이며 beat 길이 영향이 모두 제거됐다고 가정하지 않는다.
+추론 시 후보가 부족하면 상대값을 임의로 0으로 채우지 않고 별도 reference 집합이나
+raw 사용 정책을 후속 단계에서 결정한다. 평가 시 reference 집합도 명시해야 한다.
+작품별 scale은 작품 내 편차의 상대적 크기를, 학습 데이터 전체 scale은 작품 간 residual의
+크기 차이를 보존하는 방향이다. MAD·IQR·표준편차와 0 scale fallback은 후속 비교 대상이다.
+
+## 9. 아직 하지 않은 것 (알려진 한계)
 
 - **Dynamics는 아직 악보 대비 비교가 없다.** 이제 (n)ASAP의 note 단위 정렬을 쓸 수 있지만, 악보 MIDI의 velocity가 상수라 "악보보다 세게/여리게"의 기준이 없다. note 단위 정렬은 현재 Articulation만 쓴다.
 - **Articulation은 건반을 뗀 시각만 본다.** 페달로 이어진 소리의 길이는 반영하지 않는다(4-6). 소리 길이 기준 articulation이 필요하면 CC64로 note-off를 늦춘 값을 따로 만들어야 한다.
 - **Articulation의 tempo map은 LIS 동점에 민감하다.** 순증가 최장 부분열이 여러 개면 어느 점을 버리느냐에 따라 음의 0~2.8%가 다른 값을 갖는다(검증 6곡 기준). beat 값은 중앙값이라 덜 흔들리지만, 음 단위 분석에서는 주의해야 한다.
 - **Articulation은 note 정렬이 있어야 계산된다.** ATEPP나 외부 입력처럼 note 정렬이 없는 데이터에는 parangonar 같은 정렬 도구를 먼저 돌려 match 파일을 만들어야 한다.
 - **소스테누토·소프트 페달은 반영되지 않는다.** 로더가 CC64만 읽기 때문이다.
-- **작품 간 정규화는 아직 없다.** `dynamics_mean` 등 요약값은 작품 자체가 분산의 85~92%를 설명한다(작품마다 원래 세기·페달 씀씀이가 다르므로). 절대값 그대로 임베딩에 넣으면 해석이 아니라 작품을 학습할 위험이 있다 — 이는 다음 단계(정규화 설계) 과제다.
+- **Scale 표준화와 분리 후 전체 데이터 분석은 아직 없다.** 기존 Dynamics·Pedaling raw 요약값은 작품 자체가 분산의 85~92%를 설명했다. 공통 패턴 제거 후 작품 정보 감소와 연주 차이 유지 여부의 전체 데이터 분석, scale 표준화 및 추천 성능 평가는 후속 단계다.
 
-## 9. 테스트 · 검증
+## 10. 테스트 · 검증
 
 단위 테스트는 `classicfy-ai` 디렉터리에서 실행한다.
 
@@ -326,3 +437,10 @@ summary를 한 번에 고정한다. 테스트 디렉터리의 역할과 실행 �
 정리되어 있다.
 
 ASAP 전체 1,036개 연주에 적용해 다른 방식으로 다시 계산한 값과 대조하고, 분포·이상치·같은 곡 여러 연주 비교까지 마친 결과는 `reports/dynamics_pedaling/README.md`에 있다. Articulation도 같은 방식(독립 재계산, 분포·악보 기호·페달 영향, 이상치, 같은 곡 비교, 추출 과정 그림)으로 검증했고 결과는 `reports/articulation/README.md`, 스크립트는 `scripts/validate_articulation.py`다.
+
+`unit/features/test_common_pattern.py`는 중앙값·상대값 관계, mask/support, 유효한 0,
+입력 오류, 0폭 score 구간 및 읽기 전용 독립 복사본을 검증한다.
+`integration/test_common_pattern_pipeline.py`는 MIDI·ASAP annotation·(n)ASAP `.match`
+fixture로 세 feature 분리, 정렬 품질 선택 및 정렬 누락을 검증한다.
+실제 동일 작품 여러 연주 테스트도 있으며 데이터가 없으면 건너뛴다.
+다른 위치의 데이터셋은 `ASAP_ROOT`, `NASAP_ROOT`로 지정한다.
