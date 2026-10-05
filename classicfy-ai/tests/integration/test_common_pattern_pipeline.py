@@ -13,6 +13,7 @@ import pretty_midi
 from features import (
     BeatSequence, PieceFeatureInput, extract_articulation, extract_dynamics,
     extract_pedaling, separate_piece_feature,
+    standardize_piece_feature,
 )
 from preprocessing import ASAPLoader, load_match, load_midi
 
@@ -146,6 +147,22 @@ class CommonPatternPipelineTest(unittest.TestCase):
         np.testing.assert_allclose(result.common.values, [-.5, np.nan, -.5])
         np.testing.assert_array_equal(result.common_support, [2, 1, 2])
 
+    def test_midi_and_match_features_are_standardized_independently(self) -> None:
+        for name, inputs in collect_inputs(self.samples).items():
+            separated = list(separate_piece_feature(inputs).values())
+            results = standardize_piece_feature(separated, feature_name=name)
+            expected_method = "std" if name.startswith("pedal_") else "mad"
+            for before in separated:
+                result = results[before.performance_key]
+                self.assertEqual(result.scale.requested_method, expected_method)
+                np.testing.assert_array_equal(result.standardized.mask, before.relative.mask)
+                np.testing.assert_allclose(result.standardized.values,
+                                           before.relative.values / result.scale.value)
+                np.testing.assert_array_equal(result.raw.values, before.raw.values)
+            if name.startswith("pedal_"):
+                pool = np.concatenate([r.standardized.values[r.standardized.mask] for r in results.values()])
+                self.assertAlmostEqual(np.std(pool), 1)
+
     def test_missing_alignment_remains_masked_and_does_not_reduce_other_channels(self) -> None:
         samples = [*self.samples[:2], replace(self.samples[2], note_alignment_path=None)]
         groups = collect_inputs(samples)
@@ -182,8 +199,14 @@ class RealCommonPatternPipelineTest(unittest.TestCase):
         score_path = (root / "Bach/Fugue/bwv_848/midi_score.mid").resolve()
         samples = [s for s in ASAPLoader(root, nasap_root).iter_samples(True) if s.score_path == score_path]
         self.assertGreaterEqual(len(samples), 2)
-        for inputs in collect_inputs(samples).values():
+        for name, inputs in collect_inputs(samples).items():
             results = list(separate_piece_feature(inputs).values())
+            normalized = standardize_piece_feature(results, feature_name=name)
+            for result in results:
+                output = normalized[result.performance_key]
+                self.assertGreater(output.scale.value, 0)
+                np.testing.assert_allclose(output.standardized.values, result.relative.values / output.scale.value)
+                np.testing.assert_array_equal(output.standardized.mask, result.relative.mask)
             for beat in range(len(inputs[0].sequence)):
                 raw = [
                     item.sequence.values[beat] for item in inputs

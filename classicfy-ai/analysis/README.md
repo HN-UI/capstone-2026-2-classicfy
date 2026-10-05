@@ -1,0 +1,88 @@
+# 연주 feature 분석
+
+분석 그림, CSV·JSON 결과와 보고서를 이 폴더에서 주제별로 관리한다.
+각 주제의 README를 먼저 열면 그림의 위치와 분석 내용을 확인할 수 있다.
+
+| 폴더 | 분석 주제 | 시작 문서 |
+|---|---|---|
+| `tempo/` | 실제 한 작품의 Tempo 계산 확인·연주 차이, 파일당 그래프 하나 | [Tempo 그림 안내](tempo/README.md) |
+| `rubato/` | 실제 한 작품의 전체 빠르기·공통 변화 제거와 국소 편차, 파일당 그래프 하나 | [Rubato 그림 안내](rubato/README.md) |
+| `dynamics/` | 음표 velocity·강약 곡선·공통 제거·MAD 표준화와 평균/변화 폭 | [Dynamics 그림 안내](dynamics/README.md) |
+| `pedaling/` | 실제 CC64와 깊이·on 시간·전환 횟수의 공통 제거 및 SD 표준화 | [Pedaling 그림 안내](pedaling/README.md) |
+| `_articulation/` | 실제 음 길이·beat 중앙값·공통 제거·MAD 표준화, 파일당 그래프 하나 | [Articulation 그림 안내](_articulation/README.md) |
+| `_embedding_validation/` | 다섯 feature 결합의 동일 작품 검색·결측 안정성·feature 제외 비교 | [임베딩 검증 그림 안내](_embedding_validation/README.md) |
+| `_interpretation_embedding/` | 같은 작품 3연주의 차이·MIDI 원자료와 다른 작품 A·B·C 유사 특징 검색 | [연주 차이와 검색 사례](_interpretation_embedding/README.md) |
+| `_feature_search_roles/` | 다른 작품 검색에서 feature별 후보/순위 변화와 검색에 안 쓴 feature의 일치 검사 | [feature별 검색 역할](_feature_search_roles/README.md) |
+| `dynamics_pedaling/` | 원본 Dynamics·Pedaling 추출 검증과 작품별 차이 | [원본 feature 분석 보고서](dynamics_pedaling/README.md) |
+| `articulation/` | 원본 Articulation 추출 검증, 악보 기호·페달 영향 | [Articulation 분석 보고서](articulation/README.md) |
+| `feature_normalization/` | 작품 공통 제거 및 MAD·IQR·SD 비교·적용 | [정규화 분석 보고서](feature_normalization/README.md) |
+| `custom_comparisons/` | 선택한 작품의 여러 연주 곡선·히트맵 비교 | [선택 작품 비교 안내](custom_comparisons/README.md) |
+
+```text
+classicfy-ai/analysis/
+├── README.md
+├── tempo/
+├── rubato/
+├── dynamics/
+├── pedaling/
+│   ├── depth/
+│   ├── down_ratio/
+│   └── changes/
+├── dynamics_pedaling/
+├── articulation/
+├── _articulation/
+├── _embedding_validation/
+├── _interpretation_embedding/
+│   ├── same_work/
+│   ├── cross_work/
+│   └── source_midi/
+├── _feature_search_roles/
+│   ├── global/
+│   ├── examples/
+│   └── heldout/
+├── feature_normalization/
+└── custom_comparisons/
+    └── dynamics_pedaling/
+```
+
+기존 Dynamics·Pedaling 전체 분석은 `dynamics_pedaling/`에 보존한다. 쉬운 개별 예시는
+`dynamics/`와 `pedaling/`에서 읽는다. 정규화 분석은 여러 feature를 비교하는 주제이므로
+별도 폴더에 둔다.
+
+Articulation 개별 예시는 `_articulation/`에 둔다. 이름 앞의 `_`로 기존 전체 데이터
+보고서 `articulation/`와 구분한다.
+
+## 분석 실행과 저장 규칙
+
+분석 스크립트는 `classicfy-ai/scripts/`에 있다. 아래 열한 스크립트의 기본 출력은 실행
+디렉터리와 관계없이 이 `analysis/` 아래의 해당 주제 폴더다. `--out`을 명시하면 지정한
+경로를 사용한다. 상대 경로의 `--out`은 실행 디렉터리를 기준으로 해석한다.
+
+저장소 루트에서 실행하는 예시:
+
+```bash
+.venv/bin/python classicfy-ai/scripts/validate_dynamics_pedaling.py \
+  --asap-root ../datasets/ASAP
+.venv/bin/python classicfy-ai/scripts/validate_articulation.py \
+  --asap-root ../datasets/ASAP --nasap-root ../datasets/nASAP
+.venv/bin/python classicfy-ai/scripts/validate_feature_normalization.py
+.venv/bin/python classicfy-ai/scripts/validate_tempo.py
+.venv/bin/python classicfy-ai/scripts/validate_rubato.py
+.venv/bin/python classicfy-ai/scripts/validate_dynamics.py
+.venv/bin/python classicfy-ai/scripts/validate_pedaling.py
+.venv/bin/python classicfy-ai/scripts/validate_articulation_examples.py
+.venv/bin/python classicfy-ai/scripts/validate_embedding.py
+.venv/bin/python classicfy-ai/scripts/validate_interpretation_examples.py
+.venv/bin/python classicfy-ai/scripts/validate_feature_search_roles.py
+```
+
+선택 작품 비교는 `--works`를 사용하고, `--out`을 `analysis/custom_comparisons/<주제>/`로
+지정한다. 주제별 출력 폴더를 나누면 같은 이름의 그림이 서로 덮어써지지 않는다.
+자세한 예시는 [선택 작품 비교 안내](custom_comparisons/README.md)에 있다.
+
+새 분석은 `analysis/<분석_주제>/` 안에 README와 그림·CSV·JSON을 함께 저장한다.
+그림 이름과 README의 상대 링크를 유지한다. Dataset과 대용량 beat 캐시는 저장소 밖
+`Classicfy/datasets/`에 두고, 분석 문서에는 생성 조건과 재현 명령을 기록한다.
+
+기존 `docs/analysis/`의 Tempo·Rubato 자료와 `reports/`의 보고서를 이 구조로 옮겼다.
+이동 시 기존 그림·CSV·JSON의 내용은 보존했다.

@@ -233,7 +233,7 @@ articulation[i] = median(articulation of notes with b_i <= performed.onset < b_{
 
 ### 4-6. 해석할 때 알아둘 점
 
-ASAP 전체에서 확인한 값이다. 자세한 수치는 `reports/articulation/README.md`에 있다.
+ASAP 전체에서 확인한 값이다. 자세한 수치는 `analysis/articulation/README.md`에 있다.
 
 - **값은 대부분 음수다.** 음 단위 중앙값은 −0.76(음가의 약 59%)이다. 피아니스트는 보통 다음 음을 치기 전에 건반을 뗀다.
 - **악보 기호와 순서가 맞다.** 중앙값이 staccatissimo −2.37 < staccato −1.95 < 기호 없음 −0.72 순서다. 정의가 의도한 것을 재고 있다는 근거다.
@@ -262,7 +262,7 @@ beat별 시퀀스 말고, 연주 하나를 대표하는 숫자 몇 개도 함께
 요약값을 계산할 유효 구간이 없으면 해당 값은 `NaN`이다. 계산식은 feature의 음악적
 의미에 따라 다르며, 인터페이스가 같다는 이유로 동일한 평균 방식을 강제하지 않는다.
 
-**`pedal_change_rate`를 작품 사이에서 그대로 비교하면 안 된다.** 이 값은 "beat당 평균 전환 횟수"인데, beat 하나의 길이(초)는 곡 빠르기에 따라 몇 배씩 차이가 난다. 느린 곡은 beat 하나가 몇 초씩이라 그 안에 전환이 몰릴 기회가 많아지고, 실제로 ASAP 전체에서 이 값과 beat 길이의 순위상관은 0.54로 뚜렷하다. 반면 **같은 작품 안에서 연주끼리 비교**할 때는 beat 길이가 거의 같으므로 문제가 없다(같은 작품 안에서의 순위상관은 0.12로 약함). 자세한 근거는 `reports/dynamics_pedaling/README.md`에 있다.
+**`pedal_change_rate`를 작품 사이에서 그대로 비교하면 안 된다.** 이 값은 "beat당 평균 전환 횟수"인데, beat 하나의 길이(초)는 곡 빠르기에 따라 몇 배씩 차이가 난다. 느린 곡은 beat 하나가 몇 초씩이라 그 안에 전환이 몰릴 기회가 많아지고, 실제로 ASAP 전체에서 이 값과 beat 길이의 순위상관은 0.54로 뚜렷하다. 반면 **같은 작품 안에서 연주끼리 비교**할 때는 beat 길이가 거의 같으므로 문제가 없다(같은 작품 안에서의 순위상관은 0.12로 약함). 자세한 근거는 `analysis/dynamics_pedaling/README.md`에 있다.
 
 ## 6. 결측·경계 상황 정리
 
@@ -296,6 +296,9 @@ beat별 시퀀스 말고, 연주 하나를 대표하는 숫자 몇 개도 함께
 | `summarize_articulation(feature)` | `articulation_mean`, `articulation_range` |
 | `build_beat_grid(beats)` | 공통 beat 경계, 구간 길이, 0폭 구간을 제외하는 mask |
 | `assign_windows(times, beats)` | 각 시각이 속한 구간 번호. 밖이면 -1 |
+| `standardize_piece_feature(features, feature_name=..., method=None)` | 이미 분리한 작품 연주들에 공통 scale을 적용한 `NormalizedFeature` dict |
+| `fit_residual_scale(sequences, method="mad")` | 유효 residual들에 fit한 `ResidualScale`, MAD/IQR/SD와 fallback 추적 |
+| `standardize_sequence(sequence, scale)` | 기존 상대 sequence를 다시 공통 제거하지 않고 scale만 나눈 `BeatSequence` |
 
 `performance`는 `load_midi`가 돌려준 `MidiData`이고 `beats`는 `AsapSample.performance_beats`다.
 `alignment`는 `load_match(sample.note_alignment_path)`가 돌려준 `NoteAlignment`다.
@@ -363,11 +366,12 @@ from preprocessing import ASAPLoader, load_match, load_midi
 from features import (
     BeatSequence, PieceFeatureInput, extract_articulation, extract_dynamics,
     extract_pedaling, separate_piece_feature,
+    standardize_piece_feature,
 )
 
 loader = ASAPLoader("/path/to/ASAP", note_alignment_root="/path/to/nASAP")
 target_score = (loader.root / "Bach/Fugue/bwv_848/midi_score.mid").resolve()
-include_non_robust_articulation = True  # 호출자가 정렬 품질 정책을 선택한다.
+include_non_robust_articulation = False  # 호출자가 정렬 품질 정책을 선택한다.
 groups = defaultdict(list)
 for sample in loader.iter_samples(aligned_only=True):
     if sample.score_path != target_score:
@@ -398,6 +402,12 @@ separated = {
 }
 # separated[(piece_key, "dynamics")][performance_key].relative.values
 # separated[(piece_key, "dynamics")][performance_key].relative.mask
+normalized = {
+    (piece_key, name): standardize_piece_feature(list(results.values()), feature_name=name)
+    for (piece_key, name), results in separated.items()
+}
+# normalized[(piece_key, "dynamics")][performance_key].standardized.values
+# normalized[(piece_key, "dynamics")][performance_key].scale.value
 ```
 
 Articulation의 non-robust 포함 여부는 **호출자가 입력 집합을 구성할 때** 정한다.
@@ -406,12 +416,60 @@ Articulation의 non-robust 포함 여부는 **호출자가 입력 집합을 구�
 
 Tempo·Rubato의 기존 `individual_tempo_sequence`·`relative_rubato_sequence`에는 이미 공통
 패턴이 제거돼 있으므로 다시 넣지 않는다. 기존 계산·상태·mask는 유지한다.
-이번 단계에는 `standardized`, scale 표준화, clipping을 제공하지 않는다.
+이번 정규화의 대상은 Dynamics·Pedaling·Articulation이다. Tempo·Rubato는 기존 값을 그대로
+사용하는 정책이며 자동 표준화하지 않는다. 필요할 때만 기존 residual에 `fit_residual_scale`과
+`standardize_sequence`를 명시적으로 호출할 수 있다. 원래의 상태·mask 모델은 별도로 유지한다.
 `changes`는 beat당 전환 횟수 그대로이며 beat 길이 영향이 모두 제거됐다고 가정하지 않는다.
 추론 시 후보가 부족하면 상대값을 임의로 0으로 채우지 않고 별도 reference 집합이나
 raw 사용 정책을 후속 단계에서 결정한다. 평가 시 reference 집합도 명시해야 한다.
 작품별 scale은 작품 내 편차의 상대적 크기를, 학습 데이터 전체 scale은 작품 간 residual의
-크기 차이를 보존하는 방향이다. MAD·IQR·표준편차와 0 scale fallback은 후속 비교 대상이다.
+크기 차이를 보존하는 방향이다.
+
+### Figure를 근거로 선택한 scale 정책
+
+ASAP 1,036개 정렬 연주의 raw beat를 추출하고, 비교 가능한 D/P 172개 그룹 및 robust
+Articulation 135개 그룹에서 MAD·IQR·표준편차를 비교했다. 상세 figure, CSV와 해석은
+[feature 정규화 보고서](../../analysis/feature_normalization/README.md)에 있다.
+
+| `feature_name` | 기본 `method` | 근거 |
+|---|---|---|
+| `dynamics` | `mad` | 모든 그룹에서 양수, IQR과 유사하며 tail에 덜 민감 |
+| `articulation` | `mad` | 모든 그룹에서 양수, log2 원시값의 큰 tail이 scale을 지배하지 않게 함 |
+| `pedal_depth` | `std` | 28/172 그룹에서 MAD=0, 작은 robust scale이 정상적인 on/off 편차를 과도하게 확대 |
+| `pedal_down_ratio` | `std` | 63/172 그룹에서 MAD=0, 경계값과 0이 많은 분포에서 MAD/IQR 불안정 |
+| `pedal_changes` | `std` | residual의 68.4%가 0, 147/172 그룹에서 MAD=0, 전체 IQR도 0 |
+
+```text
+R = 작품·feature의 모든 유효 relative beat (연주·beat를 함께 pooling)
+MAD scale = 1.4826 * median(abs(R - median(R)))
+IQR scale = (percentile(R, 75) - percentile(R, 25)) / 1.3489795003921634
+SD scale  = std(R, ddof=0)
+standardized[p, i] = relative[p, i] / scale
+```
+
+Scale 추정에서 쓰는 중앙값/평균으로 residual을 다시 center하지 않는다. clipping, log1p,
+winsorization도 적용하지 않는다. Pedaling은 세 하위 지표별 독립 SD를 사용하며 SD가 robust
+estimator라는 뜻은 아니다. 특히 counts의 큰 이상치는 SD에 영향을 줄 수 있다.
+
+`standardize_piece_feature(list(separated.values()), feature_name="dynamics", method="iqr")`처럼
+`mad`·`iqr`·`std`를 명시해 비교할 수 있다. 같은 작품·grid·공통값·support를 공유하는 입력만
+받으며 공통 패턴을 다시 계산하지 않는다. 결과의 `raw`, `common`, `relative`, 위치별
+`common_support`는 그대로 보존한다. 추가 필드는 `standardized: BeatSequence`,
+`scale: ResidualScale`, `feature_name`이다. 입력과 독립된 읽기 전용 배열과 frozen dataclass를 사용한다.
+
+`ResidualScale`에는 `value`, `requested_method`, 실제 `method`, `valid_count`, `mad`, `iqr`,
+`std`가 들어간다. MAD가 `<=1e-12`이면 IQR→SD, IQR이 퇴화하면 SD 순으로 fallback한다.
+이 tolerance는 부동소수점 잡음을 거르는 기준이며 분모를 작은 epsilon으로 대체하지 않는다.
+모든 scale이 퇴화하면 `method="unit"`, scale=1로 residual과 유효 mask를 보존한다.
+원본이 모두 같은 연주들의 residual 0도 유효하다. 유효 residual이 하나도 없으면
+`method="empty"`, scale=NaN이고 표준화도 `NaN + mask=False`다.
+
+작품별 scale은 작품 내 상대적 편차를 비교하기 위한 선택이다. 작품 간 절대 차이까지 비교하려면
+학습 데이터의 residual들로 `fit_residual_scale`을 한 번 fit한 뒤 `standardize_sequence`로
+재사용할 수 있다. 전체 corpus의 global scale은 진단용 비교에만 사용했다. 학습/평가에서는
+공통 reference와 global scale을 학습 집합에서만 fit하고 고정해야 하며, 현재 전체 corpus
+그림을 독립 평가 결과로 해석하면 안 된다. 후보 부족 시 임의의 0 대신 결측을 유지하고,
+별도 reference 집합을 확보하는 것이 우선이다.
 
 ## 9. 아직 하지 않은 것 (알려진 한계)
 
@@ -420,14 +478,15 @@ raw 사용 정책을 후속 단계에서 결정한다. 평가 시 reference 집�
 - **Articulation의 tempo map은 LIS 동점에 민감하다.** 순증가 최장 부분열이 여러 개면 어느 점을 버리느냐에 따라 음의 0~2.8%가 다른 값을 갖는다(검증 6곡 기준). beat 값은 중앙값이라 덜 흔들리지만, 음 단위 분석에서는 주의해야 한다.
 - **Articulation은 note 정렬이 있어야 계산된다.** ATEPP나 외부 입력처럼 note 정렬이 없는 데이터에는 parangonar 같은 정렬 도구를 먼저 돌려 match 파일을 만들어야 한다.
 - **소스테누토·소프트 페달은 반영되지 않는다.** 로더가 CC64만 읽기 때문이다.
-- **Scale 표준화와 분리 후 전체 데이터 분석은 아직 없다.** 기존 Dynamics·Pedaling raw 요약값은 작품 자체가 분산의 85~92%를 설명했다. 공통 패턴 제거 후 작품 정보 감소와 연주 차이 유지 여부의 전체 데이터 분석, scale 표준화 및 추천 성능 평가는 후속 단계다.
+- **작품 정보가 모두 제거되는 것은 아니다.** 전체 분석에서 평균값의 작품 설명력은 크게 감소했지만 표준화된 5–95% 범위에는 Dynamics 0.699, Articulation 0.757의 작품 η²가 남는다. 후보 수·악보 밀도·sequence 길이도 모델 입력에 작품 단서를 줄 수 있다. 독립 작품/작곡가 ID 예측과 추천 성능 실험은 아직 하지 않았다.
+- **Pedaling changes는 beat 길이의 영향을 받는다.** 작품 공통값 제거와 scale 나눗셈은 시간당 전환율 보정이 아니다. 초당 횟수는 다른 feature이며 tempo 의존성이 추가되므로 이번에는 beat당 counts의 의미를 보존했다. 긴 마지막 beat 등의 극단값과 초당 횟수 비교는 정규화 보고서에 있다.
 
 ## 10. 테스트 · 검증
 
 단위 테스트는 `classicfy-ai` 디렉터리에서 실행한다.
 
 ```bash
-PYTHONPATH=src .venv/bin/python -m unittest discover -s tests -v
+PYTHONPATH=src ../.venv/bin/python -m unittest discover -s tests -v
 ```
 
 `tests/unit/features`는 구간 경계, 공통 결과 형식, 각 feature의 계산식과 결측 처리를
@@ -436,7 +495,7 @@ PYTHONPATH=src .venv/bin/python -m unittest discover -s tests -v
 summary를 한 번에 고정한다. 테스트 디렉터리의 역할과 실행 방법은 `tests/README.md`에
 정리되어 있다.
 
-ASAP 전체 1,036개 연주에 적용해 다른 방식으로 다시 계산한 값과 대조하고, 분포·이상치·같은 곡 여러 연주 비교까지 마친 결과는 `reports/dynamics_pedaling/README.md`에 있다. Articulation도 같은 방식(독립 재계산, 분포·악보 기호·페달 영향, 이상치, 같은 곡 비교, 추출 과정 그림)으로 검증했고 결과는 `reports/articulation/README.md`, 스크립트는 `scripts/validate_articulation.py`다.
+ASAP 전체 1,036개 연주에 적용해 다른 방식으로 다시 계산한 값과 대조하고, 분포·이상치·같은 곡 여러 연주 비교까지 마친 결과는 `analysis/dynamics_pedaling/README.md`에 있다. Articulation도 같은 방식(독립 재계산, 분포·악보 기호·페달 영향, 이상치, 같은 곡 비교, 추출 과정 그림)으로 검증했고 결과는 `analysis/articulation/README.md`, 스크립트는 `scripts/validate_articulation.py`다.
 
 `unit/features/test_common_pattern.py`는 중앙값·상대값 관계, mask/support, 유효한 0,
 입력 오류, 0폭 score 구간 및 읽기 전용 독립 복사본을 검증한다.
@@ -444,3 +503,8 @@ ASAP 전체 1,036개 연주에 적용해 다른 방식으로 다시 계산한 �
 fixture로 세 feature 분리, 정렬 품질 선택 및 정렬 누락을 검증한다.
 실제 동일 작품 여러 연주 테스트도 있으며 데이터가 없으면 건너뛴다.
 다른 위치의 데이터셋은 `ASAP_ROOT`, `NASAP_ROOT`로 지정한다.
+
+`unit/features/test_normalization.py`는 scale 계산·fallback·결측·원본 보존·공통값 중복 제거
+방지를 검증한다. 실제 ASAP/nASAP을 포함한 전체 테스트는 123개 모두 통과했다.
+`scripts/validate_feature_normalization.py`는 공식 dataset의 raw 추출부터 정책 비교,
+표준화, pair 차이 보존 검사, 극단 beat 원본 재추출까지 실행하고 CSV·JSON·PNG를 저장한다.

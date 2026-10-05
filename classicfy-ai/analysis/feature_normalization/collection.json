@@ -1,0 +1,13 @@
+{
+  "provenance": {
+    "asap_revision": "afc815c75c42e83a79c03feb6da8a35e77d4c6b8",
+    "nasap_revision": "4097b45757bed854818cf87e77b92323ebf90615",
+    "input_sha256": "19fd51ad1f964733ca888a8da68216057a57ba0302835d055a501df5ad62077a",
+    "collector_version": 1
+  },
+  "aligned_performances": 1036,
+  "include_non_robust": false,
+  "grid_variants": {},
+  "minimum_support": 2,
+  "articulation_robust_count": 833
+}

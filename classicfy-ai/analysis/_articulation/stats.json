@@ -1,0 +1,187 @@
+{
+  "work": "Bach/Fugue/bwv_848",
+  "performances": 9,
+  "robust_performances": 9,
+  "include_non_robust": false,
+  "excluded_performances": [],
+  "intervals_per_performance": 216,
+  "valid_raw_values": 1944,
+  "valid_relative_values": 1944,
+  "matched_notes": 12725,
+  "used_note_values": 12657,
+  "excluded_note_counts": {
+    "grace": 23,
+    "ornament": 0,
+    "outside_tempo_map": 45,
+    "non_positive": 0
+  },
+  "tempo_map_dropped_positions": 20,
+  "common_support_min": 9,
+  "common_support_max": 9,
+  "minimum_support": 2,
+  "scale": {
+    "value": 0.2366397716293632,
+    "requested_method": "mad",
+    "method": "mad",
+    "valid_count": 1944,
+    "mad": 0.2366397716293632,
+    "iqr": 0.23498466986413014,
+    "std": 0.34389744434151315
+  },
+  "residual_zero_ratio": 0.1111111111111111,
+  "standardized_max_abs": 8.219280582862048,
+  "raw_representative_percent_range": [
+    64.47192448271699,
+    81.5508972586516
+  ],
+  "relative_representative_delta_percent_range": [
+    -12.337622782451376,
+    10.884630407362662
+  ],
+  "pair_count": 36,
+  "median_pair_mean_abs_log2_difference": 0.3491458360763171,
+  "median_pair_multiplicative_gap_percent": 27.380705349694622,
+  "selected_performances": [
+    {
+      "role": "평균 길이 짧은 편",
+      "key": "Bach/Fugue/bwv_848/Zhou01M.mid",
+      "raw_representative_percent": 68.3300065468711
+    },
+    {
+      "role": "평균 길이 중간",
+      "key": "Bach/Fugue/bwv_848/Mizumoto03M.mid",
+      "raw_representative_percent": 72.17699282241693
+    },
+    {
+      "role": "평균 길이 긴 편",
+      "key": "Bach/Fugue/bwv_848/SunY01M.mid",
+      "raw_representative_percent": 75.42312493464706
+    }
+  ],
+  "curve_selection_rule": "nearest ranks to 25th, 50th and 75th percentiles of mean raw log2 Articulation",
+  "curve_display_interval_range": [
+    93,
+    124
+  ],
+  "duration_example": {
+    "key": "Bach/Fugue/bwv_848/Mizumoto03M.mid",
+    "display_interval": 108,
+    "notes": 7,
+    "beat_raw_log2": -0.8282336517334715,
+    "beat_duration_percent": 56.321839080461665,
+    "note": {
+      "key": "Bach/Fugue/bwv_848/Mizumoto03M.mid",
+      "match_index": 676,
+      "note_id": "n691",
+      "pitch": 65,
+      "score_onset_beats": 109.25,
+      "score_offset_beats": 109.5,
+      "score_attributes": "v1|staff1",
+      "onset_seconds": 64.54791666666667,
+      "offset_seconds": 64.65,
+      "actual_duration_seconds": 0.10208333333333997,
+      "expected_duration_seconds": 0.18125000000000568,
+      "note_log2": -0.8282336517334715,
+      "duration_vs_expected_percent": 56.321839080461665,
+      "used_for_note_feature": true,
+      "excluded_reason": "",
+      "beat_index": 107,
+      "display_interval": 108,
+      "used_for_beat_feature": true
+    }
+  },
+  "example_rule": "nearest midpoint valid beat of the median-mean-log2-rank performer; eligible note nearest the beat median; ties by match index; no maximum-difference search",
+  "extraction_checks": {
+    "tempo_map": 0.0,
+    "note_log2": 0.0,
+    "raw": 0.0,
+    "common": 0.0,
+    "relative": 0.0,
+    "scale": 0.0,
+    "standardized": 0.0,
+    "pair_difference": 4.440892098500626e-16,
+    "scaled_pair_difference": 1.7763568394002505e-15
+  },
+  "asap_revision": "afc815c75c42e83a79c03feb6da8a35e77d4c6b8",
+  "nasap_revision": "4097b45757bed854818cf87e77b92323ebf90615",
+  "inputs_and_code_sha256": "5e4a1045881a1e452b449bf50e89de2d2ed1625de90f87076da7dcb50d9ac1cd",
+  "clipping": null,
+  "smoothing": null,
+  "mask_policy": "positive beat width and eligible matched notes; relative additionally finite raw, positive score width and common support >= 2; no new Tempo masks",
+  "validation_scope": "Numerical duration/tempo-map/beat/normalization consistency under the existing alignment and LIS tie policy, not alignment ground truth, acoustic articulation or recommendation performance",
+  "largest_standardized_beat": {
+    "key": "Bach/Fugue/bwv_848/SunY01M.mid",
+    "beat_index": 99,
+    "display_interval": 100,
+    "score_interval_seconds": 0.5,
+    "performance_start_seconds": 55.863195,
+    "performance_end_seconds": 56.421875,
+    "score_beat_type": "b",
+    "performance_beat_type": "b",
+    "note_count": 7,
+    "raw": -0.11345804978335454,
+    "common": -2.058466729869489,
+    "relative": 1.9450086800861344,
+    "standardized": 8.219280582862048,
+    "raw_mask": true,
+    "common_mask": true,
+    "relative_mask": true,
+    "standardized_mask": true,
+    "raw_duration_percent": 92.43697478991145,
+    "common_duration_percent": 24.007103744420757,
+    "relative_delta_percent": 285.0400938571932,
+    "common_support": 9,
+    "scale": 0.2366397716293632
+  },
+  "example_and_extreme_midi_checks": [
+    {
+      "key": "Bach/Fugue/bwv_848/Mizumoto03M.mid",
+      "match_index": 676,
+      "pitch": 65,
+      "max_timestamp_error_seconds": 0.00026041666667708796
+    },
+    {
+      "key": "Bach/Fugue/bwv_848/SunY01M.mid",
+      "match_index": 624,
+      "pitch": 70,
+      "max_timestamp_error_seconds": 0.0
+    },
+    {
+      "key": "Bach/Fugue/bwv_848/SunY01M.mid",
+      "match_index": 626,
+      "pitch": 49,
+      "max_timestamp_error_seconds": 0.0
+    },
+    {
+      "key": "Bach/Fugue/bwv_848/SunY01M.mid",
+      "match_index": 627,
+      "pitch": 48,
+      "max_timestamp_error_seconds": 0.0
+    },
+    {
+      "key": "Bach/Fugue/bwv_848/SunY01M.mid",
+      "match_index": 628,
+      "pitch": 70,
+      "max_timestamp_error_seconds": 0.0
+    },
+    {
+      "key": "Bach/Fugue/bwv_848/SunY01M.mid",
+      "match_index": 629,
+      "pitch": 46,
+      "max_timestamp_error_seconds": 0.0
+    },
+    {
+      "key": "Bach/Fugue/bwv_848/SunY01M.mid",
+      "match_index": 630,
+      "pitch": 49,
+      "max_timestamp_error_seconds": 0.0
+    },
+    {
+      "key": "Bach/Fugue/bwv_848/SunY01M.mid",
+      "match_index": 631,
+      "pitch": 68,
+      "max_timestamp_error_seconds": 0.0
+    }
+  ],
+  "midi_time_tolerance_seconds": 0.002
+}

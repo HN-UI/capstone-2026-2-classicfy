@@ -1,0 +1,136 @@
+{
+  "work": "Bach/Fugue/bwv_848",
+  "performances": 9,
+  "intervals_per_performance": 216,
+  "curve_display_interval_range": [
+    93,
+    124
+  ],
+  "curve_selection_rule": "nearest ranks to 25th, 50th and 75th percentiles of mean raw pedal depth; same three performers in every channel",
+  "selected_performances": [
+    {
+      "role": "얕은 편",
+      "key": "Bach/Fugue/bwv_848/Mizumoto03M.mid",
+      "mean_depth_percent": 1.5182845738077053
+    },
+    {
+      "role": "중간",
+      "key": "Bach/Fugue/bwv_848/SunY01M.mid",
+      "mean_depth_percent": 9.49673265010774
+    },
+    {
+      "role": "깊은 편",
+      "key": "Bach/Fugue/bwv_848/Lou01M.mid",
+      "mean_depth_percent": 13.686849633759627
+    }
+  ],
+  "cc64_signal_example": {
+    "key": "Bach/Fugue/bwv_848/SunY01M.mid",
+    "selection_rule": "nearest midpoint valid beat with partial on time and a threshold crossing",
+    "display_intervals": [
+      112,
+      115
+    ],
+    "example_display_interval": 113,
+    "depth_percent": 45.245663969156034,
+    "down_ratio_percent": 44.503983267359835,
+    "changes": 2
+  },
+  "signal_selection_rule": "median-depth-rank performer; closest midpoint partial-on crossing beat, then nonzero-depth fallback, then valid zero fallback; four adjacent intervals; no search for maximum differences",
+  "channels": {
+    "depth": {
+      "valid_raw_values": 1944,
+      "valid_relative_values": 1944,
+      "valid_standardized_values": 1944,
+      "mean_raw_display_min": 0.3175370609966799,
+      "mean_raw_display_max": 30.86778119806244,
+      "median_pair_mean_abs_difference": 0.14155761064507927,
+      "pair_count": 36,
+      "scale": {
+        "channel": "depth",
+        "value": 0.156431826559337,
+        "requested_method": "std",
+        "method": "std",
+        "valid_count": 1944,
+        "mad": 0.0,
+        "iqr": 0.10965765532353469,
+        "std": 0.156431826559337,
+        "raw_zero_ratio": 0.6790123456790124,
+        "relative_zero_ratio": 0.6507201646090535,
+        "common_mean": 0.019364166138363937,
+        "standardized_max_abs": 5.472249551813114
+      }
+    },
+    "down_ratio": {
+      "valid_raw_values": 1944,
+      "valid_relative_values": 1944,
+      "valid_standardized_values": 1944,
+      "mean_raw_display_min": 0.4387743972023409,
+      "mean_raw_display_max": 10.127684194424008,
+      "median_pair_mean_abs_difference": 0.05792130537615925,
+      "pair_count": 36,
+      "scale": {
+        "channel": "down_ratio",
+        "value": 0.128808803831773,
+        "requested_method": "std",
+        "method": "std",
+        "valid_count": 1944,
+        "mad": 0.0,
+        "iqr": 0.0,
+        "std": 0.128808803831773,
+        "raw_zero_ratio": 0.9130658436213992,
+        "relative_zero_ratio": 0.9063786008230452,
+        "common_mean": 0.004895363753565292,
+        "standardized_max_abs": 7.308881419419888
+      }
+    },
+    "changes": {
+      "valid_raw_values": 1944,
+      "valid_relative_values": 1944,
+      "valid_standardized_values": 1944,
+      "mean_raw_display_min": 0.009259259259259259,
+      "mean_raw_display_max": 0.49537037037037035,
+      "median_pair_mean_abs_difference": 0.19907407407407407,
+      "pair_count": 36,
+      "scale": {
+        "channel": "changes",
+        "value": 0.5229392091188126,
+        "requested_method": "std",
+        "method": "std",
+        "valid_count": 1944,
+        "mad": 0.0,
+        "iqr": 0.0,
+        "std": 0.5229392091188126,
+        "raw_zero_ratio": 0.9130658436213992,
+        "relative_zero_ratio": 0.9166666666666666,
+        "common_mean": 0.027777777777777776,
+        "standardized_max_abs": 7.649072646016094
+      }
+    }
+  },
+  "common_support_min": 9,
+  "no_cc64_performances": [],
+  "cc64_event_count": 3669,
+  "minimum_support": 2,
+  "tempo_status_context_counts": {
+    "regular": 1944
+  },
+  "mask_policy": "Pedaling retains its positive-width mask; Tempo special/suspicious statuses are exported only as context, not applied as new pedal exclusions",
+  "extraction_checks": {
+    "raw_depth": 1.504352198367087e-14,
+    "raw_down_ratio": 1.27675647831893e-15,
+    "raw_changes": 0.0,
+    "common": 0.0,
+    "relative": 0.0,
+    "scale": 0.0,
+    "standardized": 0.0,
+    "pair_difference": 1.1102230246251565e-16,
+    "scaled_pair_difference": 8.881784197001252e-16
+  },
+  "asap_revision": "afc815c75c42e83a79c03feb6da8a35e77d4c6b8",
+  "nasap_revision": "4097b45757bed854818cf87e77b92323ebf90615",
+  "inputs_and_code_sha256": "79e83484d381e57241bfe2a6cb3db6779859f517183cfdebfb56318c4e65bdd6",
+  "clipping": null,
+  "smoothing": null,
+  "validation_scope": "CC64 numerical extraction, piece median subtraction and separate SD scaling, within-piece differences; not independent pedal sensor calibration or recommendation evaluation"
+}

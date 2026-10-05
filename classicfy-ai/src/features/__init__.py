@@ -12,6 +12,10 @@ from .beat_grid import BeatGrid, as_beat_array, assign_windows, build_beat_grid
 from .common_pattern import PieceFeatureInput, SeparatedFeature, separate_piece_feature
 from .dynamics import DynamicsFeature, extract_dynamics, summarize_dynamics
 from .models import BeatSequence
+from .normalization import (
+    DEFAULT_SCALE_METHODS, NormalizedFeature, ResidualScale, fit_residual_scale,
+    standardize_piece_feature, standardize_sequence,
+)
 from .pedaling import PedalingFeature, extract_pedaling, summarize_pedaling
 from .rubato import RubatoFeature, extract_piece_rubato_features, summarize_rubato
 from .tempo import (
@@ -27,10 +31,13 @@ __all__ = [
     "BeatGrid",
     "BeatSequence",
     "DynamicsFeature",
+    "DEFAULT_SCALE_METHODS",
+    "NormalizedFeature",
     "NoteArticulation",
     "PedalingFeature",
     "PieceFeatureInput",
     "RubatoFeature",
+    "ResidualScale",
     "SeparatedFeature",
     "TempoFeature",
     "TempoInput",
@@ -45,7 +52,10 @@ __all__ = [
     "extract_pedaling",
     "extract_piece_rubato_features",
     "extract_piece_tempo_features",
+    "fit_residual_scale",
     "separate_piece_feature",
+    "standardize_piece_feature",
+    "standardize_sequence",
     "summarize_articulation",
     "summarize_dynamics",
     "summarize_pedaling",

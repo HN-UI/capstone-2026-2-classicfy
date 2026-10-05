@@ -1,0 +1,84 @@
+{
+  "work": "Bach/Fugue/bwv_848",
+  "performances": 9,
+  "intervals_per_performance": 216,
+  "valid_raw_values": 1944,
+  "valid_relative_values": 1944,
+  "empty_beat_count": 0,
+  "note_event_count": 12905,
+  "common_support_min": 9,
+  "common_support_max": 9,
+  "minimum_support": 2,
+  "scale": {
+    "value": 0.04126208661417328,
+    "requested_method": "mad",
+    "method": "mad",
+    "valid_count": 1944,
+    "mad": 0.04126208661417328,
+    "iqr": 0.04111796014928892,
+    "std": 0.04608357115561558
+  },
+  "scale_in_velocity_units": 5.240285000000006,
+  "residual_zero_ratio": 0.1198559670781893,
+  "standardized_max_abs": 5.497701710789354,
+  "mean_raw_velocity_min": 64.8682962228101,
+  "mean_raw_velocity_max": 71.08197500801668,
+  "mean_relative_velocity_min": -2.6736294826572604,
+  "mean_relative_velocity_max": 3.5400493025493023,
+  "pair_count": 36,
+  "median_pair_mean_abs_velocity_difference": 6.499356077307466,
+  "curve_selection_rule": "nearest ranks to 25th, 50th and 75th percentiles of mean raw Dynamics",
+  "selected_performances": [
+    {
+      "role": "평균 세기 낮은 편",
+      "key": "Bach/Fugue/bwv_848/Lin04M.mid",
+      "raw_mean_velocity": 66.39398983218427
+    },
+    {
+      "role": "평균 세기 중간",
+      "key": "Bach/Fugue/bwv_848/LeeSH01M.mid",
+      "raw_mean_velocity": 67.38179649568538
+    },
+    {
+      "role": "평균 세기 높은 편",
+      "key": "Bach/Fugue/bwv_848/Denisova06M.mid",
+      "raw_mean_velocity": 67.59230048500882
+    }
+  ],
+  "curve_display_interval_range": [
+    93,
+    124
+  ],
+  "note_velocity_example": {
+    "key": "Bach/Fugue/bwv_848/LeeSH01M.mid",
+    "display_interval": 108,
+    "note_velocities": [
+      52,
+      51,
+      47,
+      52,
+      53,
+      57,
+      52
+    ],
+    "mean_velocity": 52.0,
+    "raw_dynamics": 0.4094488188976378
+  },
+  "example_rule": "nearest midpoint valid beat of the median-mean-Dynamics-rank performer; no maximum-difference search",
+  "extraction_checks": {
+    "raw": 0.0,
+    "common": 0.0,
+    "relative": 0.0,
+    "scale": 0.0,
+    "standardized": 0.0,
+    "pair_difference": 0.0,
+    "scaled_pair_difference": 8.881784197001252e-16
+  },
+  "asap_revision": "afc815c75c42e83a79c03feb6da8a35e77d4c6b8",
+  "nasap_revision": "4097b45757bed854818cf87e77b92323ebf90615",
+  "inputs_and_code_sha256": "a5b433ef8f6eb524dcdeede705f3d80db5cfde5ce62ef45c5f0c18d046751522",
+  "clipping": null,
+  "smoothing": null,
+  "mask_policy": "onset_count > 0 and positive performance interval width; common/relative additionally require finite values, positive score width, and support >= 2; no new Tempo masks",
+  "validation_scope": "Numerical velocity-to-beat extraction and piece normalization, within-piece differences; not calibrated acoustic loudness, voice-level dynamics or recommendation evaluation"
+}

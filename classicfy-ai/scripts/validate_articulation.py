@@ -3,7 +3,7 @@ r"""(n)ASAP note 정렬로 계산한 Articulation 특징을 ASAP 전체 연주�
 classicfy-ai 디렉터리에서 실행한다. matplotlib과 pandas가 필요하다.
 
     PYTHONPATH=src python scripts/validate_articulation.py \
-        --asap-root /path/to/ASAP --nasap-root /path/to/nASAP --out reports/articulation
+        --asap-root /path/to/ASAP --nasap-root /path/to/nASAP --out analysis/articulation
 
 match 파일을 읽는 데 몇 분이 걸리므로 --cache를 주면 수집 결과를 저장해 두고 그림과 표만 다시 만들 수 있다.
 
@@ -1060,7 +1060,8 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument("--asap-root", type=Path, required=True)
     parser.add_argument("--nasap-root", type=Path, required=True)
-    parser.add_argument("--out", type=Path, default=Path("reports/articulation"))
+    parser.add_argument("--out", type=Path,
+                        default=Path(__file__).resolve().parents[1] / "analysis/articulation")
     parser.add_argument("--cache", type=Path, default=None)
     parser.add_argument("--workers", type=int, default=8)
     parser.add_argument("--works", nargs="+", metavar="WORK",

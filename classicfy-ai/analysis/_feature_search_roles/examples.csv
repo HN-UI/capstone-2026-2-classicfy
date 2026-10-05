@@ -1,0 +1,11 @@
+﻿query_key,B,C,feature,AB_squared_difference,AC_squared_difference,advantage_for_B
+Bach/Fugue/bwv_848/Lou01M.mid,Bach/Prelude/bwv_857/ToA01M.mid,Bach/Prelude/bwv_857/WangA01M.mid,Tempo,0.42947027791238807,0.92699160935312,0.4975213314407319
+Bach/Fugue/bwv_848/Lou01M.mid,Bach/Prelude/bwv_857/ToA01M.mid,Bach/Prelude/bwv_857/WangA01M.mid,Rubato,0.15747772944073773,0.45668344765161967,0.29920571821088193
+Bach/Fugue/bwv_848/Lou01M.mid,Bach/Prelude/bwv_857/ToA01M.mid,Bach/Prelude/bwv_857/WangA01M.mid,Dynamics,0.5984724491885214,0.2649664921532276,-0.3335059570352938
+Bach/Fugue/bwv_848/Lou01M.mid,Bach/Prelude/bwv_857/ToA01M.mid,Bach/Prelude/bwv_857/WangA01M.mid,Articulation,0.0007887481073338557,1.8468052569477642,1.8460165088404303
+Bach/Fugue/bwv_848/Lou01M.mid,Bach/Prelude/bwv_857/ToA01M.mid,Bach/Prelude/bwv_857/WangA01M.mid,Pedaling,0.29136032311844945,0.1881518508616662,-0.10320847225678326
+Bach/Fugue/bwv_860/Nikiforov05M.mid,Schubert/Impromptu_op.90_D.899/3/Ko08M.mid,Schubert/Impromptu_op.90_D.899/3/Hou06M.mid,Tempo,0.09784868630814268,0.2943676441499371,0.1965189578417944
+Bach/Fugue/bwv_860/Nikiforov05M.mid,Schubert/Impromptu_op.90_D.899/3/Ko08M.mid,Schubert/Impromptu_op.90_D.899/3/Hou06M.mid,Rubato,0.04775338659530243,0.02120867730539668,-0.02654470928990575
+Bach/Fugue/bwv_860/Nikiforov05M.mid,Schubert/Impromptu_op.90_D.899/3/Ko08M.mid,Schubert/Impromptu_op.90_D.899/3/Hou06M.mid,Dynamics,0.3066985591207352,0.014067174275742668,-0.2926313848449925
+Bach/Fugue/bwv_860/Nikiforov05M.mid,Schubert/Impromptu_op.90_D.899/3/Ko08M.mid,Schubert/Impromptu_op.90_D.899/3/Hou06M.mid,Articulation,0.21575374024843424,0.45866838790752545,0.2429146476590912
+Bach/Fugue/bwv_860/Nikiforov05M.mid,Schubert/Impromptu_op.90_D.899/3/Ko08M.mid,Schubert/Impromptu_op.90_D.899/3/Hou06M.mid,Pedaling,0.530147527928153,2.497240308472339,1.9670927805441858

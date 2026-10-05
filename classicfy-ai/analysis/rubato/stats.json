@@ -1,0 +1,71 @@
+{
+  "work": "Bach/Fugue/bwv_848",
+  "performances": 9,
+  "intervals_per_performance": 216,
+  "valid_absolute_values": 1944,
+  "valid_relative_values": 1944,
+  "status_counts": {
+    "regular": 1944
+  },
+  "common_support_min": 9,
+  "curve_selection_rule": "nearest ranks to 25th, 50th and 75th percentiles of relative_rubato_amount; no extreme selection",
+  "selected_performances": [
+    {
+      "role": "편차 작은 편",
+      "key": "Bach/Fugue/bwv_848/SunY01M.mid",
+      "relative_amount_percent_ratio_gap": 1.4424103025746322
+    },
+    {
+      "role": "편차 중간",
+      "key": "Bach/Fugue/bwv_848/Mizumoto03M.mid",
+      "relative_amount_percent_ratio_gap": 1.7221052939573105
+    },
+    {
+      "role": "편차 큰 편",
+      "key": "Bach/Fugue/bwv_848/Lin04M.mid",
+      "relative_amount_percent_ratio_gap": 1.846357877430413
+    }
+  ],
+  "example_key": "Bach/Fugue/bwv_848/Mizumoto03M.mid",
+  "example_display_intervals": [
+    194,
+    125,
+    61
+  ],
+  "example_beat_rule": "nearest ranks to 25th, 50th and 75th percentiles of absolute_rubato within the median-relative-amount performer",
+  "curve_display_interval_range": [
+    93,
+    124
+  ],
+  "pair_count": 36,
+  "min_relative_amount_percent_ratio_gap": 1.3158282835037687,
+  "max_relative_amount_percent_ratio_gap": 2.464387449054725,
+  "median_absolute_amount_percent_ratio_gap": 2.6362921023193104,
+  "median_relative_amount_percent_ratio_gap": 1.7221052939573105,
+  "median_pairwise_percent_ratio_gap": 2.837962456048149,
+  "min_pairwise_percent_ratio_gap": 1.8866740838090115,
+  "max_pairwise_percent_ratio_gap": 3.8483463643213174,
+  "common_rubato_amount_log2": 0.03303214839128573,
+  "extraction_checks": {
+    "raw_log2": 0.0,
+    "absolute_log2": 0.0,
+    "common_log2": 0.0,
+    "relative_log2": 0.0,
+    "absolute_median_log2": 2.7755575615628914e-17,
+    "reconstructed_interval_seconds": 2.220446049250313e-16,
+    "pair_difference_log2": 5.551115123125783e-17
+  },
+  "speed_invariance_checks": {
+    "speed_factor": 1.2,
+    "tempo_shift_log2": 5.0737192225369654e-14,
+    "absolute_log2": 5.564992910933597e-14,
+    "common_log2": 5.294376048681215e-14,
+    "relative_log2": 8.122669203913802e-14
+  },
+  "asap_revision": "afc815c75c42e83a79c03feb6da8a35e77d4c6b8",
+  "inputs_and_code_sha256": "c09dcdee4f28882e4fbe5cd0f9772abea53c91f7111a7c95cd237f29d520f65a",
+  "clipping": null,
+  "smoothing": null,
+  "standardization": null,
+  "validation_scope": "Beat-level numerical consistency, invariance to a uniform time scaling, and within-piece differences; not independent annotation accuracy, score-marking separation or recommendation evaluation"
+}

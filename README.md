@@ -9,6 +9,11 @@
 - **빌드 도구**: Gradle
 - **데이터베이스**: mysql
 
+## AI 분석 자료
+
+연주 feature의 그림·CSV·보고서는 [분석 목록](classicfy-ai/analysis/README.md)에서
+Tempo, Rubato, Dynamics·Pedaling, Articulation, 정규화 등의 주제별로 확인할 수 있다.
+
 ## Server Architecture
 추후 이미지 업데이트
 
