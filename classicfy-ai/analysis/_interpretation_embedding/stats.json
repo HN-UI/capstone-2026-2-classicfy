@@ -1,0 +1,70 @@
+{
+  "groups": 55,
+  "performances": 570,
+  "eligible_cross_work_candidates": 561,
+  "embedding": "existing 14-coordinate full embedding, 5 equal musical blocks, no new fitting or weights",
+  "selection": {
+    "A": "Within fixed --anchor work: maximum Rubato median abs among performances at or above median pedal depth mean",
+    "same_work": "A plus nearest Tempo mean ranks 25/75%; median/extremes only if duplicates",
+    "B": "minimum full-embedding distance among all candidates outside A piece",
+    "C": "maximum full-embedding distance within B piece, distinct from B"
+  },
+  "selected": {
+    "A": {
+      "key": "Bach/Fugue/bwv_848/Lou01M.mid",
+      "piece": "Bach/Fugue/bwv_848/midi_score.mid",
+      "grid": "f727834b59a1"
+    },
+    "B": {
+      "key": "Bach/Prelude/bwv_857/ToA01M.mid",
+      "piece": "Bach/Prelude/bwv_857/midi_score.mid",
+      "grid": "51438d937c94"
+    },
+    "C": {
+      "key": "Bach/Prelude/bwv_857/Lan01M.mid",
+      "piece": "Bach/Prelude/bwv_857/midi_score.mid",
+      "grid": "51438d937c94"
+    }
+  },
+  "same_work_keys": [
+    "Bach/Fugue/bwv_848/MiyashitaM01M.mid",
+    "Bach/Fugue/bwv_848/Lou01M.mid",
+    "Bach/Fugue/bwv_848/SunY01M.mid"
+  ],
+  "distance_AB": 0.5436119071115773,
+  "distance_AC": 1.3629747907395093,
+  "profile_display_coordinates": [
+    0,
+    3,
+    4,
+    6,
+    8
+  ],
+  "percentile_policy": "100 * (count strictly lower + 0.5 * count tied) / cohort count; display only, not retrieval input",
+  "curve_display_intervals": [
+    93,
+    124
+  ],
+  "source_display_intervals": [
+    107,
+    110
+  ],
+  "source_checks": {
+    "checked_beats": 12,
+    "checked_matched_notes": 85,
+    "max_midi_match_timing_error_seconds": 0.0005208333333399651,
+    "timestamp_tolerance_seconds": 0.002,
+    "checks": "MIDI velocity mean, matched-note duration ratio/beat median, CC64 integral/on ratio/transitions agree with cache"
+  },
+  "source_provenance": {
+    "asap_revision": "afc815c75c42e83a79c03feb6da8a35e77d4c6b8",
+    "nasap_revision": "4097b45757bed854818cf87e77b92323ebf90615",
+    "input_sha256": "19fd51ad1f964733ca888a8da68216057a57ba0302835d055a501df5ad62077a",
+    "collector_version": 1
+  },
+  "cache_sha256": "79ab737a08335c7fd7e9a912159de65b7c26795e1ef22e45114e5a8c6eb8ad2e",
+  "claim_scope": "Extracted features express same-work performance differences; feature-similar performances can be retrieved across works; selected examples, not independent musical similarity or recommendation evaluation",
+  "smoothing": null,
+  "clipping": null,
+  "analysis_and_selected_sources_sha256": "48e623ca42b7969fb607adb026ed5ed9ecef17f9b3f9a6bff549ee2e13193f59"
+}

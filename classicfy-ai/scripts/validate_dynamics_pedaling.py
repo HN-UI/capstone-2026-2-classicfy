@@ -3,7 +3,7 @@ r"""ASAP 전체 연주에 Dynamics·Pedaling 특징을 적용하고 검증 결�
 classicfy-ai 디렉터리에서 실행한다. matplotlib과 pandas가 필요하다.
 
     PYTHONPATH=src python scripts/validate_dynamics_pedaling.py \
-        --asap-root /path/to/ASAP --out reports/dynamics_pedaling
+        --asap-root /path/to/ASAP --out analysis/dynamics_pedaling
 
 MIDI를 읽는 데 시간이 걸리므로 --cache를 주면 수집 결과를 저장해 두고 그림만 다시 그릴 수 있다.
 
@@ -12,7 +12,7 @@ MIDI를 읽는 데 시간이 걸리므로 --cache를 주면 수집 결과를 저
 
     python scripts/validate_dynamics_pedaling.py --asap-root /path/to/ASAP --list-works
     python scripts/validate_dynamics_pedaling.py --asap-root /path/to/ASAP \
-        --works Chopin/Etudes_op_10/1 Liszt/Gran_Etudes_de_Paganini/2_La_campanella --out reports/custom
+        --works Chopin/Etudes_op_10/1 Liszt/Gran_Etudes_de_Paganini/2_La_campanella --out analysis/custom_comparisons/dynamics_pedaling
 """
 
 import argparse
@@ -632,7 +632,8 @@ def plot_extraction_check(asap_root: Path, results, key: str, path: Path, span: 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument("--asap-root", type=Path, required=True)
-    parser.add_argument("--out", type=Path, default=Path("reports/dynamics_pedaling"))
+    parser.add_argument("--out", type=Path,
+                        default=Path(__file__).resolve().parents[1] / "analysis/dynamics_pedaling")
     parser.add_argument("--cache", type=Path, default=None)
     parser.add_argument("--workers", type=int, default=8)
     parser.add_argument("--works", nargs="+", metavar="WORK",

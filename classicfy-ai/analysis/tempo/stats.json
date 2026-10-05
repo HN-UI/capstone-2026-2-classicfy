@@ -1,0 +1,56 @@
+{
+  "work": "Bach/Fugue/bwv_848",
+  "performances": 9,
+  "intervals_per_performance": 216,
+  "valid_raw_values": 1944,
+  "valid_individual_values": 1944,
+  "status_counts": {
+    "regular": 1944
+  },
+  "common_support_min": 9,
+  "curve_selection_rule": "nearest ranks to 25th, 50th and 75th percentiles of overall_individual_tempo",
+  "selected_performances": [
+    {
+      "role": "느린 편",
+      "key": "Bach/Fugue/bwv_848/MiyashitaM01M.mid",
+      "representative_vs_common_percent": -6.4653191182002185
+    },
+    {
+      "role": "중간",
+      "key": "Bach/Fugue/bwv_848/Lou01M.mid",
+      "representative_vs_common_percent": 0.0
+    },
+    {
+      "role": "빠른 편",
+      "key": "Bach/Fugue/bwv_848/SunY01M.mid",
+      "representative_vs_common_percent": 3.565956457111403
+    }
+  ],
+  "example_beat_index": 108,
+  "example_display_interval": 109,
+  "pair_count": 36,
+  "example_beat_rule": "Nearest midpoint jointly valid interval with slow/median/fast duration ordering; otherwise nearest jointly valid midpoint",
+  "curve_display_interval_range": [
+    93,
+    124
+  ],
+  "representative_slowest_percent": -12.880365666153013,
+  "representative_fastest_percent": 15.692962735241498,
+  "representative_fastest_vs_slowest_ratio": 1.3279780570692024,
+  "median_pairwise_percent_ratio_gap": 10.019655285609474,
+  "min_pairwise_percent_ratio_gap": 2.584889735180649,
+  "max_pairwise_percent_ratio_gap": 32.60431797052765,
+  "extraction_checks": {
+    "max_raw_log2_error": 0.0,
+    "max_reconstructed_interval_seconds_error": 1.1102230246251565e-16,
+    "max_common_log2_error": 0.0,
+    "max_individual_log2_error": 0.0,
+    "max_pair_difference_log2_error": 1.1102230246251565e-16
+  },
+  "asap_revision": "afc815c75c42e83a79c03feb6da8a35e77d4c6b8",
+  "inputs_and_code_sha256": "e2a7d65d50cad8c6f635bd9bdfa94f57f095c4b860c0cd94be6231bbfa7203f8",
+  "clipping": null,
+  "smoothing": null,
+  "standardization": null,
+  "validation_scope": "Numerical consistency with ASAP aligned beat times; not independent beat annotation accuracy or recommendation evaluation"
+}

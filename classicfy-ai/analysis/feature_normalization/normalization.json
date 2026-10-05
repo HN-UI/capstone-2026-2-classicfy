@@ -1,0 +1,59 @@
+{
+  "policy": {
+    "dynamics": "mad",
+    "pedal_depth": "std",
+    "pedal_down_ratio": "std",
+    "pedal_changes": "std",
+    "articulation": "mad"
+  },
+  "normalized_cache": "/Users/ihun-ui/Desktop/Classicfy/datasets/feature_normalization_standardized.npz",
+  "normalized_cache_sha256": "7db8c538661b625fe9c1c34e95f12a60e4ec7f661dc09f1aa5cb50e9827ac3ee",
+  "clipping": null,
+  "recentering": false,
+  "scope": "piece",
+  "scale_support": "all valid residual beats",
+  "channels": {
+    "dynamics": {
+      "groups": 172,
+      "performances": 968,
+      "valid_beats": 510656,
+      "valid_ratio": 0.964409887800023,
+      "max_abs_standardized": 17.199514366653208,
+      "varying_pairs": 4540
+    },
+    "pedal_depth": {
+      "groups": 172,
+      "performances": 968,
+      "valid_beats": 529501,
+      "valid_ratio": 1.0,
+      "max_abs_standardized": 9.19784687463672,
+      "varying_pairs": 4532
+    },
+    "pedal_down_ratio": {
+      "groups": 172,
+      "performances": 968,
+      "valid_beats": 529501,
+      "valid_ratio": 1.0,
+      "max_abs_standardized": 16.742371511931307,
+      "varying_pairs": 4523
+    },
+    "pedal_changes": {
+      "groups": 172,
+      "performances": 968,
+      "valid_beats": 529501,
+      "valid_ratio": 1.0,
+      "max_abs_standardized": 21.656603016304285,
+      "varying_pairs": 4523
+    },
+    "articulation": {
+      "groups": 135,
+      "performances": 780,
+      "valid_beats": 367716,
+      "valid_ratio": 0.9636163522012579,
+      "max_abs_standardized": 33.75151592642462,
+      "varying_pairs": 3932
+    }
+  },
+  "max_pair_residual_error": 1.7763568394002505e-15,
+  "max_pair_scale_error": 7.105427357601002e-15
+}

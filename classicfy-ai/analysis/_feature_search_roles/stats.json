@@ -1,0 +1,264 @@
+{
+  "works": 55,
+  "queries": 570,
+  "configs": {
+    "all": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "without_Tempo": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "without_Rubato": [
+      0,
+      2,
+      3,
+      4
+    ],
+    "without_Dynamics": [
+      0,
+      1,
+      3,
+      4
+    ],
+    "without_Articulation": [
+      0,
+      1,
+      2,
+      4
+    ],
+    "without_Pedaling": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "only_Tempo": [
+      0
+    ],
+    "only_Rubato": [
+      1
+    ],
+    "only_Dynamics": [
+      2
+    ],
+    "only_Articulation": [
+      3
+    ],
+    "only_Pedaling": [
+      4
+    ],
+    "without_Tempo_Rubato": [
+      2,
+      3,
+      4
+    ],
+    "without_Dynamics_Articulation": [
+      0,
+      1,
+      4
+    ]
+  },
+  "coordinates": 14,
+  "alternative_coordinates": 7,
+  "source_provenance": {
+    "asap_revision": "afc815c75c42e83a79c03feb6da8a35e77d4c6b8",
+    "nasap_revision": "4097b45757bed854818cf87e77b92323ebf90615",
+    "input_sha256": "19fd51ad1f964733ca888a8da68216057a57ba0302835d055a501df5ad62077a",
+    "collector_version": 1
+  },
+  "raw_cache_sha256": "79ab737a08335c7fd7e9a912159de65b7c26795e1ef22e45114e5a8c6eb8ad2e",
+  "script_sha256": "eb5c220c08b235085ec7fed4a4d38befcc40c02948c8276230e0162dd9d3434d",
+  "aggregation": "Mean per query, mean queries within source work/grid, equal work/grid macro; candidate gallery fixed",
+  "bootstrap": {
+    "unit": "source work/grid",
+    "samples": 2000,
+    "seed": 20261005,
+    "interval": "percentile 2.5-97.5, descriptive conditional on this fixed corpus; overlapping target works remain dependent"
+  },
+  "ranking_ties": "Ranks averaged; fractional top-k cutoff; neighbor change requires baseline absent from tied nearest set; heldout tie=0.5; displayed candidate is lexical first",
+  "normalization": "Existing residuals; per-work MAD T/R/D/A and separate SD pedal channels; no refitting on removal",
+  "examples": {
+    "anchor": {
+      "A": {
+        "key": "Bach/Fugue/bwv_848/Lou01M.mid",
+        "piece": "Bach/Fugue/bwv_848/midi_score.mid",
+        "grid": "f727834b59a1"
+      },
+      "B": {
+        "key": "Bach/Prelude/bwv_857/ToA01M.mid",
+        "piece": "Bach/Prelude/bwv_857/midi_score.mid",
+        "grid": "51438d937c94"
+      },
+      "C": {
+        "key": "Bach/Prelude/bwv_857/WangA01M.mid",
+        "piece": "Bach/Prelude/bwv_857/midi_score.mid",
+        "grid": "51438d937c94"
+      }
+    },
+    "typical": {
+      "A": {
+        "key": "Bach/Fugue/bwv_860/Nikiforov05M.mid",
+        "piece": "Bach/Fugue/bwv_860/midi_score.mid",
+        "grid": "b1bb6577f566"
+      },
+      "B": {
+        "key": "Schubert/Impromptu_op.90_D.899/3/Ko08M.mid",
+        "piece": "Schubert/Impromptu_op.90_D.899/3/midi_score.mid",
+        "grid": "733be4b632ad"
+      },
+      "C": {
+        "key": "Schubert/Impromptu_op.90_D.899/3/Hou06M.mid",
+        "piece": "Schubert/Impromptu_op.90_D.899/3/midi_score.mid",
+        "grid": "733be4b632ad"
+      },
+      "selection": {
+        "work_sensitivity": 0.004499703966844287,
+        "median_work_sensitivity": 0.004499703966844287,
+        "query_sensitivity": 0.003907637655417406
+      }
+    }
+  },
+  "heldout_examples": [
+    {
+      "feature": "Tempo",
+      "A": {
+        "key": "Chopin/Ballades/1/McNamara02.mid",
+        "piece": "Chopin/Ballades/1/midi_score.mid",
+        "grid": "e0f77fef3ec1"
+      },
+      "B": {
+        "key": "Beethoven/Piano_Sonatas/21-1_no_repeat/Shi02.mid",
+        "piece": "Beethoven/Piano_Sonatas/21-1_no_repeat/midi_score.mid",
+        "grid": "34f73f92fcfe"
+      },
+      "query_agreement": 0.5,
+      "work_agreement": 0.6188910370007106,
+      "macro_agreement": 0.6107589610150139,
+      "selection": "Work mean closest to macro mean; query agreement closest to selected work mean; lexical ties"
+    },
+    {
+      "feature": "Rubato",
+      "A": {
+        "key": "Beethoven/Piano_Sonatas/16-1/Khmara01.mid",
+        "piece": "Beethoven/Piano_Sonatas/16-1/midi_score.mid",
+        "grid": "0ad45a446f9e"
+      },
+      "B": {
+        "key": "Schubert/Piano_Sonatas/894-2_no_repeat/BianF14.mid",
+        "piece": "Schubert/Piano_Sonatas/894-2_no_repeat/midi_score.mid",
+        "grid": "a677c92c06c7"
+      },
+      "query_agreement": 0.6,
+      "work_agreement": 0.5964285714285714,
+      "macro_agreement": 0.5999955169424204,
+      "selection": "Work mean closest to macro mean; query agreement closest to selected work mean; lexical ties"
+    },
+    {
+      "feature": "Dynamics",
+      "A": {
+        "key": "Beethoven/Piano_Sonatas/31-1/AbdelmoulaJS03M.mid",
+        "piece": "Beethoven/Piano_Sonatas/31-1/midi_score.mid",
+        "grid": "7245a2a2528e"
+      },
+      "B": {
+        "key": "Liszt/Transcendental_Etudes/5/Min03M.mid",
+        "piece": "Liszt/Transcendental_Etudes/5/midi_score.mid",
+        "grid": "3d38b4a4737a"
+      },
+      "query_agreement": 0.5,
+      "work_agreement": 0.5228738633500538,
+      "macro_agreement": 0.523361331731591,
+      "selection": "Work mean closest to macro mean; query agreement closest to selected work mean; lexical ties"
+    },
+    {
+      "feature": "Articulation",
+      "A": {
+        "key": "Chopin/Sonata_3/2nd/SCHU09.mid",
+        "piece": "Chopin/Sonata_3/2nd/midi_score.mid",
+        "grid": "16d81d8d5e3d"
+      },
+      "B": {
+        "key": "Beethoven/Piano_Sonatas/17-1_no_repeat/GuoE02M.mid",
+        "piece": "Beethoven/Piano_Sonatas/17-1_no_repeat/midi_score.mid",
+        "grid": "221bcdc16719"
+      },
+      "query_agreement": 0.5,
+      "work_agreement": 0.5375972611266728,
+      "macro_agreement": 0.5397004674895771,
+      "selection": "Work mean closest to macro mean; query agreement closest to selected work mean; lexical ties"
+    },
+    {
+      "feature": "Pedaling",
+      "A": {
+        "key": "Chopin/Etudes_op_10/8/Rizikov03M.mid",
+        "piece": "Chopin/Etudes_op_10/8/midi_score.mid",
+        "grid": "e2e0a6f127f6"
+      },
+      "B": {
+        "key": "Chopin/Sonata_3/2nd/HuangSW04.mid",
+        "piece": "Chopin/Sonata_3/2nd/midi_score.mid",
+        "grid": "16d81d8d5e3d"
+      },
+      "query_agreement": 0.5,
+      "work_agreement": 0.5242643697795324,
+      "macro_agreement": 0.5232687370147094,
+      "selection": "Work mean closest to macro mean; query agreement closest to selected work mean; lexical ties"
+    }
+  ],
+  "heldout_baseline": "Uniform random performance within selected target work has expected pairwise score 0.5, including ties",
+  "heldout_scope": "Cross-feature concordance; not feature necessity, listener agreement, recommendation accuracy, or out-of-sample evaluation",
+  "search_scope": "Sensitivity and explanations of this defined feature distance, not nearest neighbor correctness",
+  "candidate_count_range": [
+    541,
+    565
+  ],
+  "nearest_tie_query_counts": {
+    "full": {
+      "all": 0,
+      "without_Tempo": 0,
+      "without_Rubato": 0,
+      "without_Dynamics": 0,
+      "without_Articulation": 0,
+      "without_Pedaling": 0,
+      "only_Tempo": 0,
+      "only_Rubato": 0,
+      "only_Dynamics": 0,
+      "only_Articulation": 0,
+      "only_Pedaling": 10,
+      "without_Tempo_Rubato": 0,
+      "without_Dynamics_Articulation": 0
+    },
+    "means_only": {
+      "all": 0,
+      "without_Tempo": 0,
+      "without_Rubato": 0,
+      "without_Dynamics": 0,
+      "without_Articulation": 0,
+      "without_Pedaling": 0,
+      "only_Tempo": 0,
+      "only_Rubato": 0,
+      "only_Dynamics": 0,
+      "only_Articulation": 0,
+      "only_Pedaling": 7,
+      "without_Tempo_Rubato": 0,
+      "without_Dynamics_Articulation": 0
+    }
+  },
+  "dependency_sha256": {
+    "scripts/validate_embedding.py": "ec382dfcd98515d418ea6aaa5b3fddbec7645ece5278ee599b714295acf9b23e",
+    "scripts/validate_interpretation_examples.py": "8aea9c04ecc32ca1f01ce4c27ebd60b7ef4fe31531ac3eb5a86a655fb7571b24",
+    "scripts/validate_tempo.py": "4c698b2aece1a66defea1de0125fc84d0370059a9fa387820543140c14062f1b",
+    "scripts/validate_feature_normalization.py": "8f09be7317d53c2b905222c03ad7d0cea4ae12220466b3307b975bd078fd2ecd",
+    "src/features/normalization.py": "921782a42f37cd1fff20410b1c65e84b45446012222d10360b57f19e13a8f92e",
+    "src/features/common_pattern.py": "72e6bd3ecc20277ca7bfb2afee31f05bed7aaa19e3e5018bede0340b53bdeaa7",
+    "src/features/tempo.py": "edf4f5cd7976f339689091f06334cc762e3d8abb485cebae49862fd3445cdaa6",
+    "src/features/rubato.py": "f69fd86d7e4d5dd9d84c5bf4807f22d1bc6ca3addeef3c1e1eff96d188bdeb63"
+  }
+}
