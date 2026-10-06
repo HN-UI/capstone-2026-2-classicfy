@@ -1,0 +1,6 @@
+# Install with the existing repository environment: python -m pip install -r requirements-atepp.txt
+scipy==1.18.1
+scikit-learn==1.9.1
+numba==0.68.0
+music21==10.5.0
+gdown==6.4.1

@@ -1,0 +1,22 @@
+{
+  "selected_model": "dual_dtw",
+  "selection_reason": "accuracy comparison inconclusive; practical runtime tie-break, no accuracy superiority claim",
+  "beat_difference_gluenote_minus_dual": {
+    "mean": 0.0,
+    "low": 0.0,
+    "high": 0.0,
+    "works": 2
+  },
+  "note_difference_gluenote_minus_dual": {
+    "mean": 0.001712224320431499,
+    "low": -0.0007077360468773497,
+    "high": 0.004132184687740348,
+    "works": 2
+  },
+  "caveats": [
+    "TheGlueNote training includes (n)ASAP; this is not a held-out generalization benchmark.",
+    "(n)ASAP notes are algorithm-produced references; agreement is not independent human note accuracy.",
+    "MIDI score has no ornament annotation; both receive identical MIDI-only inputs.",
+    "ATEPP consists of automatic transcriptions: ASAP winner may not transfer."
+  ]
+}

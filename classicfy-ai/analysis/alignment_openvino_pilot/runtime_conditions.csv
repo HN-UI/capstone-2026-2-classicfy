@@ -1,0 +1,3 @@
+﻿model,runtime_workers,runtime_torch_threads,performances,median_runtime_seconds,median_score_notes
+dual_dtw,1,2,4,0.4380107499891892,1429.0
+gluenote,1,2,4,1.6527226000034716,1429.0

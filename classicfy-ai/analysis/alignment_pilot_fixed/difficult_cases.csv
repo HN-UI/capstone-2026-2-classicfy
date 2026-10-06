@@ -1,0 +1,5 @@
+﻿key,model,beat_p90_seconds,beat_p90_relative,beat_coverage,accepted
+Bach/Fugue/bwv_846/Shi05M.mid,dual_dtw,0.004557583333316,0.0036770101927193,1.0,True
+Bach/Fugue/bwv_846/Shi05M.mid,gluenote,0.004557583333316,0.0036770101927193,1.0,True
+Bach/Fugue/bwv_848/Denisova06M.mid,gluenote,0.0017354999999966,0.0033998975984036,1.0,True
+Bach/Fugue/bwv_848/Denisova06M.mid,dual_dtw,0.0014326333333329,0.0026060130742027,1.0,True

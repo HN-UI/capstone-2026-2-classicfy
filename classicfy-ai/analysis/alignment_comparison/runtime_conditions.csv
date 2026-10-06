@@ -1,0 +1,6 @@
+﻿model,inference_backend,runtime_workers,runtime_torch_threads,performances,median_runtime_seconds,median_score_notes
+dual_dtw,not_neural,2,4,751,1.7244353999849409,3115.0
+dual_dtw,not_neural,4,2,85,1.4017259999527596,1207.0
+gluenote,openvino_gpu,2,4,597,7.785931000020355,3172.0
+gluenote,torch,2,4,157,6.8408610000042245,1182.0
+gluenote,torch,4,2,82,12.27028125000652,1311.0

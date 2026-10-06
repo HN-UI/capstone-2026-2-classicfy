@@ -5,6 +5,9 @@
 
 | 폴더 | 분석 주제 | 시작 문서 |
 |---|---|---|
+| `alignment_comparison/` | ASAP의 DualDTW·TheGlueNote beat/note 정렬 비교 및 정렬기 선택 | [정렬 비교 보고서](alignment_comparison/README.md) |
+| `atepp_research/` | 선택한 연구 기반 정렬기로 ATEPP 피처 재추출·정규화·동일 추천 검증 | [재추출 검증 보고서](atepp_research/README.md) |
+| `atepp/` | ATEPP 다운로드·자동 정렬·기존 피처 확장, 무결성·시대/작곡가 정보·추천 순위 안정성 검증 | [ATEPP 확장 및 추천 검증](atepp/README.md) |
 | `tempo/` | 실제 한 작품의 Tempo 계산 확인·연주 차이, 파일당 그래프 하나 | [Tempo 그림 안내](tempo/README.md) |
 | `rubato/` | 실제 한 작품의 전체 빠르기·공통 변화 제거와 국소 편차, 파일당 그래프 하나 | [Rubato 그림 안내](rubato/README.md) |
 | `dynamics/` | 음표 velocity·강약 곡선·공통 제거·MAD 표준화와 평균/변화 폭 | [Dynamics 그림 안내](dynamics/README.md) |

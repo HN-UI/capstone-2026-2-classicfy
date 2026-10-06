@@ -1,0 +1,18 @@
+{
+  "versions": {
+    "parangonar": "3.3.3",
+    "partitura": "1.9.0",
+    "torch": "2.14.1",
+    "numpy": "2.5.3"
+  },
+  "python": "3.12.3 (tags/v3.12.3:f6650f9, Apr  9 2024, 14:05:25) [MSC v.1938 64 bit (AMD64)]",
+  "corpus_performances": 2,
+  "models": [
+    "dual_dtw",
+    "gluenote"
+  ],
+  "input": "identical score MIDI and performance MIDI",
+  "references_not_provided_to_matchers": true,
+  "selection_primary": "work-macro fraction of all annotated beats within 0.25 local beat",
+  "threads_per_worker": 2
+}

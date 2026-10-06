@@ -3,3 +3,12 @@ __pycache__/
 *.pyc
 AGENTS.md
 PROJECT_CONTEXT.md
+# 대용량/재생성 가능한 분석 산출물
+classicfy-ai/analysis/alignment_comparison/predictions/
+classicfy-ai/analysis/alignment_comparison/completed_subset_snapshot.jsonl
+classicfy-ai/analysis/**/midi_audit.csv
+classicfy-ai/analysis/**/inventory.csv
+*.partial.csv
+*.prof
+classicfy-ai/analysis/**/*.log
+kernel.errors.txt

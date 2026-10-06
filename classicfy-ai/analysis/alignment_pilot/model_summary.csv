@@ -1,0 +1,3 @@
+﻿model,attempted,completed,failures,works,beat_within_quarter,beat_within_100ms,beat_coverage,beat_mae_seconds,median_performance_p90_seconds,beat_catastrophic_fraction,median_runtime_seconds,eligible_note_performances,note_f1,accepted_fraction
+dual_dtw,2,2,0,2,1.0,1.0,1.0,0.0015689250164828247,0.002995108333324482,0.0,3.282832700002473,2,0.9931064306064306,1.0
+gluenote,2,0,2,2,0.0,0.0,0.0,,,,,0,,0.0
