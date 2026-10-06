@@ -17,6 +17,7 @@ import sys
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from matplotlib import font_manager
 import numpy as np
 import pandas as pd
 
@@ -233,6 +234,54 @@ def eta_squared(values, labels):
         return np.nan
     group_mean = frame.groupby("label").value.transform("mean")
     return float(((group_mean - frame.value.mean()) ** 2).sum() / total)
+
+
+def plot_identity_means(metrics, out):
+    """One readable before/after chart per label; retain all stages in the CSV."""
+    installed = {font.name for font in font_manager.fontManager.ttflist}
+    korean_font = next((name for name in ("Apple SD Gothic Neo", "NanumGothic", "Noto Sans CJK KR",
+                                         "Malgun Gothic", "Arial Unicode MS") if name in installed), None)
+    def text(korean, english):
+        return korean if korean_font else english
+    labels = text(("강약\nDynamics", "페달 깊이\nDepth", "페달 밟는 시간 비율\nDown ratio",
+                   "페달 전환 횟수\nChanges", "음의 연결·분리\nArticulation"),
+                  ("Dynamics", "Pedal depth", "Pedal down-time ratio", "Pedal changes", "Articulation"))
+    stages = (("raw", text("처리 전 · 원본", "Before · raw"), "#7b93ac"),
+              ("standardized", text("처리 후 · 공통 패턴 제거 + 단위 맞춤", "After · common removal + scaling"), "#197b6a"))
+    with plt.rc_context({"font.family": [korean_font or "DejaVu Sans", "DejaVu Sans"], "font.size": 13,
+                         "axes.unicode_minus": False}):
+        for label, name, filename in (("piece", "작품", "04_identity_variance.png"),
+                                      ("composer", "작곡가", "04_composer_identity_variance.png")):
+            subset = metrics[(metrics.summary == "mean") & (metrics.label == label)]
+            fig, ax = plt.subplots(figsize=(11.5, 7.8))
+            fig.subplots_adjust(left=.265, right=.965, bottom=.25, top=.735)
+            fig.text(.06, .95, text(f"평균 특징이 {name}별로 얼마나 달라지나?", f"How much do mean features differ by {label}?"), fontsize=24, weight="bold", color="#243730")
+            fig.text(.06, .893, text(f"막대가 짧을수록 평균 특징이 {name}별로 덜 구분됩니다.", "Shorter bars mean less difference between groups in the mean features."), fontsize=15, color="#52605b")
+            for i, (field, title, color) in enumerate(stages):
+                rows = subset[subset.field == field].set_index("channel").reindex(CHANNELS)
+                values = rows.eta_squared.to_numpy() * 100
+                if not np.all(np.isfinite(values)) or np.any((values < 0) | (values > 100)):
+                    raise ValueError("Identity figure requires finite eta-squared for every channel")
+                positions = np.arange(len(CHANNELS)) + (i - .5) * .32
+                ax.barh(positions, values, height=.27, color=color, label=title, zorder=3)
+                for y, value in zip(positions, values):
+                    ax.text(value + 1.2, y, f"{value:.1f}%", ha="left", va="center", fontsize=13,
+                            color="#263932" if i else "#556879", weight="bold" if i else "normal")
+            ax.set_yticks(np.arange(len(CHANNELS)), labels, fontsize=14)
+            ax.set_ylim(len(CHANNELS)-.55, -.55)
+            ax.set_xlim(0, 100)
+            ax.set_xticks(np.arange(0, 101, 20), [f"{x}%" for x in range(0, 101, 20)])
+            ax.set_xlabel(text(f"연주 간 평균값 차이 중 {name}별 차이가 설명하는 비율", f"Share of variance in performance means explained by {label} (%)"), labelpad=16)
+            ax.xaxis.grid(True, color="#e3e9e6", zorder=0)
+            ax.tick_params(axis="both", length=0, pad=10)
+            for spine in ax.spines.values(): spine.set_visible(False)
+            fig.legend(*ax.get_legend_handles_labels(), loc="upper left", bbox_to_anchor=(.255, .83),
+                       frameon=False, ncols=2, fontsize=13, handlelength=1.5, columnspacing=2)
+            fig.text(.06, .09, text("처리 후 = 같은 작품의 공통 패턴을 뺀 뒤, feature별 숫자 범위를 맞춘 값", "After = subtract the piece's common pattern, then scale each feature"), fontsize=12, color="#52605b")
+            fig.text(.06, .051, text("연주별 평균값의 분산을 비교한 비율(η²)입니다. 작품·작곡가 맞히기 정확도가 아닙니다.", "This is a descriptive variance ratio (η²), not piece/composer classification accuracy."), fontsize=11, color="#66706a")
+            fig.text(.06, .019, text("평균값만 비교한 결과입니다. 연주 중 변화 폭에는 작품별 차이가 여전히 남습니다.", "Only means are compared here. Feature widths still contain piece differences."), fontsize=11, color="#66706a")
+            fig.savefig(out / filename, dpi=170, facecolor="white")
+            plt.close(fig)
 
 
 def plot_pedal_duration(separated, records, out):
@@ -454,7 +503,8 @@ def normalize_and_report(separated, records, args, provenance):
                                     "eta_squared": eta, "shuffled_mean": float(shuffled), "performances": len(group)})
     metrics = pd.DataFrame(metrics)
     metrics.to_csv(args.out / "identity_variance.csv", index=False)
-    for summary, filename in (("mean", "04_identity_variance.png"), ("range", "05_identity_range_variance.png")):
+    plot_identity_means(metrics, args.out)
+    for summary, filename in (("range", "05_identity_range_variance.png"),):
         fig, axes = plt.subplots(1, 2, figsize=(12, 5), sharey=True)
         for ax, label in zip(axes, ("piece", "composer")):
             subset = metrics[(metrics.summary == summary) & (metrics.label == label)]
@@ -502,10 +552,15 @@ def main():
     parser.add_argument("--workers", type=int, default=6)
     parser.add_argument("--include-non-robust", action="store_true")
     parser.add_argument("--diagnose-only", action="store_true")
+    parser.add_argument("--identity-figures-only", action="store_true",
+                        help="Redraw mean identity charts from existing identity_variance.csv; no extraction or statistics recomputation")
     parser.add_argument("--normalized-cache", type=Path, default=datasets / "feature_normalization_standardized.npz")
     args = parser.parse_args()
-    args.asap_root, args.nasap_root = args.asap_root.resolve(), args.nasap_root.resolve()
     args.out.mkdir(parents=True, exist_ok=True)
+    if args.identity_figures_only:
+        plot_identity_means(pd.read_csv(args.out / "identity_variance.csv"), args.out)
+        return
+    args.asap_root, args.nasap_root = args.asap_root.resolve(), args.nasap_root.resolve()
     provenance = source_signature(args.asap_root, args.nasap_root)
     records = collect(args, provenance)
     separated, skipped, variants = separate(records, args.include_non_robust)

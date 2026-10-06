@@ -13,6 +13,7 @@
 | `_embedding_validation/` | 다섯 feature 결합의 동일 작품 검색·결측 안정성·feature 제외 비교 | [임베딩 검증 그림 안내](_embedding_validation/README.md) |
 | `_interpretation_embedding/` | 같은 작품 3연주의 차이·MIDI 원자료와 다른 작품 A·B·C 유사 특징 검색 | [연주 차이와 검색 사례](_interpretation_embedding/README.md) |
 | `_feature_search_roles/` | 다른 작품 검색에서 feature별 후보/순위 변화와 검색에 안 쓴 feature의 일치 검사 | [feature별 검색 역할](_feature_search_roles/README.md) |
+| `_listening_evaluation/` | 3인 청취 평가의 연주 선정·발췌·비공개 거리와 준비 기록 | [진행자 자료](_listening_evaluation/README.md) · [참가자 도구](../tools/listening_evaluation/README.md) |
 | `dynamics_pedaling/` | 원본 Dynamics·Pedaling 추출 검증과 작품별 차이 | [원본 feature 분석 보고서](dynamics_pedaling/README.md) |
 | `articulation/` | 원본 Articulation 추출 검증, 악보 기호·페달 영향 | [Articulation 분석 보고서](articulation/README.md) |
 | `feature_normalization/` | 작품 공통 제거 및 MAD·IQR·SD 비교·적용 | [정규화 분석 보고서](feature_normalization/README.md) |
@@ -40,6 +41,7 @@ classicfy-ai/analysis/
 │   ├── global/
 │   ├── examples/
 │   └── heldout/
+├── _listening_evaluation/
 ├── feature_normalization/
 └── custom_comparisons/
     └── dynamics_pedaling/
