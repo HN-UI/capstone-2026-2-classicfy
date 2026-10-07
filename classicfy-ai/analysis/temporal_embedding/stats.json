@@ -1,0 +1,95 @@
+{
+  "run": "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_embedding_run01",
+  "cache_sha256": "79ab737a08335c7fd7e9a912159de65b7c26795e1ef22e45114e5a8c6eb8ad2e",
+  "evaluation_code_sha256": "fe2621205354175c85d4cf9334c17b6c9277d104a82d45411fda4b31245e3283",
+  "checkpoint_sha256": {
+    "initial": "cfa3089e678f3ad3d36c4612b8004822d97351c967eb44698df0a17a645cf1b3",
+    "best": "bc27801029193a71073491aae38e1f4a06f7132d86f7090423af944673420ac7",
+    "epoch2": "c9ee40fcdd8eb96119d3cacafb7a79879efaf8de9362fdd92e7f444a13ddc142"
+  },
+  "validation_works": 8,
+  "validation_windows": 935,
+  "initial_epoch": 0,
+  "best_epoch": 18,
+  "completed_epochs": 20,
+  "aggregate": {
+    "zero": {
+      "mse": 1.5697278337578386,
+      "slope_mse": 2.014847010488007
+    },
+    "visible_mean": {
+      "mse": 1.38031094087772,
+      "slope_mse": 2.014847010488007
+    },
+    "linear_interpolation": {
+      "mse": 1.7468971918830718,
+      "slope_mse": 2.060576166417489
+    },
+    "initial": {
+      "mse": 1.5751968397557685,
+      "slope_mse": 2.023690614606861
+    },
+    "best": {
+      "mse": 1.3029368641727779,
+      "slope_mse": 2.027768848345791
+    },
+    "epoch2": {
+      "mse": 1.3855678082758804,
+      "slope_mse": 2.04951379210429
+    },
+    "shuffled": {
+      "mse": 1.444026957187187,
+      "slope_mse": 2.046970486615686
+    }
+  },
+  "selected_examples": [
+    {
+      "key": "Bach/Fugue/bwv_860/TuanS01M.mid",
+      "start_beat": 64
+    },
+    {
+      "key": "Beethoven/Piano_Sonatas/31-1/Kavalerova01.mid",
+      "start_beat": 128
+    },
+    {
+      "key": "Chopin/Etudes_op_25/11/MiyashitaM03M.mid",
+      "start_beat": 160
+    }
+  ],
+  "direction_tolerance": 1e-06,
+  "normalization": "Existing per-piece/grid cohort common and scale; candidate-included reference; no cross-work fitting",
+  "shape_definition": "Per-window centering on hidden valid values; pooled Pearson correlation",
+  "slope_definition": "Adjacent pairs with both beats hidden and valid; original beat indices retained",
+  "shuffle_definition": "Inference only; joint permutation of seven visible channels; targets and masks unchanged",
+  "shuffle_seed": 20261017,
+  "work_macro": {
+    "zero": {
+      "mse": 1.670627029806064,
+      "slope_mse": 1.9767200405034921
+    },
+    "visible_mean": {
+      "mse": 1.3806788531184173,
+      "slope_mse": 1.9767200405034921
+    },
+    "linear_interpolation": {
+      "mse": 1.7230385253566638,
+      "slope_mse": 2.0304439055605816
+    },
+    "initial": {
+      "mse": 1.6761995732498258,
+      "slope_mse": 1.989201167769429
+    },
+    "best": {
+      "mse": 1.332892689842115,
+      "slope_mse": 1.9986686287155224
+    },
+    "epoch2": {
+      "mse": 1.4120344663228308,
+      "slope_mse": 2.022633709387712
+    },
+    "shuffled": {
+      "mse": 1.4622821107913406,
+      "slope_mse": 2.00955330908251
+    }
+  }
+}

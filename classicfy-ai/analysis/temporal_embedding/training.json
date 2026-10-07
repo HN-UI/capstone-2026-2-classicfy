@@ -1,0 +1,59 @@
+{
+  "initial_validation": {
+    "loss": 1.5751968543729948,
+    "tempo": 1.5362114005854615,
+    "rubato": 2.1020646974092494,
+    "dynamics": 1.2998662772764928,
+    "articulation": 1.9419735803435014,
+    "pedal_depth": 0.9566078506624892,
+    "pedal_down_ratio": 0.9562951420242921,
+    "pedal_changes": 1.0747019560640225
+  },
+  "best_validation": {
+    "loss": 1.3029368789689522,
+    "tempo": 1.0481304470376114,
+    "rubato": 1.907692693563978,
+    "dynamics": 0.997379154545468,
+    "articulation": 1.7529854976847368,
+    "pedal_depth": 0.6610626879835622,
+    "pedal_down_ratio": 0.7674943334225376,
+    "pedal_changes": 0.9969327846328013
+  },
+  "best_epoch": 18,
+  "completed_epochs": 20,
+  "baselines": {
+    "zero": 1.5697278364912877,
+    "linear_interpolation": 1.7468971919925416
+  },
+  "example": {
+    "key": "Bach/Fugue/bwv_860/Ko04M.mid",
+    "start_beat": 0
+  },
+  "model_config": {
+    "window_size": 64,
+    "hidden_size": 64,
+    "embedding_size": 64,
+    "blocks": 4,
+    "dropout": 0.1
+  },
+  "training_config": {
+    "epochs": 20,
+    "batch_size": 32,
+    "learning_rate": 0.001,
+    "patience": 20,
+    "mask_fraction": 0.2,
+    "mask_block_size": 4,
+    "seed": 20261006
+  },
+  "channels": [
+    "tempo",
+    "rubato",
+    "dynamics",
+    "articulation",
+    "pedal_depth",
+    "pedal_down_ratio",
+    "pedal_changes"
+  ],
+  "torch_version": "2.14.1",
+  "device": "cpu"
+}
