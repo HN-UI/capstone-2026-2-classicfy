@@ -138,7 +138,22 @@ Articulation 367,716개(96.36%)다. 비율 분모는 해당 채널에서 비교 
 | Pedal changes | 0.855 → 0.103 → 0.100 | 0.099 → 0.009 → 0.012 |
 | Articulation | 0.848 → 0.020 → 0.031 | 0.378 → 0.003 → 0.003 |
 
-![평균값 라벨 설명력](04_identity_variance.png)
+평균값 비교 그림은 작품과 작곡가를 파일 두 개로 나눴다. 막대는 두 개씩만 표시한다.
+**파란 회색은 처리 전 원본**, **초록은 공통 패턴 제거와 단위 맞춤을 마친 값**이다.
+중간 단계인 `relative`의 값은 위 표와 CSV에 그대로 남아 있다.
+
+![평균 특징의 작품별 차이: 처리 전후 비교](04_identity_variance.png)
+
+**이렇게 읽는다:** 강약의 85.0%는 연주별 평균 강약값의 전체 차이 중 작품별 그룹 차이로
+설명되는 비율이다. 처리 후에는 1.3%로 줄어, 평균 강약값이 작품에 따라 구분되는 정도가
+작아졌다. 작품을 85% 정확도로 맞혔다는 뜻이 아니다. 나머지를 모두 연주 해석의 차이라고
+판정하는 지표도 아니다.
+
+![평균 특징의 작곡가별 차이: 처리 전후 비교](04_composer_identity_variance.png)
+
+작곡가 그림도 같은 방식으로 읽는다. 예를 들어 페달을 밟는 시간 비율은 작곡가별 차이로
+설명되는 비율이 63.8%에서 5.5%로 줄었다. 두 그림 모두 0–100%의 같은 축을 사용한다.
+수치 감소는 주로 작품 공통 패턴을 빼는 단계에서 나타났고, 단위 맞춤만의 효과로 해석하지 않는다.
 
 **변화 범위(연주별 5–95%)에는 작품 정보가 남는다.** standardized의 작품 η²는 Dynamics
 0.699, depth 0.403, down_ratio 0.418, changes 0.409, Articulation 0.757이다. Dynamics는
@@ -190,6 +205,8 @@ counts는 -0.006으로 줄었다. 이 pooled 상관만으로 시간 의존성이
   --out classicfy-ai/analysis/feature_normalization --diagnose-only
 .venv/bin/python classicfy-ai/scripts/validate_feature_normalization.py \
   --out classicfy-ai/analysis/feature_normalization
+# 평균값 전후 비교 그림 두 장만 다시 그리기: 기존 CSV 사용, feature·통계 재계산 없음
+.venv/bin/python classicfy-ai/scripts/validate_feature_normalization.py --identity-figures-only
 cd classicfy-ai
 PYTHONPATH=src ../.venv/bin/python -m unittest discover -s tests -v
 ```
@@ -198,6 +215,9 @@ PYTHONPATH=src ../.venv/bin/python -m unittest discover -s tests -v
 디렉터리에 의존하지 않는다. 다른 경로는 `--asap-root`, `--nasap-root`, `--cache`,
 `--normalized-cache`로 지정한다. `--include-non-robust`는 Articulation 모집단을 변경하므로
 비교할 때 `--out`과 `--normalized-cache`도 별도로 지정한다.
+
+전후 비교 그림은 설치된 한글 폰트(Apple SD Gothic Neo·NanumGothic·Noto Sans CJK KR 등)를
+자동 선택한다. 한글 폰트가 없는 환경에서는 같은 수치와 배치를 영문으로 표시한다.
 
 - `feature_normalization_raw.npz`: 전체 정렬 연주의 원본 arrays/masks/grid·metadata 캐시.
 - `feature_normalization_standardized.npz`: 비교 가능한 채널·연주별 raw/common/relative/

@@ -14,6 +14,9 @@
 연주 feature의 그림·CSV·보고서는 [분석 목록](classicfy-ai/analysis/README.md)에서
 Tempo, Rubato, Dynamics·Pedaling, Articulation, 정규화 등의 주제별로 확인할 수 있다.
 
+임베딩의 연주 차이를 세 팀원이 실제 녹음으로 확인하는 [청취 평가 도구](classicfy-ai/tools/listening_evaluation/README.md)는
+같은 작품 비교·다른 작품 후보 비교와 응답 저장·그림 분석을 제공한다.
+
 ## Server Architecture
 추후 이미지 업데이트
 

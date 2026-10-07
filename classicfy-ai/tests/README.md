@@ -6,7 +6,8 @@
 tests/
 ├── unit/
 │   ├── features/       # beat grid, 결과 모델, 다섯 feature와 summary 계산
-│   └── preprocessing/  # ASAP annotation, MIDI 원본, (n)ASAP match 파일 로딩
+│   ├── preprocessing/  # ASAP annotation, MIDI 원본, (n)ASAP match 파일 로딩
+│   └── tools/          # 청취 평가 음원·blind 순서·응답 분석·HTTP Range
 └── integration/        # loader 출력이 feature 입력까지 이어지는 전체 흐름
 ```
 
@@ -46,3 +47,10 @@ Pedaling 묶음 가중치, feature 제외, 결측 seed 및 입력 불변을 검�
 `unit/features/test_feature_search_roles.py`는 후보 제외·동점 순위/Top 5·Pedaling 묶음 가중치,
 검색에서 제외한 feature의 독립 검사·무작위 대조 50% 기준·중간 거리 대조·작품 동일 가중 집계를 검증한다.
 해당 분석 추가 후 전체 142개 테스트가 실제 데이터 환경에서 skip 없이 통과했다.
+
+`unit/tools/test_listening_study.py`는 실제 PCM 프레임 보존, 원본/잘린 ASAP 음원의 offset,
+ZIP64·부분 다운로드·캐시 검증, 참가자별 순서, 동일/반복 문항, 응답 검증과 B/C 복원·동점 분모,
+HTTP Range 재생·구간 이동 및 pack 밖 파일 차단을 다룬다. 합성 fixture는 자동 검증용이며
+사람의 청취 결과로 저장하지 않는다.
+
+청취 도구 추가 후 실제 데이터 환경에서 전체 163개 테스트가 skip 없이 통과했다.
