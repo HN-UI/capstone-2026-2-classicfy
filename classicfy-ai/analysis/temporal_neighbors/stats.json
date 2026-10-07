@@ -1,0 +1,101 @@
+{
+  "run": "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_embedding_run01",
+  "best_epoch": 18,
+  "performances": 570,
+  "test_queries": 82,
+  "test_works": 8,
+  "candidate_policy": "All corpus splits, excluding every performance of query work",
+  "control_policy": "Exact mean and tie-aware comparison against every other performance of selected candidate work",
+  "selection_policy": "First/middle/last alphabetical test work; median performance key; fixed before inspecting outcomes",
+  "cache_sha256": "79ab737a08335c7fd7e9a912159de65b7c26795e1ef22e45114e5a8c6eb8ad2e",
+  "checkpoint_sha256": "bc27801029193a71073491aae38e1f4a06f7132d86f7090423af944673420ac7",
+  "embedding_sha256": "f59c818366bba68df0fb5003e27a054984a6fa673d70a4003145e8754f046713",
+  "code_sha256": "a1015c1c26436cdd17beed4503dbcd3023c099e2cae3f8e38db1524d50ecfb27",
+  "source_provenance": {
+    "asap_revision": "afc815c75c42e83a79c03feb6da8a35e77d4c6b8",
+    "nasap_revision": "4097b45757bed854818cf87e77b92323ebf90615",
+    "input_sha256": "19fd51ad1f964733ca888a8da68216057a57ba0302835d055a501df5ad62077a",
+    "collector_version": 1
+  },
+  "reencoded_vectors_match": true,
+  "test_summary": {
+    "representative": {
+      "candidate_distance": 0.20559738647555378,
+      "candidate_work_peer_mean_distance": 0.55983777945654,
+      "other_work_random_mean_distance": 0.5798759002657773,
+      "closer_than_peer_share": 0.9726668665634577,
+      "closer_than_other_work_share": 0.9769678027657744,
+      "closer_than_peer_mean_count": 82
+    },
+    "width": {
+      "candidate_distance": 0.873347985821264,
+      "candidate_work_peer_mean_distance": 0.8955181779082823,
+      "other_work_random_mean_distance": 1.047076693491972,
+      "closer_than_peer_share": 0.5098604706672668,
+      "closer_than_other_work_share": 0.6274842691367263,
+      "closer_than_peer_mean_count": 46
+    },
+    "step_rms": {
+      "candidate_distance": 0.3353518409035659,
+      "candidate_work_peer_mean_distance": 0.3564361383355644,
+      "other_work_random_mean_distance": 0.3962745250056077,
+      "closer_than_peer_share": 0.5601244094047101,
+      "closer_than_other_work_share": 0.6186191827887385,
+      "closer_than_peer_mean_count": 50
+    },
+    "combined": {
+      "candidate_distance": 0.6378965734711259,
+      "candidate_work_peer_mean_distance": 0.7687276785680716,
+      "other_work_random_mean_distance": 0.8680832934904044,
+      "closer_than_peer_share": 0.7277747167667478,
+      "closer_than_other_work_share": 0.7726977766929546,
+      "closer_than_peer_mean_count": 68
+    }
+  },
+  "test_work_macro": {
+    "representative": {
+      "candidate_distance": 0.21188333097255824,
+      "candidate_work_peer_mean_distance": 0.5673562916169935,
+      "closer_than_peer_share": 0.9712835151122123
+    },
+    "width": {
+      "candidate_distance": 0.9577478185525428,
+      "candidate_work_peer_mean_distance": 0.9528271876862182,
+      "closer_than_peer_share": 0.4830750085038832
+    },
+    "step_rms": {
+      "candidate_distance": 0.35151402791031944,
+      "candidate_work_peer_mean_distance": 0.3712947251337021,
+      "closer_than_peer_share": 0.5632629443753294
+    },
+    "combined": {
+      "candidate_distance": 0.697018506029176,
+      "candidate_work_peer_mean_distance": 0.8056563398578804,
+      "closer_than_peer_share": 0.6958600942535456
+    }
+  },
+  "examples": [
+    {
+      "query_index": 119,
+      "near_index": 481,
+      "contrast_index": 483,
+      "near_cosine": 0.9243816997046271,
+      "contrast_cosine": 0.48691172588520387
+    },
+    {
+      "query_index": 373,
+      "near_index": 29,
+      "contrast_index": 28,
+      "near_cosine": 0.8885885060666525,
+      "contrast_cosine": -0.5266655507680136
+    },
+    {
+      "query_index": 521,
+      "near_index": 131,
+      "contrast_index": 144,
+      "near_cosine": 0.9201809883062588,
+      "contrast_cosine": 0.17272721599139718
+    }
+  ],
+  "human_style_labels": false
+}

@@ -63,3 +63,8 @@ HTTP Range 재생·구간 이동 및 pack 밖 파일 차단을 다룬다. 합성
 
 `unit/embedding/test_temporal_evaluation.py`는 구간 평균만 맞추는 경우와 변화 모양 복원을
 구분하고, 인접 hidden beat 조건·관측값만 사용하는 baseline·7채널 묶음 순서 변경을 검증한다.
+
+`unit/embedding/test_temporal_neighbors.py`는 다른 작품 후보의 feature 대조에서
+결측 beat를 잇지 않는 변화량 계산, Pedaling의 동일 feature 비중,
+최근접 후보를 제외한 대조·동점 처리, 결과와 무관한 대표 사례 선정을 검증한다.
+[검색 관찰 보고서](../analysis/temporal_neighbors/README.md)는 feature 기반 대조이며 사람의 청취 정답 평가가 아니다.
