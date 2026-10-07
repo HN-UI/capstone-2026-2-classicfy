@@ -1,0 +1,27 @@
+{
+  "selected_model": "dual_dtw",
+  "selection_reason": "work-macro beat accuracy paired CI < 0",
+  "beat_difference_gluenote_minus_dual": {
+    "mean": -0.011772299446580372,
+    "low": -0.014239208301027404,
+    "high": -0.009236723785997106,
+    "works": 183
+  },
+  "paired_only": true,
+  "evaluated_performances": 836,
+  "evaluated_works": 183,
+  "observed_performances": 838,
+  "sampling_policy": "user-requested stop; completed paired prefix in composer/title order",
+  "note_difference_gluenote_minus_dual": {
+    "mean": -0.010352118520794262,
+    "low": -0.013713910681846204,
+    "high": -0.0074413447994240945,
+    "works": 116
+  },
+  "caveats": [
+    "TheGlueNote training includes (n)ASAP; this is not a held-out generalization benchmark.",
+    "(n)ASAP notes are algorithm-produced references; agreement is not independent human note accuracy.",
+    "MIDI score has no ornament annotation; both receive identical MIDI-only inputs.",
+    "ATEPP consists of automatic transcriptions: ASAP winner may not transfer."
+  ]
+}

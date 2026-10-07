@@ -1,0 +1,33 @@
+         1971817 function calls (1965968 primitive calls) in 5.629 seconds
+
+   Ordered by: cumulative time
+   List reduced from 1510 to 25 due to restriction <25>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.025    0.025    5.645    5.645 C:\Users\정세린\Desktop\capstone_classicfy\capstone-2026-2-classicfy\classicfy-ai/src\preprocessing\research_alignment.py:86(align_research)
+        1    0.006    0.006    4.780    4.780 C:\Users\정세린\Desktop\capstone_classicfy\capstone-2026-2-classicfy\.venv\Lib\site-packages\parangonar\match\matchers.py:1896(__call__)
+        1    0.114    0.114    2.830    2.830 C:\Users\정세린\Desktop\capstone_classicfy\capstone-2026-2-classicfy\.venv\Lib\site-packages\parangonar\match\matchers.py:1233(__call__)
+        2    0.259    0.130    1.944    0.972 C:\Users\정세린\Desktop\capstone_classicfy\capstone-2026-2-classicfy\.venv\Lib\site-packages\parangonar\match\matchers.py:1583(__call__)
+        1    0.162    0.162    1.812    1.812 C:\Users\정세린\Desktop\capstone_classicfy\capstone-2026-2-classicfy\.venv\Lib\site-packages\parangonar\match\matchers.py:993(get_score_to_perf_map)
+        2    0.001    0.000    1.682    0.841 C:\Users\정세린\Desktop\capstone_classicfy\capstone-2026-2-classicfy\.venv\Lib\site-packages\parangonar\dp\dtw.py:190(__call__)
+        2    0.513    0.256    1.311    0.656 C:\Users\정세린\Desktop\capstone_classicfy\capstone-2026-2-classicfy\classicfy-ai/src\preprocessing\exact_dtw_kernel.py:40(compiled)
+    16049    0.026    0.000    0.967    0.000 C:\Users\정세린\Desktop\capstone_classicfy\capstone-2026-2-classicfy\.venv\Lib\site-packages\numpy\lib\_function_base_impl.py:3914(median)
+    16050    0.053    0.000    0.942    0.000 C:\Users\정세린\Desktop\capstone_classicfy\capstone-2026-2-classicfy\.venv\Lib\site-packages\numpy\lib\_function_base_impl.py:3827(_ureduce)
+    16049    0.159    0.000    0.869    0.000 C:\Users\정세린\Desktop\capstone_classicfy\capstone-2026-2-classicfy\.venv\Lib\site-packages\numpy\lib\_function_base_impl.py:4003(_median)
+        2    0.000    0.000    0.829    0.414 C:\Users\정세린\Desktop\capstone_classicfy\capstone-2026-2-classicfy\.venv\Lib\site-packages\numba\core\dispatcher.py:342(_compile_for_args)
+       80    0.287    0.004    0.817    0.010 C:\Users\정세린\Desktop\capstone_classicfy\capstone-2026-2-classicfy\.venv\Lib\site-packages\parangonar\match\matchers.py:387(unique_alignments)
+        2    0.000    0.000    0.777    0.388 C:\Users\정세린\Desktop\capstone_classicfy\capstone-2026-2-classicfy\.venv\Lib\site-packages\numba\core\dispatcher.py:873(compile)
+        2    0.000    0.000    0.776    0.388 C:\Users\정세린\Desktop\capstone_classicfy\capstone-2026-2-classicfy\.venv\Lib\site-packages\numba\core\caching.py:742(load_overload)
+    253/2    0.001    0.000    0.711    0.355 C:\Users\정세린\Desktop\capstone_classicfy\capstone-2026-2-classicfy\.venv\Lib\site-packages\numba\core\base.py:261(refresh)
+        1    0.000    0.000    0.640    0.640 C:\Users\정세린\Desktop\capstone_classicfy\capstone-2026-2-classicfy\classicfy-ai/src\preprocessing\research_alignment.py:78(tempo_grid)
+        1    0.024    0.024    0.639    0.639 C:\Users\정세린\Desktop\capstone_classicfy\capstone-2026-2-classicfy\classicfy-ai/src\features\articulation.py:87(build_tempo_map)
+      253    0.008    0.000    0.547    0.002 C:\Users\정세린\Desktop\capstone_classicfy\capstone-2026-2-classicfy\.venv\Lib\site-packages\numba\core\cpu.py:102(load_additional_registries)
+        1    0.285    0.285    0.541    0.541 C:\Users\정세린\Desktop\capstone_classicfy\capstone-2026-2-classicfy\.venv\Lib\site-packages\parangonar\match\matchers.py:873(pitch_and_onset_wise_times_rev)
+        1    0.232    0.232    0.476    0.476 C:\Users\정세린\Desktop\capstone_classicfy\capstone-2026-2-classicfy\.venv\Lib\site-packages\parangonar\match\matchers.py:653(pitch_and_onset_wise_times_ornament)
+5306/5080    0.012    0.000    0.467    0.000 <frozen importlib._bootstrap>:1390(_handle_fromlist)
+    35826    0.039    0.000    0.465    0.000 C:\Users\정세린\Desktop\capstone_classicfy\capstone-2026-2-classicfy\.venv\Lib\site-packages\numpy\_core\fromnumeric.py:48(_wrapfunc)
+       82    0.347    0.004    0.465    0.006 C:\Users\정세린\Desktop\capstone_classicfy\capstone-2026-2-classicfy\.venv\Lib\site-packages\parangonar\dp\dtw.py:419(dtw_backtracking)
+    82/51    0.002    0.000    0.460    0.009 <frozen importlib._bootstrap>:1349(_find_and_load)
+    73/42    0.001    0.000    0.455    0.011 <frozen importlib._bootstrap>:1304(_find_and_load_unlocked)
+
+

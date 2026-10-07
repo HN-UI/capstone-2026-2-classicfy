@@ -1,0 +1,113 @@
+{
+  "openvino": "2026.4.1-22982-e213a147257-releases/2026/4",
+  "devices": [
+    "CPU",
+    "GPU"
+  ],
+  "rows": [
+    {
+      "device": "CPU",
+      "trial": 0,
+      "torch_seconds": 0.14634939999086782,
+      "converted_seconds": 0.14007760002277792,
+      "max_absolute_difference": 5.0067901611328125e-06,
+      "mean_absolute_difference": 1.7933353690935405e-09,
+      "output_shape": [
+        1,
+        513,
+        513
+      ]
+    },
+    {
+      "device": "CPU",
+      "trial": 1,
+      "torch_seconds": 0.14047159999608994,
+      "converted_seconds": 0.10158079996472225,
+      "max_absolute_difference": 9.417533874511719e-06,
+      "mean_absolute_difference": 1.8252436229104774e-09,
+      "output_shape": [
+        1,
+        513,
+        513
+      ]
+    },
+    {
+      "device": "CPU",
+      "trial": 2,
+      "torch_seconds": 0.13395200000377372,
+      "converted_seconds": 0.08647140004904941,
+      "max_absolute_difference": 7.867813110351562e-06,
+      "mean_absolute_difference": 1.5839051181743002e-09,
+      "output_shape": [
+        1,
+        513,
+        513
+      ]
+    },
+    {
+      "device": "CPU",
+      "trial": 3,
+      "torch_seconds": 0.12900830002035946,
+      "converted_seconds": 0.08560880000004545,
+      "max_absolute_difference": 8.940696716308594e-06,
+      "mean_absolute_difference": 2.0034436332139194e-09,
+      "output_shape": [
+        1,
+        513,
+        513
+      ]
+    },
+    {
+      "device": "GPU",
+      "trial": 0,
+      "torch_seconds": 0.1347859000088647,
+      "converted_seconds": 0.07450109999626875,
+      "max_absolute_difference": 7.361173629760742e-06,
+      "mean_absolute_difference": 1.3875858240197658e-09,
+      "output_shape": [
+        1,
+        513,
+        513
+      ]
+    },
+    {
+      "device": "GPU",
+      "trial": 1,
+      "torch_seconds": 0.18802519998280331,
+      "converted_seconds": 0.0552830999949947,
+      "max_absolute_difference": 6.0498714447021484e-06,
+      "mean_absolute_difference": 1.9792538719087815e-09,
+      "output_shape": [
+        1,
+        513,
+        513
+      ]
+    },
+    {
+      "device": "GPU",
+      "trial": 2,
+      "torch_seconds": 0.15779039997141808,
+      "converted_seconds": 0.05189000000245869,
+      "max_absolute_difference": 6.198883056640625e-06,
+      "mean_absolute_difference": 1.0211879120092249e-09,
+      "output_shape": [
+        1,
+        513,
+        513
+      ]
+    },
+    {
+      "device": "GPU",
+      "trial": 3,
+      "torch_seconds": 0.13426199997775257,
+      "converted_seconds": 0.051106599974446,
+      "max_absolute_difference": 9.149312973022461e-06,
+      "mean_absolute_difference": 2.064911353016896e-09,
+      "output_shape": [
+        1,
+        513,
+        513
+      ]
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+# Install after requirements.txt and requirements-atepp.txt.
+# Reproduces the evaluated official implementations and small GlueNote checkpoint.
+parangonar[accelerated]==3.3.3
+partitura==1.9.0
+torch==2.14.1
+symusic==0.6.0
+miditok==3.1.0

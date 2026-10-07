@@ -1,0 +1,2 @@
+# Optional Intel CPU/GPU FP32 graph inference; native PyTorch remains supported.
+openvino==2026.4.1

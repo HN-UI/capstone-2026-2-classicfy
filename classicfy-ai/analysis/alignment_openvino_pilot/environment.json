@@ -1,0 +1,23 @@
+{
+  "versions": {
+    "parangonar": "3.3.3",
+    "partitura": "1.9.0",
+    "torch": "2.14.1",
+    "numpy": "2.5.3"
+  },
+  "python": "3.12.3 (tags/v3.12.3:f6650f9, Apr  9 2024, 14:05:25) [MSC v.1938 64 bit (AMD64)]",
+  "corpus_performances": 4,
+  "models": [
+    "dual_dtw",
+    "gluenote"
+  ],
+  "input": "identical score MIDI and performance MIDI",
+  "references_not_provided_to_matchers": true,
+  "selection_primary": "work-macro fraction of all annotated beats within 0.25 local beat",
+  "threads_per_worker": 2,
+  "workers": 1,
+  "checkpoint": "thegluenote_small_checkpoint.pt",
+  "checkpoint_sha256": "ffdaac52f0730576e9fe45ee18634e92534987dfe17b217eda4369ec6ea0add9",
+  "dual_dtw_cost_kernel": "float64 exact compiled membership and scalar pitchwise DTW; original traceback",
+  "conflict_policy": "remove all conflicting edges without choosing a replacement"
+}
