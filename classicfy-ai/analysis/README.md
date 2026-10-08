@@ -15,6 +15,8 @@
 | `_articulation/` | 실제 음 길이·beat 중앙값·공통 제거·MAD 표준화, 파일당 그래프 하나 | [Articulation 그림 안내](_articulation/README.md) |
 | `_embedding_validation/` | 다섯 feature 결합의 동일 작품 검색·결측 안정성·feature 제외 비교 | [임베딩 검증 그림 안내](_embedding_validation/README.md) |
 | `temporal_embedding/` | 1D CNN 20epoch의 검증 오차·구간 내 변화 모양·관측 순서 영향 | [시계열 복원 학습 결과](temporal_embedding/README.md) |
+| `temporal_neighbors/` | 현재 1D CNN의 다른 작품 검색과 대표 성향·변화 폭·beat별 변화 크기 대조 | [CNN 성향 검색 관찰](temporal_neighbors/README.md) |
+| `composer_style_example/` | 베토벤·바흐 4연주를 feature로 선정해 CNN 배치와 작곡가/스타일 쌍 거리 비교 | [작곡가와 연주 스타일 figure](composer_style_example/README.md) |
 | `_interpretation_embedding/` | 같은 작품 3연주의 차이·MIDI 원자료와 다른 작품 A·B·C 유사 특징 검색 | [연주 차이와 검색 사례](_interpretation_embedding/README.md) |
 | `_feature_search_roles/` | 다른 작품 검색에서 feature별 후보/순위 변화와 검색에 안 쓴 feature의 일치 검사 | [feature별 검색 역할](_feature_search_roles/README.md) |
 | `_listening_evaluation/` | 3인 청취 평가의 연주 선정·발췌·비공개 거리와 준비 기록 | [진행자 자료](_listening_evaluation/README.md) · [참가자 도구](../tools/listening_evaluation/README.md) |
@@ -38,6 +40,8 @@ classicfy-ai/analysis/
 ├── _articulation/
 ├── _embedding_validation/
 ├── temporal_embedding/
+├── temporal_neighbors/
+├── composer_style_example/
 ├── _interpretation_embedding/
 │   ├── same_work/
 │   ├── cross_work/
@@ -82,6 +86,7 @@ Articulation 개별 예시는 `_articulation/`에 둔다. 이름 앞의 `_`로 �
 .venv/bin/python classicfy-ai/scripts/validate_interpretation_examples.py
 .venv/bin/python classicfy-ai/scripts/validate_feature_search_roles.py
 .venv/bin/python classicfy-ai/scripts/validate_temporal_embedding.py --out /tmp/classicfy-temporal-evaluation
+.venv/bin/python classicfy-ai/scripts/observe_temporal_neighbors.py --out /tmp/classicfy-temporal-neighbors
 ```
 
 선택 작품 비교는 `--works`를 사용하고, `--out`을 `analysis/custom_comparisons/<주제>/`로
