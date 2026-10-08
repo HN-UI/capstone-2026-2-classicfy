@@ -1,0 +1,86 @@
+{
+  "seeds": [
+    20261006,
+    20261007,
+    20261008
+  ],
+  "training_config": {
+    "epochs": 20,
+    "batch_size": 32,
+    "learning_rate": 0.001,
+    "patience": 20,
+    "mask_fraction": 0.2,
+    "mask_block_size": 4,
+    "seed": 20261006
+  },
+  "model_config": {
+    "window_size": 64,
+    "hidden_size": 64,
+    "embedding_size": 64,
+    "blocks": 4,
+    "dropout": 0.1
+  },
+  "sequence_configs": {
+    "bilstm": {
+      "architecture": "bilstm",
+      "layers": 2,
+      "heads": 4,
+      "feedforward_size": 128
+    },
+    "transformer": {
+      "architecture": "transformer",
+      "layers": 2,
+      "heads": 4,
+      "feedforward_size": 128
+    }
+  },
+  "reference_dataset_sha256": "85486dadf913a454a38dc48131d8f8090c3d9c4ce92fe79f7bbe0c1c8427e7b4",
+  "cache_sha256": "79ab737a08335c7fd7e9a912159de65b7c26795e1ef22e45114e5a8c6eb8ad2e",
+  "original_collector_commit": "20a4168",
+  "collector_compatibility": "All original feature/preprocessing .py files byte-identical to reference; original inventory hash and data revisions verified; unrelated ATEPP additions excluded from original inventory only.",
+  "source_sha256": {
+    "scripts/compare_sequence_autoencoders.py": "07e57bc1c44104d76981c00a4552befbf6623a13f60f3b2a0674fd677b5e707f",
+    "src/embedding/sequence_models.py": "f8fa05f2703dd2da5ac1c759bddcf6c5e2ff0322d2e059ec1ad368de62e48e7e",
+    "src/embedding/model.py": "06844a05d709ff8a9d33aaf9d90de68c1285659a913f4520327b7ebc106c96d1",
+    "src/embedding/data.py": "bb15ea0fbe7937da3947dcb8c362c54bb7ac183f5b17318fe249e53b3eda6040",
+    "src/embedding/evaluation.py": "6cac2102cfc50d0ea61569123436f4e3f6cba430deeba5561e6244809f62afd9",
+    "src/embedding/training.py": "bba2a763afe9196be0264bc33b8431170fc0bafa29ff82fb728815b957ff9efc",
+    "scripts/train_temporal_ablation.py": "27890b6f347628a6fbb0ced75e410117071cae3c1aeb55b680df356a3ad0ea90",
+    "scripts/validate_temporal_embedding.py": "7b52a2b0e856544a2047214fd8eca7262d600b43608dbbd2627b3a1d520bfa27",
+    "scripts/validate_embedding.py": "9bdbbeec18a96b2754cf080bb4eec830c417b691ae81dc4079e918ba1197b265",
+    "scripts/validate_feature_normalization.py": "7d968b961c7cd78c56f4db5c2fae39beb0421935f34e7ecec5de673033279923"
+  },
+  "primary": "validation-selected best checkpoint; final epoch shown separately; same 20 epoch budget",
+  "diagnostics": "three fixed visible-order permutations and mask block sizes 1/4/8/16 on validation only",
+  "test": "descriptive frozen-protocol evaluation; previously used test split, not a new independent holdout",
+  "evaluation_masks_sha256": {
+    "train": "454eab4f3887876be2795c2cfa82aaa07501e5eeec3ff4df0f7cf9e1ab3ca16b",
+    "validation": "3ed043c7109b481e4eb4576a919246e97266fb3ef04c83d2f4fa0847862d0d3d",
+    "test": "fc395c855e5d066c10a6070c93355989e15f41a17350977ee8a279886b6743df"
+  },
+  "limitations": [
+    "One work split, three seeds; seed ranges are not confidence intervals.",
+    "Encoder parameter counts differ; not an equal-parameter comparison.",
+    "Fixed optimizer and 20 epochs; no claim each architecture is optimally tuned.",
+    "Candidate-included per-work references; not standalone unseen-MIDI inference.",
+    "Window means/std aggregation loses global window order.",
+    "Feature agreement is not listening similarity or retrieval accuracy."
+  ],
+  "counts": {
+    "train": {
+      "works": 39,
+      "performances": 395,
+      "windows": 5803
+    },
+    "validation": {
+      "works": 8,
+      "performances": 93,
+      "windows": 935
+    },
+    "test": {
+      "works": 8,
+      "performances": 82,
+      "windows": 1670
+    }
+  }
+}

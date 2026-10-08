@@ -1,0 +1,42 @@
+[
+  {
+    "file": "00_task_example.png",
+    "sha256": "ae03443caa7e472650919bcdc009dbc352a075561aba91d04c169b5db67387f1"
+  },
+  {
+    "file": "00_task_example.svg",
+    "sha256": "b0ba5a9dd52c7a69a162b81bc4334101580b016cf493c2ee40ab6d87231d8521"
+  },
+  {
+    "file": "01_primary_comparison.png",
+    "sha256": "750ee462c64a7acfe6ecf1c1e17cf7a4016c09bb167e35d2fc47f8c475fb8d5d"
+  },
+  {
+    "file": "01_primary_comparison.svg",
+    "sha256": "5ad102d79dbb9b5a8c8dd87068d29670e0ce8cc6b495f6ede3e916f481591494"
+  },
+  {
+    "file": "02_order_conditions.png",
+    "sha256": "6182d6d22e3ce00d41395d04af52939845b599c3309287596491ff78162fa067"
+  },
+  {
+    "file": "02_order_conditions.svg",
+    "sha256": "536549ed42aaedd47fcd25ac4c4ef7860d430f2d760381fe342250c9b8af36d5"
+  },
+  {
+    "file": "03_noise_sensitivity.png",
+    "sha256": "27dfa2969daac698bbcd08d3012658e347758300f37808acc464fe090f034610"
+  },
+  {
+    "file": "03_noise_sensitivity.svg",
+    "sha256": "98a0e0f7523128a5e990318dd31ec2470b3d2e6fbb6239f06dc0ae09d018a991"
+  },
+  {
+    "file": "04_training_effect.png",
+    "sha256": "bd73f7a8b8121546a523de910d45bc92c95deda31fb9f924b7d9d36cdc428c6c"
+  },
+  {
+    "file": "04_training_effect.svg",
+    "sha256": "749a62ecad42f828ff30f3bc44f5ee3010061532704995257e4d5b933cbb5be7"
+  }
+]

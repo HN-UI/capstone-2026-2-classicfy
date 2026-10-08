@@ -2,6 +2,14 @@
 
 작품이 달라도 유사한 연주 성향을 검색하기 위한 첫 1D CNN 구현이다.
 기존 feature 추출·공통 패턴 제거·scale 정책은 그대로 재사용한다.
+BiLSTM·Transformer를 동일한 압축층·복원기에 연결한 추가 구현은 `sequence_models.py`에 있으며,
+[3 seed 모델 비교와 figure](../../analysis/sequence_autoencoders/README.md)에서 결과를 확인할 수 있다.
+[학습 예산·BiLSTM 임베딩 차원 후속 비교](../../analysis/sequence_followup/README.md)는
+최대 80 epoch 및 64·128·256차원을 고정 validation에서 비교한다.
+[시간 순서 임베딩 평가](../../analysis/temporal_order_evaluation/README.md)는 복원기 없이
+작은 잡음과 순서 변경의 거리를 비교하고, 기존 14D 요약·원본 시계열·학습 전 모델을 기준으로 둔다.
+[고정 임베딩 시간 변화 평가](../../analysis/temporal_probe/README.md)는 실제 네 구간의 평균 변화를
+train-only 선형 예측기로 읽고, 학습 전후와 단순 PCA64 압축을 비교한다.
 학습에 연주 성향 유사도 라벨은 쓰지 않는다. 숨긴 beat의 feature 값을 복원하면서
 구간 표현을 학습하고, 다른 작품의 검색 결과는 이후 청취로 확인한다.
 
@@ -11,8 +19,18 @@
 |---|---|
 | `data.py` | 원래 beat 위치 복원, 작품별 split, 고정 길이 구간·마스크 |
 | `model.py` | 앞뒤 문맥을 읽는 CNN, 64차원 bottleneck, 복원기, feature별 오차 |
+| `sequence_models.py` | BiLSTM·Transformer 인코더, 동일 압축층·복원기, 전용 checkpoint 저장/로드 |
+| `extended_experiments.py` | 공통 batch·mask schedule, 가변 BiLSTM 압축 차원, 정확한 중단 재개 |
+| `order_evaluation.py` | 완전 유효 구간의 공통 순열·잡음, 기존 요약/RMS/cosine 거리와 동률 점수 |
+| `temporal_probe.py` | 네 구간 변화 정답, 작품 분리·동일 비중 가중치, train-only ridge·PCA와 평가 |
 | `training.py` | 학습·검증, checkpoint 저장/로드, 구간·전곡 벡터 추출, 검색 |
 | `../../scripts/train_temporal_embedding.py` | 기존 ASAP 입력 연결, 실행 CLI, CSV·그림 저장 |
+| `../../scripts/compare_sequence_autoencoders.py` | 원래 CNN 입력 검증, BiLSTM→Transformer 학습·진단·비교 |
+| `../../scripts/plot_sequence_autoencoders.py` | CSV 기반 모델별 figure·지표 설명·보고서 생성 |
+| `../../scripts/extend_sequence_experiments.py` | 최대 80 epoch 및 BiLSTM 64·128·256차원 검증 실험 |
+| `../../scripts/plot_extended_sequences.py` | 예산·차원별 품질, 작품별 변화, 고정 사례 figure |
+| `../../scripts/audit_extended_sequences.py` | schedule·checkpoint·종료 규칙·표·그림 무결성 검증 |
+| `../../scripts/check_extended_figure_layout.py` | figure 재생성과 제목·축·범례·주석의 캔버스 잘림 검사 |
 
 ## 입력과 정규화 기준
 

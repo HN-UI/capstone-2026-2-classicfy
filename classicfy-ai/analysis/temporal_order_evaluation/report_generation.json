@@ -1,0 +1,6 @@
+{
+  "plot_source_sha256": "c5758042869f872414ea698d9ab2a627a935047e0dc108f66b32c34932189c98",
+  "evaluation_protocol_sha256": "f236fda60a3cd6025b377ee1612213e10603d9e8eb341f2919a05f99b245a894",
+  "summary_sha256": "824070c6af052c367ee8f4b742578ffbfc3414a88cfe09750324b9c2de7e8197",
+  "note": "Evaluation protocol retains its original pre-evaluation source hashes. This records final figure/report code after editorial revisions; numerical evaluation is unchanged."
+}

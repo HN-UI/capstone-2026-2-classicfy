@@ -1,0 +1,134 @@
+[
+  {
+    "model": "cnn",
+    "seed": 20261006,
+    "arm": "baseline",
+    "epochs": 20,
+    "encoder_width": 64,
+    "embedding_size": 64,
+    "decoder_width": 128,
+    "parameters": 428544,
+    "encoder_parameters": 362432,
+    "decoder_parameters": 66112,
+    "delta_weight": 0.0,
+    "final_validation": {
+      "value_mse": 1.3076888622067322,
+      "delta_mse": 2.032933771954286
+    },
+    "best_value_epoch": 18,
+    "best_validation_value_mse": 1.302936850383034,
+    "training_schedule_sha256": "22cffe550f237a32c318e255cf8337df53d0e85601b1d7073d1fc5088dae793d",
+    "seconds": 130.002493374981,
+    "final_sha256": "b35258e8996091d04f0d9daca1838e49943b92df4cfac7fdc1cd5782e191aac3"
+  },
+  {
+    "model": "cnn",
+    "seed": 20261007,
+    "arm": "baseline",
+    "epochs": 20,
+    "encoder_width": 64,
+    "embedding_size": 64,
+    "decoder_width": 128,
+    "parameters": 428544,
+    "encoder_parameters": 362432,
+    "decoder_parameters": 66112,
+    "delta_weight": 0.0,
+    "final_validation": {
+      "value_mse": 1.312935706211091,
+      "delta_mse": 2.0369988177570146
+    },
+    "best_value_epoch": 16,
+    "best_validation_value_mse": 1.3105590344610765,
+    "training_schedule_sha256": "5a7581215c982f5c46cca29bb92e88fe7bd914fc1f304b008ef64730f1df59d7",
+    "seconds": 172.4361197920516,
+    "final_sha256": "7fb0f511e5ae0bc079f184e2bce8ed7db5059ed2e8701b15c136c841c618d3ab"
+  },
+  {
+    "model": "cnn",
+    "seed": 20261008,
+    "arm": "baseline",
+    "epochs": 20,
+    "encoder_width": 64,
+    "embedding_size": 64,
+    "decoder_width": 128,
+    "parameters": 428544,
+    "encoder_parameters": 362432,
+    "decoder_parameters": 66112,
+    "delta_weight": 0.0,
+    "final_validation": {
+      "value_mse": 1.3084655469554636,
+      "delta_mse": 2.039213045631235
+    },
+    "best_value_epoch": 20,
+    "best_validation_value_mse": 1.3084655469554636,
+    "training_schedule_sha256": "415815b441d161bf411680852f443b83441fac14fc9c4149ea5808f81af142fb",
+    "seconds": 172.34663091693074,
+    "final_sha256": "24918c3045ed1e36e8a50206a433b0830ebb203dca504ebf73d23387c6e7f19d"
+  },
+  {
+    "model": "bilstm",
+    "architecture": "bilstm",
+    "seed": 20261006,
+    "best_value_epoch": 20,
+    "best_validation_value_mse": 1.2866225357091998,
+    "final_validation": {
+      "value_mse": 1.2866225357091998,
+      "delta_mse": 2.029089108602313
+    },
+    "epochs": 20,
+    "seconds": 65.47285466687754,
+    "parameters": 379904,
+    "encoder_parameters": 313792,
+    "decoder_parameters": 66112,
+    "training_schedule_sha256": "22cffe550f237a32c318e255cf8337df53d0e85601b1d7073d1fc5088dae793d",
+    "checkpoint_sha256": {
+      "initial": "9aa4b821fa0d2308b6314ccc4b49ef9b1d1340b64357e04ce73600decb3910d3",
+      "best_value": "a778afef2b707b68dd018ec09b8df6a4be1405097ad9e4f90aa9ed177016ae72",
+      "final": "9ea5c559c7047fb4fc49a11807d84a6beb7a2f793881264ff3439e831894dceb"
+    }
+  },
+  {
+    "model": "bilstm",
+    "architecture": "bilstm",
+    "seed": 20261007,
+    "best_value_epoch": 18,
+    "best_validation_value_mse": 1.2872543937776506,
+    "final_validation": {
+      "value_mse": 1.2886699481541681,
+      "delta_mse": 2.0277501155607
+    },
+    "epochs": 20,
+    "seconds": 65.62839841702953,
+    "parameters": 379904,
+    "encoder_parameters": 313792,
+    "decoder_parameters": 66112,
+    "training_schedule_sha256": "5a7581215c982f5c46cca29bb92e88fe7bd914fc1f304b008ef64730f1df59d7",
+    "checkpoint_sha256": {
+      "initial": "dee869da34ccfc8f54d10f074044e7e96c558612fb612679e8ae5d4419423157",
+      "best_value": "936285337f687155dbb0a300700e3642696d252daa30fbfaba4db4da6d8a7847",
+      "final": "f17f4de6ee2d2b3805636ef513250424455fccac274749627fc840bef6ce5915"
+    }
+  },
+  {
+    "model": "bilstm",
+    "architecture": "bilstm",
+    "seed": 20261008,
+    "best_value_epoch": 18,
+    "best_validation_value_mse": 1.2888871681591034,
+    "final_validation": {
+      "value_mse": 1.2900257371769475,
+      "delta_mse": 2.0345998229494517
+    },
+    "epochs": 20,
+    "seconds": 65.71757741598412,
+    "parameters": 379904,
+    "encoder_parameters": 313792,
+    "decoder_parameters": 66112,
+    "training_schedule_sha256": "415815b441d161bf411680852f443b83441fac14fc9c4149ea5808f81af142fb",
+    "checkpoint_sha256": {
+      "initial": "c847d230300ed2e07c4fb9d33b8ba6f348701c7caa83e0167d34df664c7b92af",
+      "best_value": "cb06cb61016246f8f3e145fcf6500127fcb9e0c5528f03827622161f5fca0712",
+      "final": "c5bcbdf42f28cd634635155fd93118986f9debd3f7b3fde3ee2ae289ed3f0c28"
+    }
+  }
+]

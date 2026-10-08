@@ -1,0 +1,17 @@
+{
+  "status": "passed",
+  "encoder_checkpoints_unchanged": 18,
+  "train_eval_works_disjoint": true,
+  "heldout_inputs_match_previous_exactly": true,
+  "no_test_or_validation_tuning": true,
+  "methods": 23,
+  "csv_sha256": {
+    "summary.csv": "20a2a8738452c8402629dde633ec858729298f7c2e88f19f0b87518e2b97dfea",
+    "work_metrics.csv": "6bc1b9ef55d9212abc433e3578c4a9a2a7141483fcde4d03930f1ff3ddd78013",
+    "cv.csv": "198dd98d2470ab5461387f36b1e483c837996e90c0394eff6e25ea0034042c1d",
+    "example_quarters.csv": "b11cb2f4e84815c59c2c1a8c2fea309f350849be14229ece18644f327122987e",
+    "probe_parameters.csv": "8b372b08b06bac9b0c228946ac3f7c8bfc933bbd68ec272b3e2538bf1044eafe",
+    "selected_windows.csv": "aa39f78f71ca14df47abd79f452efb81e64dbc80d33ff42709affa9c86a6fdd5",
+    "channel_metrics.csv": "6a05af04243b51450385fbb4ee9685c54fc185497d878e2ee57ab137b6d4d47d"
+  }
+}

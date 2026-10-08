@@ -1,0 +1,21 @@
+{
+  "status": "passed",
+  "probes": 20,
+  "independently_recalculated_cv_fits": 600,
+  "channel_rows": 322,
+  "work_rows": 2254,
+  "example_rows": 3864,
+  "encoder_forward_samples": 162,
+  "checkpoint_hashes": 18,
+  "figure_hashes": 10,
+  "checks": [
+    "Frozen protocol, source, encoder and prior embedding integrity",
+    "Disjoint works and nonoverlapping windows; original target recalculation",
+    "All fold-normalized train-only CV fits and selected penalties recalculated",
+    "Train-only PCA eigen equation, ridge normalization and normal equations",
+    "All heldout predictions, channel/work aggregation and fixed examples recalculated",
+    "Figure hashes and canvas-bound layout audit"
+  ],
+  "source_sha256": "3e48b7ceb38a2c22c439de77809447972def5157bc19ca3bfb14a8c9c7f869b8",
+  "protocol_sha256": "74911194240601d918d130ca41a121a3e406cf5c8ca311354c62a56846937a34"
+}

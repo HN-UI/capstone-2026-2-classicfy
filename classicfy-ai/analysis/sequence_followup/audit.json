@@ -1,0 +1,23 @@
+{
+  "status": "passed",
+  "completed_runs": 15,
+  "original_curves_reproduced": 9,
+  "png_figures": 55,
+  "svg_figures": 55,
+  "evaluated_split": "validation only",
+  "auditor_sha256": "86d336b675ca3678293ac464becc0990045d237b790e2dbd103cf305e9a37578",
+  "checks": [
+    "frozen experiment sources",
+    "all 80 schedule epochs independently hashed",
+    "first20 schedules match original",
+    "nine original first20 curves reproduced",
+    "fixed minimum/patience/maximum stop rule",
+    "75 checkpoint scores match tables",
+    "checkpoint hashes and finite parameters",
+    "no test metrics",
+    "fixed examples contain no invalid hidden targets",
+    "PNG/CSV hashes and SVG pairs",
+    "all figure text fits canvas",
+    "report links resolve"
+  ]
+}

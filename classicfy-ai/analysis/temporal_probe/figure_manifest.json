@@ -1,0 +1,42 @@
+[
+  {
+    "file": "00_probe_task.png",
+    "sha256": "7ca9b636771404ed9f1da6ebabd332352061ae8b795b5044c76c76058550ae12"
+  },
+  {
+    "file": "00_probe_task.svg",
+    "sha256": "4ad01621b5bdc7d0ebf3d844f6119ad89661fe516db64ca9a20bd7364cc58dee"
+  },
+  {
+    "file": "01_dynamics_comparison.png",
+    "sha256": "65f88d6476480fdda9f5f7a4fd0437e416b17d2f43293e54da63a56ef8f90ff7"
+  },
+  {
+    "file": "01_dynamics_comparison.svg",
+    "sha256": "8e9739645035fd279d4fa66c6a4462f117c457dc431510011ca1ca9cf7fff2dd"
+  },
+  {
+    "file": "02_feature_comparison.png",
+    "sha256": "bf80ea0ec6285cefe7749fce5461dfcf3c52fb1629dcb783a4995f8bf3730519"
+  },
+  {
+    "file": "02_feature_comparison.svg",
+    "sha256": "d16dec04bb2b14e67298c3d2b062935b369b789eb9f0d6dc34a910d9a9698b86"
+  },
+  {
+    "file": "03_training_effect.png",
+    "sha256": "80d659d666eea0202b82f934fdc6036f0b46371976dc3bd6f2c5869d1c6900a1"
+  },
+  {
+    "file": "03_training_effect.svg",
+    "sha256": "a9158041f0faf42bbd4a16d293fee9c1cf1853d43f708b4a47259f6cc11cb280"
+  },
+  {
+    "file": "04_fixed_examples.png",
+    "sha256": "110114ed25cce99efa21f5be639d7f8b36754444d0f0d1380d0c37adf75cac32"
+  },
+  {
+    "file": "04_fixed_examples.svg",
+    "sha256": "80480f8885f9d70bafb3cd1b5fc2b24f341aa9425102651657791bfbd8ef9a2b"
+  }
+]

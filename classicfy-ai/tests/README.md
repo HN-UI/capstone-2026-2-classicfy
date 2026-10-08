@@ -68,3 +68,14 @@ HTTP Range 재생·구간 이동 및 pack 밖 파일 차단을 다룬다. 합성
 결측 beat를 잇지 않는 변화량 계산, Pedaling의 동일 feature 비중,
 최근접 후보를 제외한 대조·동점 처리, 결과와 무관한 대표 사례 선정을 검증한다.
 [검색 관찰 보고서](../analysis/temporal_neighbors/README.md)는 feature 기반 대조이며 사람의 청취 정답 평가가 아니다.
+
+`unit/embedding/test_sequence_models.py`는 BiLSTM·Transformer의 hidden/결측 정답 누출 방지,
+내부 결측과 오른쪽 padding, CNN과 동일한 초기 압축층·복원기, 인코더 gradient·학습,
+checkpoint 저장/재로드 동일 출력, 잘못된 mask 거부를 검증한다.
+모델 비교·진단은 [시계열 오토인코더 실험](../analysis/sequence_autoencoders/README.md)에 있다.
+
+`unit/embedding/test_extended_experiments.py`는 임베딩 차원을 바꿔도 동일한 초기 인코더와
+복원기 출력층을 사용하는지, optimizer·dropout 상태를 복원한 중단 재개가 연속 실행과
+정확히 같은지, 최소 학습 epoch와 조기 종료 규칙을 검증한다.
+[후속 실험 1·3](../analysis/sequence_followup/README.md)은 실제 15개 실행의 schedule,
+checkpoint, 표와 figure를 `scripts/audit_extended_sequences.py`로 추가 검사한다.

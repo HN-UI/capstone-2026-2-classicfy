@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "figures": 5,
+  "violations": [],
+  "limitation": "Canvas-bound checks complement visual review; not all text overlaps are detected."
+}

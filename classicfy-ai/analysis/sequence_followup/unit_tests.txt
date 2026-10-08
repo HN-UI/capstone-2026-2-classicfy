@@ -1,0 +1,100 @@
+test_larger_bottlenecks_preserve_encoder_and_output_layer (test_extended_experiments.ExtendedExperimentTest.test_larger_bottlenecks_preserve_encoder_and_output_layer) ... ok
+test_minimum_epoch_and_patience_rule (test_extended_experiments.ExtendedExperimentTest.test_minimum_epoch_and_patience_rule) ... bilstm64 seed=31 01/20: value=1.000000, best=1.000000@0, stale=1 (0.0s)
+bilstm64 seed=31 02/20: value=1.000000, best=1.000000@0, stale=2 (0.0s)
+bilstm64 seed=31 03/20: value=1.000000, best=1.000000@0, stale=3 (0.0s)
+bilstm64 seed=31 04/20: value=1.000000, best=1.000000@0, stale=4 (0.0s)
+bilstm64 seed=31 05/20: value=1.000000, best=1.000000@0, stale=5 (0.0s)
+bilstm64 seed=31 06/20: value=1.000000, best=1.000000@0, stale=6 (0.0s)
+bilstm64 seed=31 07/20: value=1.000000, best=1.000000@0, stale=7 (0.0s)
+bilstm64 seed=31 08/20: value=1.000000, best=1.000000@0, stale=8 (0.0s)
+bilstm64 seed=31 09/20: value=1.000000, best=1.000000@0, stale=9 (0.0s)
+bilstm64 seed=31 10/20: value=1.000000, best=1.000000@0, stale=10 (0.0s)
+bilstm64 seed=31 11/20: value=1.000000, best=1.000000@0, stale=11 (0.0s)
+bilstm64 seed=31 12/20: value=1.000000, best=1.000000@0, stale=12 (0.0s)
+bilstm64 seed=31 13/20: value=1.000000, best=1.000000@0, stale=13 (0.0s)
+bilstm64 seed=31 14/20: value=1.000000, best=1.000000@0, stale=14 (0.0s)
+bilstm64 seed=31 15/20: value=1.000000, best=1.000000@0, stale=15 (0.0s)
+bilstm64 seed=31 16/20: value=1.000000, best=1.000000@0, stale=16 (0.0s)
+bilstm64 seed=31 17/20: value=1.000000, best=1.000000@0, stale=17 (0.0s)
+bilstm64 seed=31 18/20: value=1.000000, best=1.000000@0, stale=18 (0.0s)
+bilstm64 seed=31 19/20: value=1.000000, best=1.000000@0, stale=19 (0.0s)
+bilstm64 seed=31 20/20: value=1.000000, best=1.000000@0, stale=20 (0.0s)
+ok
+test_resume_preserves_optimizer_dropout_and_exact_outputs (test_extended_experiments.ExtendedExperimentTest.test_resume_preserves_optimizer_dropout_and_exact_outputs) ... bilstm64 seed=31 01/20: value=1.096847, best=1.096799@0, stale=1 (0.0s)
+bilstm64 seed=31 02/20: value=1.099558, best=1.096799@0, stale=2 (0.0s)
+bilstm64 seed=31 03/20: value=1.101015, best=1.096799@0, stale=3 (0.0s)
+bilstm64 seed=31 04/20: value=1.099064, best=1.096799@0, stale=4 (0.0s)
+bilstm64 seed=31 05/20: value=1.094767, best=1.094767@5, stale=0 (0.0s)
+bilstm64 seed=31 06/20: value=1.090473, best=1.090473@6, stale=0 (0.0s)
+bilstm64 seed=31 07/20: value=1.087981, best=1.087981@7, stale=0 (0.0s)
+bilstm64 seed=31 08/20: value=1.084219, best=1.084219@8, stale=0 (0.0s)
+bilstm64 seed=31 09/20: value=1.079055, best=1.079055@9, stale=0 (0.0s)
+bilstm64 seed=31 10/20: value=1.073779, best=1.073779@10, stale=0 (0.0s)
+bilstm64 seed=31 11/20: value=1.068104, best=1.068104@11, stale=0 (0.0s)
+bilstm64 seed=31 12/20: value=1.063458, best=1.063458@12, stale=0 (0.0s)
+bilstm64 seed=31 13/20: value=1.058222, best=1.058222@13, stale=0 (0.0s)
+bilstm64 seed=31 14/20: value=1.054609, best=1.054609@14, stale=0 (0.0s)
+bilstm64 seed=31 15/20: value=1.053161, best=1.053161@15, stale=0 (0.0s)
+bilstm64 seed=31 16/20: value=1.052781, best=1.052781@16, stale=0 (0.0s)
+bilstm64 seed=31 17/20: value=1.053589, best=1.052781@16, stale=1 (0.0s)
+bilstm64 seed=31 18/20: value=1.054772, best=1.052781@16, stale=2 (0.0s)
+bilstm64 seed=31 19/20: value=1.054722, best=1.052781@16, stale=3 (0.0s)
+bilstm64 seed=31 20/20: value=1.054058, best=1.052781@16, stale=4 (0.0s)
+bilstm64 seed=31 01/20: value=1.096847, best=1.096799@0, stale=1 (0.0s)
+bilstm64 seed=31 02/20: value=1.099558, best=1.096799@0, stale=2 (0.0s)
+Resume bilstm64/31 at epoch 4
+bilstm64 seed=31 04/20: value=1.099064, best=1.096799@0, stale=4 (0.0s)
+bilstm64 seed=31 05/20: value=1.094767, best=1.094767@5, stale=0 (0.0s)
+bilstm64 seed=31 06/20: value=1.090473, best=1.090473@6, stale=0 (0.0s)
+bilstm64 seed=31 07/20: value=1.087981, best=1.087981@7, stale=0 (0.0s)
+bilstm64 seed=31 08/20: value=1.084219, best=1.084219@8, stale=0 (0.0s)
+bilstm64 seed=31 09/20: value=1.079055, best=1.079055@9, stale=0 (0.0s)
+bilstm64 seed=31 10/20: value=1.073779, best=1.073779@10, stale=0 (0.0s)
+bilstm64 seed=31 11/20: value=1.068104, best=1.068104@11, stale=0 (0.0s)
+bilstm64 seed=31 12/20: value=1.063458, best=1.063458@12, stale=0 (0.0s)
+bilstm64 seed=31 13/20: value=1.058222, best=1.058222@13, stale=0 (0.0s)
+bilstm64 seed=31 14/20: value=1.054609, best=1.054609@14, stale=0 (0.0s)
+bilstm64 seed=31 15/20: value=1.053161, best=1.053161@15, stale=0 (0.0s)
+bilstm64 seed=31 16/20: value=1.052781, best=1.052781@16, stale=0 (0.0s)
+bilstm64 seed=31 17/20: value=1.053589, best=1.052781@16, stale=1 (0.0s)
+bilstm64 seed=31 18/20: value=1.054772, best=1.052781@16, stale=2 (0.0s)
+bilstm64 seed=31 19/20: value=1.054722, best=1.052781@16, stale=3 (0.0s)
+bilstm64 seed=31 20/20: value=1.054058, best=1.052781@16, stale=4 (0.0s)
+ok
+test_bottleneck_and_encoder_learn_and_reload_exactly (test_sequence_models.SequenceModelsTest.test_bottleneck_and_encoder_learn_and_reload_exactly) ... ok
+test_invalid_masks_and_empty_windows_rejected (test_sequence_models.SequenceModelsTest.test_invalid_masks_and_empty_windows_rejected) ... ok
+test_no_hidden_or_missing_truth_leak_with_internal_gaps_and_padding (test_sequence_models.SequenceModelsTest.test_no_hidden_or_missing_truth_leak_with_internal_gaps_and_padding) ... ok
+test_shared_heads_match_seeded_cnn (test_sequence_models.SequenceModelsTest.test_shared_heads_match_seeded_cnn) ... ok
+test_baseline_is_identical_and_wider_encoder_keeps_same_decoder (test_temporal_ablation.TemporalAblationTest.test_baseline_is_identical_and_wider_encoder_keeps_same_decoder) ... ok
+test_delta_loss_ignores_visible_boundaries_and_disconnected_gaps (test_temporal_ablation.TemporalAblationTest.test_delta_loss_ignores_visible_boundaries_and_disconnected_gaps) ... ok
+test_objective_is_exact_baseline_at_zero_weight_and_has_finite_gradients (test_temporal_ablation.TemporalAblationTest.test_objective_is_exact_baseline_at_zero_weight_and_has_finite_gradients) ... ok
+test_single_hidden_beat_does_not_create_fake_delta_targets (test_temporal_ablation.TemporalAblationTest.test_single_hidden_beat_does_not_create_fake_delta_targets) ... ok
+test_actual_runs_merge_blocks_but_do_not_join_gaps (test_temporal_diagnostics.TemporalDiagnosticsTest.test_actual_runs_merge_blocks_but_do_not_join_gaps) ... ok
+test_invalid_anchor_is_not_observed_context (test_temporal_diagnostics.TemporalDiagnosticsTest.test_invalid_anchor_is_not_observed_context) ... ok
+test_metrics_pool_targets_instead_of_averaging_unequal_gaps (test_temporal_diagnostics.TemporalDiagnosticsTest.test_metrics_pool_targets_instead_of_averaging_unequal_gaps) ... ok
+test_shape_definitions_are_exclusive_and_handle_flat_pedal (test_temporal_diagnostics.TemporalDiagnosticsTest.test_shape_definitions_are_exclusive_and_handle_flat_pedal) ... ok
+test_five_feature_blocks_have_equal_loss_weight (test_temporal_embedding.TemporalEmbeddingTest.test_five_feature_blocks_have_equal_loss_weight) ... ok
+test_hidden_mask_has_no_invalid_targets_and_keeps_context (test_temporal_embedding.TemporalEmbeddingTest.test_hidden_mask_has_no_invalid_targets_and_keeps_context) ... ok
+test_hidden_truth_cannot_leak_to_prediction_or_embedding (test_temporal_embedding.TemporalEmbeddingTest.test_hidden_truth_cannot_leak_to_prediction_or_embedding) ... ok
+test_neighbors_exclude_all_same_work_and_reject_zero_vectors (test_temporal_embedding.TemporalEmbeddingTest.test_neighbors_exclude_all_same_work_and_reject_zero_vectors) ... ok
+test_optimizer_updates_encoder_and_improves_fixed_mask_reconstruction (test_temporal_embedding.TemporalEmbeddingTest.test_optimizer_updates_encoder_and_improves_fixed_mask_reconstruction) ... ok
+test_restore_gaps_trailing_missing_and_work_variants (test_temporal_embedding.TemporalEmbeddingTest.test_restore_gaps_trailing_missing_and_work_variants) ... ok
+test_split_is_work_disjoint_seeded_and_order_independent (test_temporal_embedding.TemporalEmbeddingTest.test_split_is_work_disjoint_seeded_and_order_independent) ... ok
+test_training_saves_reloadable_best_and_unmasked_embeddings (test_temporal_embedding.TemporalEmbeddingTest.test_training_saves_reloadable_best_and_unmasked_embeddings) ... Epoch 1: train=0.307572, validation=0.967197
+Epoch 2: train=0.743720, validation=0.967411
+ok
+test_windows_preserve_missing_values_padding_and_tail (test_temporal_embedding.TemporalEmbeddingTest.test_windows_preserve_missing_values_padding_and_tail) ... ok
+test_baselines_cannot_read_hidden_truth_or_invalid_values (test_temporal_evaluation.TemporalEvaluationTest.test_baselines_cannot_read_hidden_truth_or_invalid_values) ... ok
+test_centering_removes_window_mean_shortcut (test_temporal_evaluation.TemporalEvaluationTest.test_centering_removes_window_mean_shortcut) ... ok
+test_no_compressed_gap_or_visible_boundary_in_flow_pairs (test_temporal_evaluation.TemporalEvaluationTest.test_no_compressed_gap_or_visible_boundary_in_flow_pairs) ... ok
+test_shape_and_value_errors_have_different_meaning (test_temporal_evaluation.TemporalEvaluationTest.test_shape_and_value_errors_have_different_meaning) ... ok
+test_visible_shuffle_preserves_joint_feature_vectors_and_hidden_values (test_temporal_evaluation.TemporalEvaluationTest.test_visible_shuffle_preserves_joint_feature_vectors_and_hidden_values) ... ok
+test_examples_depend_on_fixed_work_and_key_order (test_temporal_neighbors.TemporalNeighborsTest.test_examples_depend_on_fixed_work_and_key_order) ... ok
+test_peer_comparison_excludes_candidate_and_gives_ties_half_credit (test_temporal_neighbors.TemporalNeighborsTest.test_peer_comparison_excludes_candidate_and_gives_ties_half_credit) ... ok
+test_step_summary_does_not_bridge_missing_beats (test_temporal_neighbors.TemporalNeighborsTest.test_step_summary_does_not_bridge_missing_beats) ... ok
+test_three_pedal_channels_do_not_outweigh_one_feature (test_temporal_neighbors.TemporalNeighborsTest.test_three_pedal_channels_do_not_outweigh_one_feature) ... ok
+
+----------------------------------------------------------------------
+Ran 33 tests in 1.230s
+
+OK

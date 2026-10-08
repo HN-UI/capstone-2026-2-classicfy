@@ -1,0 +1,294 @@
+{
+  "task": "d(A, small_noise)<d(A, joint_temporal_reordering); tie gets 0.5",
+  "primary": {
+    "noise": 0.05,
+    "order": "shuffle",
+    "stage": "best_extended"
+  },
+  "noise_levels": [
+    0.02,
+    0.05,
+    0.1
+  ],
+  "orders": [
+    "shuffle",
+    "block8",
+    "reverse",
+    "adjacent"
+  ],
+  "perturbation_seed": 20261009,
+  "seed_policy": "Validation uses perturbation_seed; test uses seed+1. Same transformations for every representation/model seed.",
+  "noise": "Independent Gaussian direction per channel, centered and RMS-normalized, scaled by each original window/channel std; constant channels unchanged. Same direction across levels.",
+  "permutations": "All 7 channels move jointly; full random permutation, shuffle eight 8-beat blocks, reversal, swap each adjacent beat pair.",
+  "selection": "Original fixed 64-beat windows. Fully valid only; greedy chronological nonoverlapping windows per performance. No value-based selection.",
+  "zero_change": "Exclude an order condition for a window when feature-weighted input RMS change <=1e-10, identically for all methods.",
+  "distances": {
+    "summary14": "Existing 14D feature-weighted RMS (mean, Rubato median abs, p95-p5); sorted reduction ensures exact permutation invariance.",
+    "raw": "Feature-weighted RMS over all 64 ordered beats",
+    "networks": "Cosine distance on unmasked 64D window embeddings; dropout off"
+  },
+  "aggregation": "Window score -> equal performances within work -> equal works within split. Then report three model-seed mean/min/max. No independent-window confidence intervals.",
+  "tie_absolute_tolerance": 1e-08,
+  "arms": [
+    "cnn64",
+    "bilstm64",
+    "transformer64"
+  ],
+  "stages": {
+    "initial": "initial",
+    "best20": "best20",
+    "best_extended": "best"
+  },
+  "model_seeds": [
+    20261006,
+    20261007,
+    20261008
+  ],
+  "checkpoint_selection": "Reuse initial, first-20-epoch reconstruction-best, extended-budget reconstruction-best checkpoints. No new selection/training.",
+  "support": [
+    {
+      "split": "validation",
+      "total_works": 8,
+      "total_performances": 93,
+      "total_windows": 935,
+      "full_windows": 514,
+      "selected_windows": 271,
+      "selected_performances": 93,
+      "selected_works": 8,
+      "excluded_works": []
+    },
+    {
+      "split": "test",
+      "total_works": 8,
+      "total_performances": 82,
+      "total_windows": 1670,
+      "full_windows": 724,
+      "selected_windows": 403,
+      "selected_performances": 67,
+      "selected_works": 6,
+      "excluded_works": [
+        "Beethoven/Piano_Sonatas/31-2/midi_score.mid",
+        "Chopin/Sonata_3/3rd/midi_score.mid"
+      ]
+    }
+  ],
+  "checkpoints": [
+    {
+      "arm": "cnn64",
+      "seed": 20261006,
+      "stage": "initial",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/cnn64/20261006/initial.pt",
+      "sha256": "c1dab6a6877516b031301dfc9a3ef0836bc4b3b934f99b44d668953c046dd17c"
+    },
+    {
+      "arm": "cnn64",
+      "seed": 20261006,
+      "stage": "best20",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/cnn64/20261006/best20.pt",
+      "sha256": "f4f9f5695918bba1cb6611a466db18aca5888d7ae8436a46a113270a4927a934"
+    },
+    {
+      "arm": "cnn64",
+      "seed": 20261006,
+      "stage": "best_extended",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/cnn64/20261006/best.pt",
+      "sha256": "a9177bbeea0ebecbdab08411ff3ba950debca9ac65ff814eb74eab2696303f49"
+    },
+    {
+      "arm": "cnn64",
+      "seed": 20261007,
+      "stage": "initial",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/cnn64/20261007/initial.pt",
+      "sha256": "22e9ecb56a30237a612ab8ab99a58ff49056f644a141b43a741fe17098675106"
+    },
+    {
+      "arm": "cnn64",
+      "seed": 20261007,
+      "stage": "best20",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/cnn64/20261007/best20.pt",
+      "sha256": "6b090b349f0161a4a0dadc16ccfeca1d28abc0e90a28b09ed6945c7c7992ff82"
+    },
+    {
+      "arm": "cnn64",
+      "seed": 20261007,
+      "stage": "best_extended",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/cnn64/20261007/best.pt",
+      "sha256": "16225e71b48ca9ad277d535b70d26e377ef397e55fae32b26dd0ce408b1c9b2d"
+    },
+    {
+      "arm": "cnn64",
+      "seed": 20261008,
+      "stage": "initial",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/cnn64/20261008/initial.pt",
+      "sha256": "34fbfb2d677e73e389ead16b819589f5b27c7dc5b39bc83d03a9955e8b99b913"
+    },
+    {
+      "arm": "cnn64",
+      "seed": 20261008,
+      "stage": "best20",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/cnn64/20261008/best20.pt",
+      "sha256": "03c61a61c20c90515e0cb7b6eeaa8bab1eb7e62e29705aa86c432d5785c79e0f"
+    },
+    {
+      "arm": "cnn64",
+      "seed": 20261008,
+      "stage": "best_extended",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/cnn64/20261008/best.pt",
+      "sha256": "ecf637385885325271e3944c2b58636988eb292eee2e2c2f982abedb3ae91038"
+    },
+    {
+      "arm": "bilstm64",
+      "seed": 20261006,
+      "stage": "initial",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/bilstm64/20261006/initial.pt",
+      "sha256": "fe823b15effcad053c22abbe81c3b75c7eee477632c3f4cb9af0cd311929f8bf"
+    },
+    {
+      "arm": "bilstm64",
+      "seed": 20261006,
+      "stage": "best20",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/bilstm64/20261006/best20.pt",
+      "sha256": "0eed729193a2352fcc76ab68e8405f8cbf0160f7400f62ed7a14261e676dcf37"
+    },
+    {
+      "arm": "bilstm64",
+      "seed": 20261006,
+      "stage": "best_extended",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/bilstm64/20261006/best.pt",
+      "sha256": "c79fbc9b5b23702cc731d9742c56d56f78f08693842ba751114424bdce385044"
+    },
+    {
+      "arm": "bilstm64",
+      "seed": 20261007,
+      "stage": "initial",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/bilstm64/20261007/initial.pt",
+      "sha256": "8c5042c681a317b75e8fe70b705a2ce45eb59e4d39c96c817d4e8816cbb55968"
+    },
+    {
+      "arm": "bilstm64",
+      "seed": 20261007,
+      "stage": "best20",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/bilstm64/20261007/best20.pt",
+      "sha256": "d6f4cf179b59043528dc2d198fdd0f1c0c8c168394c3bcd81e58755637092df4"
+    },
+    {
+      "arm": "bilstm64",
+      "seed": 20261007,
+      "stage": "best_extended",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/bilstm64/20261007/best.pt",
+      "sha256": "8529f3ad5a089791cb9fdd50cfe19271e5c7597cb70e481ee323444cfce6b55f"
+    },
+    {
+      "arm": "bilstm64",
+      "seed": 20261008,
+      "stage": "initial",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/bilstm64/20261008/initial.pt",
+      "sha256": "b478286471030a3a2c29170eaee1e9034ad11dd3c299d1ce99feec3ec2e5eeff"
+    },
+    {
+      "arm": "bilstm64",
+      "seed": 20261008,
+      "stage": "best20",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/bilstm64/20261008/best20.pt",
+      "sha256": "f1e7cc7dfb64b95bf8946f20e54f1af3c66762d08397a2261286863dd7f335c1"
+    },
+    {
+      "arm": "bilstm64",
+      "seed": 20261008,
+      "stage": "best_extended",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/bilstm64/20261008/best.pt",
+      "sha256": "4b35c399b02f087b26a599478271be4754541ccfc760c927e38b6736cf1d4382"
+    },
+    {
+      "arm": "transformer64",
+      "seed": 20261006,
+      "stage": "initial",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/transformer64/20261006/initial.pt",
+      "sha256": "9dae1d52cf243a43780890d197880d12f3236e944ccce25f78551fe01838f25d"
+    },
+    {
+      "arm": "transformer64",
+      "seed": 20261006,
+      "stage": "best20",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/transformer64/20261006/best20.pt",
+      "sha256": "5f542e918c183ccfe5fc498b62e1b29ea6d97693be4cca3a510267aea95b1c9a"
+    },
+    {
+      "arm": "transformer64",
+      "seed": 20261006,
+      "stage": "best_extended",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/transformer64/20261006/best.pt",
+      "sha256": "fab05a58e90cf36330f4cfda029d5c7f354a0b39595d5ef8cd11861acb897efa"
+    },
+    {
+      "arm": "transformer64",
+      "seed": 20261007,
+      "stage": "initial",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/transformer64/20261007/initial.pt",
+      "sha256": "0b5f561df592d74be40c6122b493e6091f97a17f702c7f0102a09863b155ae38"
+    },
+    {
+      "arm": "transformer64",
+      "seed": 20261007,
+      "stage": "best20",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/transformer64/20261007/best20.pt",
+      "sha256": "0c1ee91e097ece2c851f041d5f493b65a310871731d729f69839652b8ba3aabf"
+    },
+    {
+      "arm": "transformer64",
+      "seed": 20261007,
+      "stage": "best_extended",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/transformer64/20261007/best.pt",
+      "sha256": "3e48ef51d2c9e4c4d7a9d58921e1c8f948139beaeedfa3646bcf50b15544ee39"
+    },
+    {
+      "arm": "transformer64",
+      "seed": 20261008,
+      "stage": "initial",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/transformer64/20261008/initial.pt",
+      "sha256": "35d9c4696f7a829b72c968efb178fc916071255a98f7c915ff4f720a009d6fc3"
+    },
+    {
+      "arm": "transformer64",
+      "seed": 20261008,
+      "stage": "best20",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/transformer64/20261008/best20.pt",
+      "sha256": "d77831d2ac5c76b3d2e1d43e06c0ecc0dc4c2ecca02c9a2f20cfc0b98f0e2157"
+    },
+    {
+      "arm": "transformer64",
+      "seed": 20261008,
+      "stage": "best_extended",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/transformer64/20261008/best.pt",
+      "sha256": "a954b8e6659f0634a650d071df7ec93661467a1ba45a4bddf6dddb737e69a0a6"
+    }
+  ],
+  "reference_dataset_sha256": "85486dadf913a454a38dc48131d8f8090c3d9c4ce92fe79f7bbe0c1c8427e7b4",
+  "cache_sha256": "79ab737a08335c7fd7e9a912159de65b7c26795e1ef22e45114e5a8c6eb8ad2e",
+  "model_experiment_protocol_sha256": "6338c5fe480dcf32b62a5e81f3e820090b890de2e0254ac5ff1f50b582fce6ee",
+  "sources": {
+    "scripts/evaluate_temporal_order.py": "9afe7555aa2f6fbe758b9c5d1e23e37d4498748436676bf06eaf81b40683a99a",
+    "src/embedding/order_evaluation.py": "480b23cfe7856296629a7230144416bd08d1224ce1786aacc3615a07616281ca",
+    "scripts/plot_temporal_order_evaluation.py": "e31988d9af8364b9f1d60fda86fda147efb9659e7731d6b6a5f737ecc29ea370"
+  },
+  "input_sha256": {
+    "validation": "26f61df986a0a8207ede62aa96a02a031bfc18f6686968cd63d6cddb0b2d7a67",
+    "test": "c89b539077cb9d44a2ce63f67a16eaab2f48791baabbdb2ce5685ba31e77b2f2"
+  },
+  "runtime": {
+    "torch": "2.14.1",
+    "numpy": "2.5.3",
+    "device": "cpu",
+    "threads": 2
+  },
+  "limits": [
+    "Synthetic feature perturbations, not different actual performances or audio.",
+    "Large permutation vs tiny noise is easy for raw distance/random encoders; a high score alone does not demonstrate learned musical structure.",
+    "Different methods use different distance definitions; only within-method rankings/score rates are compared.",
+    "One perturbation realization per window/order; model-seed ranges are not transformation uncertainty or confidence intervals.",
+    "Validation and test works have been observed in earlier experiments; this is not a pristine holdout.",
+    "Fully valid subset excludes works/performances with gaps. Reference-cohort normalization is unchanged.",
+    "Window-level evaluation does not validate whole-performance pooled embedding or long-range ordering.",
+    "No human preference or real cross-performance similarity claim."
+  ]
+}

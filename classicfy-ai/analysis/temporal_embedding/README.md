@@ -1,5 +1,16 @@
 # 1D CNN 20 epoch 학습과 연주 흐름 복원 확인
 
+후속 비교: [BiLSTM·Transformer와 CNN의 동일 조건 비교](../sequence_autoencoders/README.md),
+[학습 예산 확대·BiLSTM 64/128/256차원 실험](../sequence_followup/README.md).
+아래 내용은 첫 CNN 20 epoch 실행의 기록이다.
+
+복원 성능과 별개로 임베딩 거리에 순서 차이가 반영되는지는
+[요약·원본 시계열·세 모델의 학습 전후 평가](../temporal_order_evaluation/README.md)에서 확인한다.
+실제 네 구간의 변화가 임베딩에서 읽히는지는
+[고정 임베딩의 선형 예측 평가](../temporal_probe/README.md)에서 확인한다.
+학습 후 세 모델 모두 기존 요약·학습 전 표현보다 개선됐으며,
+이는 아래의 세밀한 가림 복원 결과와 별개의 관측 정보 보존 평가다.
+
 **검증 복원 오차는 감소했다. 시간 순서를 일부 활용하지만, 세밀한 beat별 변화는 아직 잘 복원하지 못한다.**
 
 동일 seed·작품 split·검증 마스크로 실제 20 epoch를 학습했다. 검증 MSE는

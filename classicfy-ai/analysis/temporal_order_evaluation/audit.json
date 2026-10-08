@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "rows": 234552,
+  "undefined_eligible_rows": 0,
+  "exact_permutation_summary_invariance": true,
+  "checkpoint_integrity": true,
+  "per_window_csv": "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_order_evaluation_run01/window_metrics.csv",
+  "output_sha256": {
+    "summary.csv": "824070c6af052c367ee8f4b742578ffbfc3414a88cfe09750324b9c2de7e8197",
+    "work_metrics.csv": "cb2e45c708bb0628ff1eb27c9e11796e0ff3487c793abd1a0060549da30fa8d9",
+    "selected_windows.csv": "04d126a46f12db8ffeeb94b68f0f7128d0cdcd108dfbf697ac56722eda185bad",
+    "example_beats.csv": "53631c268a9f1e1a4e8f3471c6561a55740ba8d0730a3ec52e0e5edca042612e"
+  }
+}

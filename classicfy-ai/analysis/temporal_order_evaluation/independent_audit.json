@@ -1,0 +1,18 @@
+{
+  "status": "passed",
+  "checked_window_rows": 234552,
+  "expected_rows": 234552,
+  "summary_rows": 696,
+  "checkpoint_hashes_checked": 27,
+  "figure_hashes_checked": 10,
+  "checks": [
+    "Frozen evaluation protocol and source/checkpoint integrity",
+    "Exact reproducible variants and joint permutations preserving distributions",
+    "No overlapping selected windows within performances",
+    "All saved distances and triplet scores recalculated from stored inputs/embeddings",
+    "Independent performance/work-macro aggregation matches summary",
+    "Figure hashes and canvas-bound layout audit"
+  ],
+  "source_sha256": "a4989da0da790ae84ca731cf941029d341cb0d58f755b8e723213ecd4d1e0859",
+  "protocol_sha256": "f236fda60a3cd6025b377ee1612213e10603d9e8eb341f2919a05f99b245a894"
+}

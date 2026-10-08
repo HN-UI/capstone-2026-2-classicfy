@@ -1,0 +1,23 @@
+{
+  "status": "passed",
+  "trained_sequence_runs": 6,
+  "reused_cnn_runs": 3,
+  "epochs_per_run": 20,
+  "png_figures_including_intermediate_record": 100,
+  "retrieval_rows": 2214,
+  "test_queries_per_model_seed": 82,
+  "auditor_source_sha256": "23470ef5361cfa546fd0fca8964fe4a741ef4ad1a59367f6a2da11d8e19850cc",
+  "checks": [
+    "frozen source hashes",
+    "checkpoint scores equal evaluation tables",
+    "checkpoint file hashes and selected epochs",
+    "same batch/mask schedules",
+    "all test conditions have three seeds",
+    "same-work candidates excluded",
+    "complete top-5 rows",
+    "fixed examples have no invalid targets",
+    "PNG and CSV hashes",
+    "PNG/SVG pairs and resolution",
+    "local report links"
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "experiments": [
+    1,
+    3
+  ],
+  "arms": {
+    "cnn64": [
+      "cnn",
+      64
+    ],
+    "bilstm64": [
+      "bilstm",
+      64
+    ],
+    "transformer64": [
+      "transformer",
+      64
+    ],
+    "bilstm128": [
+      "bilstm",
+      128
+    ],
+    "bilstm256": [
+      "bilstm",
+      256
+    ]
+  },
+  "seeds": [
+    20261006,
+    20261007,
+    20261008
+  ],
+  "training_config": {
+    "epochs": 80,
+    "batch_size": 32,
+    "learning_rate": 0.001,
+    "patience": 10,
+    "mask_fraction": 0.2,
+    "mask_block_size": 4,
+    "seed": 20261006
+  },
+  "minimum_epochs": 20,
+  "stop_rule": "minimum 20; stop after 10 consecutive epochs without strictly lower validation value MSE; maximum 80",
+  "selection": "best validation value MSE within first 20 vs best within actual extended budget on the same trajectory",
+  "test_policy": "No test metrics, test figure selection or test-driven tuning; existing validation used for development",
+  "initialization": "64D is the exact original model. 128/256D construct the same 64D BiLSTM then replace only dimension-dependent Linear layers with default initialization under seed+1000; encoder and decoder output layer start identically across sizes.",
+  "dimension_effect": "Decoder hidden width stays 128. Bottleneck and decoder input parameter counts necessarily increase; not an equal-parameter experiment or a proof of information capacity alone.",
+  "schedule": "Same ordered batches and hidden targets for each epoch/seed across arms, including first 20 epochs of original experiments. Precomputed schedules replace repeated Python generation only.",
+  "reference_dataset_sha256": "85486dadf913a454a38dc48131d8f8090c3d9c4ce92fe79f7bbe0c1c8427e7b4",
+  "cache_sha256": "79ab737a08335c7fd7e9a912159de65b7c26795e1ef22e45114e5a8c6eb8ad2e",
+  "sources": {
+    "scripts/extend_sequence_experiments.py": "683ef864da2b005522b7ab0006e929bb8da2f2479b96746fe2ca6ecc66d9d551",
+    "src/embedding/extended_experiments.py": "6474248592478dfd2b41b69a0c6a359812d34ebc913b364e7fdc4613f713d557",
+    "src/embedding/sequence_models.py": "f8fa05f2703dd2da5ac1c759bddcf6c5e2ff0322d2e059ec1ad368de62e48e7e",
+    "src/embedding/model.py": "06844a05d709ff8a9d33aaf9d90de68c1285659a913f4520327b7ebc106c96d1",
+    "src/embedding/data.py": "bb15ea0fbe7937da3947dcb8c362c54bb7ac183f5b17318fe249e53b3eda6040",
+    "src/embedding/training.py": "bba2a763afe9196be0264bc33b8431170fc0bafa29ff82fb728815b957ff9efc",
+    "src/embedding/evaluation.py": "6cac2102cfc50d0ea61569123436f4e3f6cba430deeba5561e6244809f62afd9",
+    "scripts/compare_sequence_autoencoders.py": "07e57bc1c44104d76981c00a4552befbf6623a13f60f3b2a0674fd677b5e707f",
+    "scripts/train_temporal_ablation.py": "27890b6f347628a6fbb0ced75e410117071cae3c1aeb55b680df356a3ad0ea90",
+    "scripts/validate_temporal_embedding.py": "7b52a2b0e856544a2047214fd8eca7262d600b43608dbbd2627b3a1d520bfa27",
+    "scripts/validate_embedding.py": "9bdbbeec18a96b2754cf080bb4eec830c417b691ae81dc4079e918ba1197b265",
+    "scripts/validate_feature_normalization.py": "7d968b961c7cd78c56f4db5c2fae39beb0421935f34e7ecec5de673033279923"
+  },
+  "runtime": {
+    "torch": "2.14.1",
+    "device": "cpu",
+    "threads": 2
+  },
+  "counts": {
+    "train": {
+      "works": 39,
+      "performances": 395,
+      "windows": 5803
+    },
+    "validation": {
+      "works": 8,
+      "performances": 93,
+      "windows": 935
+    }
+  },
+  "validation_mask_sha256": "3ed043c7109b481e4eb4576a919246e97266fb3ef04c83d2f4fa0847862d0d3d",
+  "limits": [
+    "One previously observed validation split; three seeds, not confidence intervals.",
+    "Maximum budget is 80, not proof of convergence when best is near the cap.",
+    "Bottleneck sizes change head initialization and parameter counts.",
+    "Early stopping yields different actual epoch counts and different extra compute.",
+    "Reconstruction metrics do not validate human listening similarity."
+  ]
+}

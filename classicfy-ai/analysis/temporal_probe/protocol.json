@@ -1,0 +1,315 @@
+{
+  "task": "Frozen representations -> linear prediction of observed four-quarter channel means minus window mean",
+  "primary": "Dynamics: 100*(1-MSE_probe/MSE_flat) on mean-removed four-bin trajectory",
+  "secondary": "Same task for all seven channels; equal five-feature macro (three pedal channels form one feature)",
+  "bins": 4,
+  "bin_beats": 16,
+  "encoder_policy": "Saved 64D encoder fixed, eval mode, no synthetic masking, no L2-normalization; no encoder updates or new checkpoint selection",
+  "checkpoint_stages": [
+    "initial",
+    "best_extended"
+  ],
+  "checkpoints": [
+    {
+      "arm": "cnn64",
+      "seed": 20261006,
+      "stage": "initial",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/cnn64/20261006/initial.pt",
+      "sha256": "c1dab6a6877516b031301dfc9a3ef0836bc4b3b934f99b44d668953c046dd17c"
+    },
+    {
+      "arm": "cnn64",
+      "seed": 20261006,
+      "stage": "best_extended",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/cnn64/20261006/best.pt",
+      "sha256": "a9177bbeea0ebecbdab08411ff3ba950debca9ac65ff814eb74eab2696303f49"
+    },
+    {
+      "arm": "cnn64",
+      "seed": 20261007,
+      "stage": "initial",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/cnn64/20261007/initial.pt",
+      "sha256": "22e9ecb56a30237a612ab8ab99a58ff49056f644a141b43a741fe17098675106"
+    },
+    {
+      "arm": "cnn64",
+      "seed": 20261007,
+      "stage": "best_extended",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/cnn64/20261007/best.pt",
+      "sha256": "16225e71b48ca9ad277d535b70d26e377ef397e55fae32b26dd0ce408b1c9b2d"
+    },
+    {
+      "arm": "cnn64",
+      "seed": 20261008,
+      "stage": "initial",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/cnn64/20261008/initial.pt",
+      "sha256": "34fbfb2d677e73e389ead16b819589f5b27c7dc5b39bc83d03a9955e8b99b913"
+    },
+    {
+      "arm": "cnn64",
+      "seed": 20261008,
+      "stage": "best_extended",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/cnn64/20261008/best.pt",
+      "sha256": "ecf637385885325271e3944c2b58636988eb292eee2e2c2f982abedb3ae91038"
+    },
+    {
+      "arm": "bilstm64",
+      "seed": 20261006,
+      "stage": "initial",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/bilstm64/20261006/initial.pt",
+      "sha256": "fe823b15effcad053c22abbe81c3b75c7eee477632c3f4cb9af0cd311929f8bf"
+    },
+    {
+      "arm": "bilstm64",
+      "seed": 20261006,
+      "stage": "best_extended",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/bilstm64/20261006/best.pt",
+      "sha256": "c79fbc9b5b23702cc731d9742c56d56f78f08693842ba751114424bdce385044"
+    },
+    {
+      "arm": "bilstm64",
+      "seed": 20261007,
+      "stage": "initial",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/bilstm64/20261007/initial.pt",
+      "sha256": "8c5042c681a317b75e8fe70b705a2ce45eb59e4d39c96c817d4e8816cbb55968"
+    },
+    {
+      "arm": "bilstm64",
+      "seed": 20261007,
+      "stage": "best_extended",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/bilstm64/20261007/best.pt",
+      "sha256": "8529f3ad5a089791cb9fdd50cfe19271e5c7597cb70e481ee323444cfce6b55f"
+    },
+    {
+      "arm": "bilstm64",
+      "seed": 20261008,
+      "stage": "initial",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/bilstm64/20261008/initial.pt",
+      "sha256": "b478286471030a3a2c29170eaee1e9034ad11dd3c299d1ce99feec3ec2e5eeff"
+    },
+    {
+      "arm": "bilstm64",
+      "seed": 20261008,
+      "stage": "best_extended",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/bilstm64/20261008/best.pt",
+      "sha256": "4b35c399b02f087b26a599478271be4754541ccfc760c927e38b6736cf1d4382"
+    },
+    {
+      "arm": "transformer64",
+      "seed": 20261006,
+      "stage": "initial",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/transformer64/20261006/initial.pt",
+      "sha256": "9dae1d52cf243a43780890d197880d12f3236e944ccce25f78551fe01838f25d"
+    },
+    {
+      "arm": "transformer64",
+      "seed": 20261006,
+      "stage": "best_extended",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/transformer64/20261006/best.pt",
+      "sha256": "fab05a58e90cf36330f4cfda029d5c7f354a0b39595d5ef8cd11861acb897efa"
+    },
+    {
+      "arm": "transformer64",
+      "seed": 20261007,
+      "stage": "initial",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/transformer64/20261007/initial.pt",
+      "sha256": "0b5f561df592d74be40c6122b493e6091f97a17f702c7f0102a09863b155ae38"
+    },
+    {
+      "arm": "transformer64",
+      "seed": 20261007,
+      "stage": "best_extended",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/transformer64/20261007/best.pt",
+      "sha256": "3e48ef51d2c9e4c4d7a9d58921e1c8f948139beaeedfa3646bcf50b15544ee39"
+    },
+    {
+      "arm": "transformer64",
+      "seed": 20261008,
+      "stage": "initial",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/transformer64/20261008/initial.pt",
+      "sha256": "35d9c4696f7a829b72c968efb178fc916071255a98f7c915ff4f720a009d6fc3"
+    },
+    {
+      "arm": "transformer64",
+      "seed": 20261008,
+      "stage": "best_extended",
+      "path": "/Users/ihun-ui/Desktop/Classicfy/datasets/extended_sequences_run01/transformer64/20261008/best.pt",
+      "sha256": "a954b8e6659f0634a650d071df7ec93661467a1ba45a4bddf6dddb737e69a0a6"
+    }
+  ],
+  "target": "Original [7,64] -> means of each consecutive 16 beats -> subtract each channel's 64-beat mean -> [7,4]",
+  "probe": "One multi-output affine ridge map per representation; 28 outputs. Weighted train-only input mean/std. Objective sum(w*error^2)+alpha*||coeff||^2; intercept unpenalized.",
+  "penalty_selection": {
+    "alphas": [
+      0.0001,
+      0.001,
+      0.01,
+      0.1,
+      1.0,
+      10.0
+    ],
+    "folds": 5,
+    "seed": 20261010,
+    "mapping": {
+      "Bach/Fugue/bwv_883/midi_score.mid": 0,
+      "Beethoven/Piano_Sonatas/32-1/midi_score.mid": 1,
+      "Beethoven/Piano_Sonatas/28-1/midi_score.mid": 2,
+      "Haydn/Keyboard_Sonatas/50-1_no_repeat/midi_score.mid": 3,
+      "Chopin/Ballades/4/midi_score.mid": 4,
+      "Bach/Fugue/bwv_885/midi_score.mid": 0,
+      "Scriabin/Sonatas/5/midi_score.mid": 1,
+      "Chopin/Etudes_op_25/10/midi_score.mid": 2,
+      "Chopin/Sonata_3/4th/midi_score.mid": 3,
+      "Beethoven/Piano_Sonatas/11-1/midi_score.mid": 4,
+      "Liszt/Transcendental_Etudes/5/midi_score.mid": 0,
+      "Beethoven/Piano_Sonatas/26-1/midi_score.mid": 1,
+      "Bach/Prelude/bwv_860/midi_score.mid": 2,
+      "Liszt/Gran_Etudes_de_Paganini/2_La_campanella/midi_score.mid": 3,
+      "Balakirev/Islamey/midi_score.mid": 4,
+      "Bach/Prelude/bwv_885/midi_score.mid": 0,
+      "Beethoven/Piano_Sonatas/16-1/midi_score.mid": 1,
+      "Chopin/Etudes_op_10/4/midi_score.mid": 2,
+      "Schubert/Piano_Sonatas/894-2_no_repeat/midi_score.mid": 3,
+      "Beethoven/Piano_Sonatas/7-1/midi_score.mid": 4,
+      "Beethoven/Piano_Sonatas/26-2/midi_score.mid": 0,
+      "Chopin/Etudes_op_10/1/midi_score.mid": 1,
+      "Chopin/Ballades/1/midi_score.mid": 2,
+      "Beethoven/Piano_Sonatas/27-1/midi_score.mid": 3,
+      "Chopin/Etudes_op_25/12/midi_score.mid": 4,
+      "Bach/Fugue/bwv_857/midi_score.mid": 0,
+      "Schubert/Impromptu_op.90_D.899/3/midi_score.mid": 1,
+      "Beethoven/Piano_Sonatas/24-1_no_2_repeat/midi_score.mid": 2,
+      "Mozart/Piano_Sonatas/8-1/midi_score.mid": 3,
+      "Bach/Fugue/bwv_848/midi_score.mid": 4,
+      "Bach/Fugue/bwv_889/midi_score.mid": 0,
+      "Chopin/Sonata_3/2nd/midi_score.mid": 1,
+      "Chopin/Etudes_op_10/8/midi_score.mid": 2,
+      "Bach/Fugue/bwv_854/midi_score.mid": 3,
+      "Beethoven/Piano_Sonatas/17-1_no_repeat/midi_score.mid": 4,
+      "Chopin/Etudes_op_10/2/midi_score.mid": 0,
+      "Bach/Prelude/bwv_889/midi_score.mid": 1,
+      "Chopin/Barcarolle/midi_score.mid": 2,
+      "Chopin/Scherzos/31/midi_score.mid": 3
+    },
+    "metric": "Fold-heldout MSE normalized by fold-training channel target energy; equal five features; folds weighted by held-out work count.",
+    "isolation": "All tuning and fold-specific normalization/PCA use only train works. Validation/test targets never used for fitting or penalty choice."
+  },
+  "baselines": [
+    "flat zero trajectory",
+    "fixed training-average trajectory",
+    "existing summary14 + same ridge",
+    "train-only standardized weighted PCA64 + same ridge",
+    "original feature direct target calculation (identity reference, not learned)"
+  ],
+  "pca": "Fold-specific/train-only mean/std, weighted covariance top 64 eigenvectors. PCA outputs are standardized again by ridge using its training subset.",
+  "aggregation": "Windows equally within each performance; performances equally within each work; works equally. Channel score is 100*(1-work-macro-MSE/work-macro-flat-MSE), then equal five-feature average.",
+  "selection": "Same fully valid chronological nonoverlapping 64-beat windows as order evaluation; train selection added with identical rule",
+  "support": [
+    {
+      "split": "train",
+      "original_works": 39,
+      "original_performances": 395,
+      "original_windows": 5803,
+      "works": 39,
+      "performances": 395,
+      "windows": 1639,
+      "excluded_works": []
+    },
+    {
+      "split": "validation",
+      "original_works": 8,
+      "original_performances": 93,
+      "original_windows": 935,
+      "works": 8,
+      "performances": 93,
+      "windows": 271,
+      "excluded_works": []
+    },
+    {
+      "split": "test",
+      "original_works": 8,
+      "original_performances": 82,
+      "original_windows": 1670,
+      "works": 6,
+      "performances": 67,
+      "windows": 403,
+      "excluded_works": [
+        "Beethoven/Piano_Sonatas/31-2/midi_score.mid",
+        "Chopin/Sonata_3/3rd/midi_score.mid"
+      ]
+    }
+  ],
+  "model_seeds": [
+    20261006,
+    20261007,
+    20261008
+  ],
+  "reference_dataset_sha256": "85486dadf913a454a38dc48131d8f8090c3d9c4ce92fe79f7bbe0c1c8427e7b4",
+  "cache_sha256": "79ab737a08335c7fd7e9a912159de65b7c26795e1ef22e45114e5a8c6eb8ad2e",
+  "previous_protocol_sha256": "f236fda60a3cd6025b377ee1612213e10603d9e8eb341f2919a05f99b245a894",
+  "previous_embedding_files": {
+    "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_order_evaluation_run01/cnn64_20261006_initial_validation.npz": "d0d18dab1b9b98b6e97ec999c102130c1177c6f766f61b9b626783c53b8f5200",
+    "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_order_evaluation_run01/cnn64_20261006_initial_test.npz": "1a0ef2f7db3cfe0c7d64420f7361be8c05d3ec76467c18065b64ce76591a3344",
+    "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_order_evaluation_run01/cnn64_20261006_best_extended_validation.npz": "710dcd56217e63027605dce2370d1065d8eca7d6cd659c97df725a1d8fc96845",
+    "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_order_evaluation_run01/cnn64_20261006_best_extended_test.npz": "d96f7ce434bc19d709fe52080bb0934c4f07ee8e4a4f95c8c49565026753cdfd",
+    "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_order_evaluation_run01/cnn64_20261007_initial_validation.npz": "99587fc926dea931dec7ecd0a45b87d126e2f46ff08f6d0abae01e56e7060278",
+    "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_order_evaluation_run01/cnn64_20261007_initial_test.npz": "3edb99cb6743ee31084f903da911f5c8b0e18ca186138a9a2739d8aca9e750ba",
+    "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_order_evaluation_run01/cnn64_20261007_best_extended_validation.npz": "00c02188cd8be619511e2d9f272ba7d0862380ab910b7a140fe0da4f29723913",
+    "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_order_evaluation_run01/cnn64_20261007_best_extended_test.npz": "4bc16c356b9659b44f7771d6a67dc3d533101faba612b9e48afea07c1174a799",
+    "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_order_evaluation_run01/cnn64_20261008_initial_validation.npz": "e969f99dd5538a53733eaf7db0b18db57bdb006200aef45541dccf6c29f33b9a",
+    "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_order_evaluation_run01/cnn64_20261008_initial_test.npz": "d564d57dede29da556f9d608af3815fd3a51781e71191a131bc4b10b5c9e8a2e",
+    "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_order_evaluation_run01/cnn64_20261008_best_extended_validation.npz": "b868983f1f879f2c462b033d474e28fc5cd71e2aa94037aefbb05b08188384dc",
+    "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_order_evaluation_run01/cnn64_20261008_best_extended_test.npz": "1adcfc1ffbdfb2154951ea2a828a34be615b3c63cf8fc4280674e7e8ebe6d912",
+    "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_order_evaluation_run01/bilstm64_20261006_initial_validation.npz": "76368729376fdecfb6d68167e68e520a15c277a03b99590e2ecc2c903028e8fb",
+    "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_order_evaluation_run01/bilstm64_20261006_initial_test.npz": "b685179a3ebd99919d1f76bbc175533f1bd79f2e085576b98e5879d5c5b162e0",
+    "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_order_evaluation_run01/bilstm64_20261006_best_extended_validation.npz": "8d8acae6e9d2558f61add5e08a7d96f336a90efe5583a02ece6801a508a292ff",
+    "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_order_evaluation_run01/bilstm64_20261006_best_extended_test.npz": "f8ccc44154cac5a7acf0ad3557993723cb508f74447674a9fe7aa20d0b4c4d23",
+    "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_order_evaluation_run01/bilstm64_20261007_initial_validation.npz": "94b621935d7af7ba25a73e3a84d63ce2b8d786c087a2cbd55ebf374d62986892",
+    "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_order_evaluation_run01/bilstm64_20261007_initial_test.npz": "b79239bd956934eadd5d54bc4963dad4dcb1f94e96486b8bbed4cd1d041d3c3a",
+    "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_order_evaluation_run01/bilstm64_20261007_best_extended_validation.npz": "bec5e5b39b3c5e97371b6f9856037602420eebc5014375cea7c37dd9cdc6576b",
+    "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_order_evaluation_run01/bilstm64_20261007_best_extended_test.npz": "b7c6321b196cbb68e5305325cace4c04a2da619996173e0f7aa50d1fcc4406ee",
+    "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_order_evaluation_run01/bilstm64_20261008_initial_validation.npz": "1a22c0dbcaafbe1a3f6af0cf46e71bb3cb708af0ae5399a26aeeb63b03915b35",
+    "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_order_evaluation_run01/bilstm64_20261008_initial_test.npz": "070e0bead3265db4245689b97ce13c59fc751f3f5d3601d6bfe74ca52a2b1f13",
+    "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_order_evaluation_run01/bilstm64_20261008_best_extended_validation.npz": "9c8b15dc975a8bd03907688517730601852c0719122e196d0b616f2cddfb217e",
+    "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_order_evaluation_run01/bilstm64_20261008_best_extended_test.npz": "8f15bb2b5db484767f4961bda8964af60820b6c291fd2340e0bea776df8f3181",
+    "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_order_evaluation_run01/transformer64_20261006_initial_validation.npz": "457209427c85858d1e07ed3d3ba97f888ea4f9bb37733474874ad9b6e2737d5e",
+    "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_order_evaluation_run01/transformer64_20261006_initial_test.npz": "0aaa642591c7d67983359c984ac3265a9451029012a73cce33728a8a54f5d3de",
+    "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_order_evaluation_run01/transformer64_20261006_best_extended_validation.npz": "6f376b438c11e4a3d76816ecce9467100264496523b55f505dc8c7f0a6cc5875",
+    "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_order_evaluation_run01/transformer64_20261006_best_extended_test.npz": "5911771f3b74aa826ba46ee9eb123be846726425fc9150e712d537bbc208d55f",
+    "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_order_evaluation_run01/transformer64_20261007_initial_validation.npz": "d60eb39bc3cc9de0ba38351f7dd049a9484bd130132befb2ff3c3ed665bf5a2c",
+    "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_order_evaluation_run01/transformer64_20261007_initial_test.npz": "e76a5d5ecba11df4d8b50aba64f4327725856098f77b481de4e8dfc0742ab973",
+    "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_order_evaluation_run01/transformer64_20261007_best_extended_validation.npz": "afe80c1db01b9837abc7327544fb12ab3835298e5399757cfe57860c0770167c",
+    "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_order_evaluation_run01/transformer64_20261007_best_extended_test.npz": "18e7beb47d271af214563d27c5f69dba57afaabaa82bfb105a1e4c57720cae76",
+    "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_order_evaluation_run01/transformer64_20261008_initial_validation.npz": "2bdc7584326e96590505eded41d78f2d71e50efa73c412fcd9f87e00402c75d5",
+    "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_order_evaluation_run01/transformer64_20261008_initial_test.npz": "43c1b9f608ebbf69ec245223a7c11e6ab475e4b01482dc02e4d1f4acc7080e30",
+    "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_order_evaluation_run01/transformer64_20261008_best_extended_validation.npz": "d8ec27c478f0b09fb32461ef09ea8e55a73fba7bbbc884be69ff11581daeb8bb",
+    "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_order_evaluation_run01/transformer64_20261008_best_extended_test.npz": "e884bb8f65c8f5990d47655c6d67f8bd8b7a58c6390896dfd5dc791f7c968274"
+  },
+  "input_sha256": {
+    "train": "d50aa6121d875938ce5d7bd040fac08492fdf8f892a9e2754a2825ad70778243",
+    "validation": "26f61df986a0a8207ede62aa96a02a031bfc18f6686968cd63d6cddb0b2d7a67",
+    "test": "c89b539077cb9d44a2ce63f67a16eaab2f48791baabbdb2ce5685ba31e77b2f2"
+  },
+  "sources": {
+    "scripts/evaluate_temporal_probe.py": "222a4d18fe3bef78297cc9443e69100a2942b2785bd839e3de716c015b35bf65",
+    "src/embedding/temporal_probe.py": "4f10f99066ef28ef90c7535e2012f03742b4a34dd21a64bd504e6c74193357d7",
+    "scripts/plot_temporal_probe.py": "74297cfaed5852e0a98ab15aaecdcf05cc2b5fc34bff608b31f57ef28fdfd9cd",
+    "scripts/evaluate_temporal_order.py": "9afe7555aa2f6fbe758b9c5d1e23e37d4498748436676bf06eaf81b40683a99a",
+    "src/embedding/order_evaluation.py": "480b23cfe7856296629a7230144416bd08d1224ce1786aacc3615a07616281ca"
+  },
+  "runtime": {
+    "torch": "2.14.1",
+    "numpy": "2.5.3",
+    "device": "cpu",
+    "threads": 2
+  },
+  "limits": [
+    "Linear accessibility of coarse within-window trajectories, not all temporal information or cosine retrieval quality.",
+    "Targets derive from the same extracted features; evaluates representation fidelity, not rule correctness or perceived musical similarity.",
+    "Prior validation/test have already been observed; not a pristine holdout.",
+    "Fully valid subset excludes two test works; original cohort-based normalization remains unchanged.",
+    "Different representations have different dimensions/nonlinearity; train-only penalty selection and PCA64/random encoder controls mitigate but do not remove every difference.",
+    "Model-seed min/max is not a confidence interval. No user preference claims.",
+    "Four-bin means ignore within-16-beat detail and full-performance ordering."
+  ]
+}
