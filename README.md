@@ -17,6 +17,9 @@ Tempo, Rubato, Dynamics·Pedaling, Articulation, 정규화 등의 주제별로 �
 임베딩의 연주 차이를 세 팀원이 실제 녹음으로 확인하는 [청취 평가 도구](classicfy-ai/tools/listening_evaluation/README.md)는
 같은 작품 비교·다른 작품 후보 비교와 응답 저장·그림 분석을 제공한다.
 
+[시계열 연주 임베딩](classicfy-ai/src/embedding/README.md)은 기존 beat별 feature를
+1D CNN으로 읽고, 숨긴 특징을 복원하는 자기지도 학습과 다른 작품 후보 검색을 제공한다.
+
 ## Server Architecture
 추후 이미지 업데이트
 

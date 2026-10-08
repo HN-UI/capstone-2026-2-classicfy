@@ -14,6 +14,7 @@
 | `pedaling/` | 실제 CC64와 깊이·on 시간·전환 횟수의 공통 제거 및 SD 표준화 | [Pedaling 그림 안내](pedaling/README.md) |
 | `_articulation/` | 실제 음 길이·beat 중앙값·공통 제거·MAD 표준화, 파일당 그래프 하나 | [Articulation 그림 안내](_articulation/README.md) |
 | `_embedding_validation/` | 다섯 feature 결합의 동일 작품 검색·결측 안정성·feature 제외 비교 | [임베딩 검증 그림 안내](_embedding_validation/README.md) |
+| `temporal_embedding/` | 1D CNN 20epoch의 검증 오차·구간 내 변화 모양·관측 순서 영향 | [시계열 복원 학습 결과](temporal_embedding/README.md) |
 | `_interpretation_embedding/` | 같은 작품 3연주의 차이·MIDI 원자료와 다른 작품 A·B·C 유사 특징 검색 | [연주 차이와 검색 사례](_interpretation_embedding/README.md) |
 | `_feature_search_roles/` | 다른 작품 검색에서 feature별 후보/순위 변화와 검색에 안 쓴 feature의 일치 검사 | [feature별 검색 역할](_feature_search_roles/README.md) |
 | `_listening_evaluation/` | 3인 청취 평가의 연주 선정·발췌·비공개 거리와 준비 기록 | [진행자 자료](_listening_evaluation/README.md) · [참가자 도구](../tools/listening_evaluation/README.md) |
@@ -36,6 +37,7 @@ classicfy-ai/analysis/
 ├── articulation/
 ├── _articulation/
 ├── _embedding_validation/
+├── temporal_embedding/
 ├── _interpretation_embedding/
 │   ├── same_work/
 │   ├── cross_work/
@@ -59,7 +61,7 @@ Articulation 개별 예시는 `_articulation/`에 둔다. 이름 앞의 `_`로 �
 
 ## 분석 실행과 저장 규칙
 
-분석 스크립트는 `classicfy-ai/scripts/`에 있다. 아래 열한 스크립트의 기본 출력은 실행
+분석 스크립트는 `classicfy-ai/scripts/`에 있다. 아래 스크립트의 기본 출력은 실행
 디렉터리와 관계없이 이 `analysis/` 아래의 해당 주제 폴더다. `--out`을 명시하면 지정한
 경로를 사용한다. 상대 경로의 `--out`은 실행 디렉터리를 기준으로 해석한다.
 
@@ -79,6 +81,7 @@ Articulation 개별 예시는 `_articulation/`에 둔다. 이름 앞의 `_`로 �
 .venv/bin/python classicfy-ai/scripts/validate_embedding.py
 .venv/bin/python classicfy-ai/scripts/validate_interpretation_examples.py
 .venv/bin/python classicfy-ai/scripts/validate_feature_search_roles.py
+.venv/bin/python classicfy-ai/scripts/validate_temporal_embedding.py --out /tmp/classicfy-temporal-evaluation
 ```
 
 선택 작품 비교는 `--works`를 사용하고, `--out`을 `analysis/custom_comparisons/<주제>/`로

@@ -1,0 +1,1203 @@
+{
+  "selection": "Largest per-gap CNN MSE per channel, validation, two visible anchors, length 2..4",
+  "limit": "Re-extraction consistency and robust alignment flags do not certify musical validity or annotation accuracy.",
+  "checks": [
+    {
+      "channel": "tempo",
+      "key": "Bach/Prelude/bwv_848/Lee01M.mid",
+      "piece": "Bach/Prelude/bwv_848/midi_score.mid",
+      "beat": 39,
+      "length": 4,
+      "pattern": "abrupt",
+      "gap_mse": 48.19831649328567,
+      "check_type": "score/performance annotation durations",
+      "cache_agrees": true,
+      "robust_alignment": true,
+      "performance_midi_sha256": "b5aadfb8377bd418205a04f49b53756066b8dfbf2fa98b39a15146b4c6db2fd2",
+      "match_sha256": "d6845516358183437452c9fa359aa6ab1231d0f67340eb5ea4bbf089d07e89d0",
+      "context_beats": [
+        38,
+        39,
+        40,
+        41,
+        42,
+        43
+      ],
+      "raw_values": [
+        -0.13460998773838612,
+        -1.1093231123725715,
+        -0.6210367425140244,
+        0.07161527379209416,
+        0.10518146078905169,
+        0.17982185468665762
+      ],
+      "beat_seconds": [
+        0.27444899999999883,
+        0.5393610000000013,
+        0.38449499999999937,
+        0.2378929999999997,
+        0.23242199999999968,
+        0.22070300000000032
+      ],
+      "note_counts": null
+    },
+    {
+      "channel": "rubato",
+      "key": "Bach/Prelude/bwv_848/Lee01M.mid",
+      "piece": "Bach/Prelude/bwv_848/midi_score.mid",
+      "beat": 39,
+      "length": 4,
+      "pattern": "abrupt",
+      "gap_mse": 130.43826349553734,
+      "check_type": "score/performance annotation durations",
+      "cache_agrees": true,
+      "robust_alignment": true,
+      "performance_midi_sha256": "b5aadfb8377bd418205a04f49b53756066b8dfbf2fa98b39a15146b4c6db2fd2",
+      "match_sha256": "d6845516358183437452c9fa359aa6ab1231d0f67340eb5ea4bbf089d07e89d0",
+      "context_beats": [
+        38,
+        39,
+        40,
+        41,
+        42,
+        43
+      ],
+      "raw_values": [
+        -0.13460998773838612,
+        -1.1093231123725715,
+        -0.6210367425140244,
+        0.07161527379209416,
+        0.10518146078905169,
+        0.17982185468665762
+      ],
+      "beat_seconds": [
+        0.27444899999999883,
+        0.5393610000000013,
+        0.38449499999999937,
+        0.2378929999999997,
+        0.23242199999999968,
+        0.22070300000000032
+      ],
+      "note_counts": null
+    },
+    {
+      "channel": "dynamics",
+      "key": "Chopin/Etudes_op_10/12/KimBenjamin04.mid",
+      "piece": "Chopin/Etudes_op_10/12/midi_score.mid",
+      "beat": 317,
+      "length": 4,
+      "pattern": "abrupt",
+      "gap_mse": 11.482712016515357,
+      "check_type": "original MIDI/match re-extraction versus raw cache",
+      "cache_agrees": true,
+      "robust_alignment": true,
+      "performance_midi_sha256": "fb8d0dc11a74176da22c860377eca82f8b9edeef3e42cf1059b94df410a5e568",
+      "match_sha256": "0daf8a5baf7101b5f64fc25beea3c8ada215930a50eda5d9b48ba9f6d7afdec7",
+      "context_beats": [
+        316,
+        317,
+        318,
+        319,
+        320,
+        321
+      ],
+      "raw_values": [
+        0.43194600674915634,
+        0.4625984251968504,
+        0.5104986876640419,
+        0.5579302587176603,
+        0.6839145106861643,
+        0.6279527559055118
+      ],
+      "beat_seconds": [
+        0.4540590000000009,
+        0.4775630000000035,
+        0.553416999999996,
+        0.8536299999999528,
+        0.8092920000000561,
+        0.37125999999997816
+      ],
+      "note_counts": [
+        7,
+        4,
+        6,
+        7,
+        7,
+        8
+      ]
+    },
+    {
+      "channel": "articulation",
+      "key": "Chopin/Etudes_op_25/11/Kociuban02.mid",
+      "piece": "Chopin/Etudes_op_25/11/midi_score.mid",
+      "beat": 375,
+      "length": 2,
+      "pattern": "abrupt",
+      "gap_mse": 40.024020474074504,
+      "check_type": "original MIDI/match re-extraction versus raw cache",
+      "cache_agrees": true,
+      "robust_alignment": true,
+      "performance_midi_sha256": "0c0bf2cebc389c2e95a0215b0b6837222bffe5ed4700451d0e69d012b2cb724a",
+      "match_sha256": "4e3fdda4ca221e6b7d66d6612424b209d78bda3a30b2e5a29666bafe1da08238",
+      "context_beats": [
+        374,
+        375,
+        376,
+        377
+      ],
+      "raw_values": [
+        -0.6832520404441144,
+        -4.2935819076616415,
+        -0.4059923596759668,
+        -0.16729474539767816
+      ],
+      "beat_seconds": [
+        0.7211529999999868,
+        0.7211529999999868,
+        0.40331199999999967,
+        0.6249995000000013
+      ],
+      "note_counts": [
+        2,
+        6,
+        3,
+        17
+      ]
+    },
+    {
+      "channel": "pedal_depth",
+      "key": "Bach/Prelude/bwv_848/LeeSH01M.mid",
+      "piece": "Bach/Prelude/bwv_848/midi_score.mid",
+      "beat": 293,
+      "length": 4,
+      "pattern": "abrupt",
+      "gap_mse": 24.03722671171619,
+      "check_type": "original MIDI/match re-extraction versus raw cache",
+      "cache_agrees": true,
+      "robust_alignment": true,
+      "performance_midi_sha256": "7cce2e538d3c49a0f257b572c19ce6941ad938d3c5c0d3fc297017940642261b",
+      "match_sha256": "975805be076817a387981b0acd785eb7a3be68b6620211e591fe57cde5c6a04c",
+      "context_beats": [
+        292,
+        293,
+        294,
+        295,
+        296,
+        297
+      ],
+      "raw_values": [
+        0.2726758494266349,
+        0.41167339079881543,
+        0.1637536637060505,
+        0.9849488053682873,
+        1.0,
+        0.4301985628556178
+      ],
+      "beat_seconds": [
+        0.21666700000000105,
+        0.23229099999998937,
+        0.2510419999999982,
+        0.23541700000001242,
+        0.2447909999999922,
+        0.24270900000000495
+      ],
+      "note_counts": null
+    },
+    {
+      "channel": "pedal_down_ratio",
+      "key": "Bach/Prelude/bwv_848/LeeSH01M.mid",
+      "piece": "Bach/Prelude/bwv_848/midi_score.mid",
+      "beat": 293,
+      "length": 4,
+      "pattern": "abrupt",
+      "gap_mse": 42.741035460689474,
+      "check_type": "original MIDI/match re-extraction versus raw cache",
+      "cache_agrees": true,
+      "robust_alignment": true,
+      "performance_midi_sha256": "7cce2e538d3c49a0f257b572c19ce6941ad938d3c5c0d3fc297017940642261b",
+      "match_sha256": "975805be076817a387981b0acd785eb7a3be68b6620211e591fe57cde5c6a04c",
+      "context_beats": [
+        292,
+        293,
+        294,
+        295,
+        296,
+        297
+      ],
+      "raw_values": [
+        0.0,
+        0.0,
+        0.17012425543663298,
+        1.0,
+        1.0,
+        0.48927041573792385
+      ],
+      "beat_seconds": [
+        0.21666700000000105,
+        0.23229099999998937,
+        0.2510419999999982,
+        0.23541700000001242,
+        0.2447909999999922,
+        0.24270900000000495
+      ],
+      "note_counts": null
+    },
+    {
+      "channel": "pedal_changes",
+      "key": "Bach/Prelude/bwv_848/Lee01M.mid",
+      "piece": "Bach/Prelude/bwv_848/midi_score.mid",
+      "beat": 219,
+      "length": 4,
+      "pattern": "abrupt",
+      "gap_mse": 81.96800839188425,
+      "check_type": "original MIDI/match re-extraction versus raw cache",
+      "cache_agrees": true,
+      "robust_alignment": true,
+      "performance_midi_sha256": "b5aadfb8377bd418205a04f49b53756066b8dfbf2fa98b39a15146b4c6db2fd2",
+      "match_sha256": "d6845516358183437452c9fa359aa6ab1231d0f67340eb5ea4bbf089d07e89d0",
+      "context_beats": [
+        218,
+        219,
+        220,
+        221,
+        222,
+        223
+      ],
+      "raw_values": [
+        0,
+        2,
+        0,
+        0,
+        2,
+        0
+      ],
+      "beat_seconds": [
+        0.22005300000000005,
+        0.23307299999999742,
+        0.21744699999999995,
+        0.22916800000000137,
+        0.23437400000000252,
+        0.23046899999999937
+      ],
+      "note_counts": null
+    }
+  ],
+  "events": [
+    {
+      "channel": "tempo",
+      "key": "Bach/Prelude/bwv_848/Lee01M.mid",
+      "beat": 38,
+      "start_seconds": 9.652995,
+      "end_seconds": 9.927444,
+      "raw": -0.13460998773838612,
+      "hidden": false
+    },
+    {
+      "channel": "tempo",
+      "key": "Bach/Prelude/bwv_848/Lee01M.mid",
+      "beat": 39,
+      "start_seconds": 9.927444,
+      "end_seconds": 10.466805,
+      "raw": -1.1093231123725715,
+      "hidden": true
+    },
+    {
+      "channel": "tempo",
+      "key": "Bach/Prelude/bwv_848/Lee01M.mid",
+      "beat": 40,
+      "start_seconds": 10.466805,
+      "end_seconds": 10.8513,
+      "raw": -0.6210367425140244,
+      "hidden": true
+    },
+    {
+      "channel": "tempo",
+      "key": "Bach/Prelude/bwv_848/Lee01M.mid",
+      "beat": 41,
+      "start_seconds": 10.8513,
+      "end_seconds": 11.089193,
+      "raw": 0.07161527379209416,
+      "hidden": true
+    },
+    {
+      "channel": "tempo",
+      "key": "Bach/Prelude/bwv_848/Lee01M.mid",
+      "beat": 42,
+      "start_seconds": 11.089193,
+      "end_seconds": 11.321615,
+      "raw": 0.10518146078905169,
+      "hidden": true
+    },
+    {
+      "channel": "tempo",
+      "key": "Bach/Prelude/bwv_848/Lee01M.mid",
+      "beat": 43,
+      "start_seconds": 11.321615,
+      "end_seconds": 11.542318,
+      "raw": 0.17982185468665762,
+      "hidden": false
+    },
+    {
+      "channel": "rubato",
+      "key": "Bach/Prelude/bwv_848/Lee01M.mid",
+      "beat": 38,
+      "start_seconds": 9.652995,
+      "end_seconds": 9.927444,
+      "raw": -0.13460998773838612,
+      "hidden": false
+    },
+    {
+      "channel": "rubato",
+      "key": "Bach/Prelude/bwv_848/Lee01M.mid",
+      "beat": 39,
+      "start_seconds": 9.927444,
+      "end_seconds": 10.466805,
+      "raw": -1.1093231123725715,
+      "hidden": true
+    },
+    {
+      "channel": "rubato",
+      "key": "Bach/Prelude/bwv_848/Lee01M.mid",
+      "beat": 40,
+      "start_seconds": 10.466805,
+      "end_seconds": 10.8513,
+      "raw": -0.6210367425140244,
+      "hidden": true
+    },
+    {
+      "channel": "rubato",
+      "key": "Bach/Prelude/bwv_848/Lee01M.mid",
+      "beat": 41,
+      "start_seconds": 10.8513,
+      "end_seconds": 11.089193,
+      "raw": 0.07161527379209416,
+      "hidden": true
+    },
+    {
+      "channel": "rubato",
+      "key": "Bach/Prelude/bwv_848/Lee01M.mid",
+      "beat": 42,
+      "start_seconds": 11.089193,
+      "end_seconds": 11.321615,
+      "raw": 0.10518146078905169,
+      "hidden": true
+    },
+    {
+      "channel": "rubato",
+      "key": "Bach/Prelude/bwv_848/Lee01M.mid",
+      "beat": 43,
+      "start_seconds": 11.321615,
+      "end_seconds": 11.542318,
+      "raw": 0.17982185468665762,
+      "hidden": false
+    },
+    {
+      "channel": "dynamics",
+      "key": "Chopin/Etudes_op_10/12/KimBenjamin04.mid",
+      "beat": 316,
+      "start_seconds": 138.530574,
+      "end_seconds": 138.984633,
+      "raw": 0.43194600674915634,
+      "hidden": false,
+      "velocities": [
+        56,
+        54,
+        60,
+        55,
+        56,
+        49,
+        54
+      ]
+    },
+    {
+      "channel": "dynamics",
+      "key": "Chopin/Etudes_op_10/12/KimBenjamin04.mid",
+      "beat": 317,
+      "start_seconds": 138.984633,
+      "end_seconds": 139.462196,
+      "raw": 0.4625984251968504,
+      "hidden": true,
+      "velocities": [
+        58,
+        59,
+        60,
+        58
+      ]
+    },
+    {
+      "channel": "dynamics",
+      "key": "Chopin/Etudes_op_10/12/KimBenjamin04.mid",
+      "beat": 318,
+      "start_seconds": 139.462196,
+      "end_seconds": 140.015613,
+      "raw": 0.5104986876640419,
+      "hidden": true,
+      "velocities": [
+        73,
+        56,
+        60,
+        65,
+        64,
+        71
+      ]
+    },
+    {
+      "channel": "dynamics",
+      "key": "Chopin/Etudes_op_10/12/KimBenjamin04.mid",
+      "beat": 319,
+      "start_seconds": 140.015613,
+      "end_seconds": 140.86924299999995,
+      "raw": 0.5579302587176603,
+      "hidden": true,
+      "velocities": [
+        61,
+        68,
+        65,
+        66,
+        77,
+        76,
+        83
+      ]
+    },
+    {
+      "channel": "dynamics",
+      "key": "Chopin/Etudes_op_10/12/KimBenjamin04.mid",
+      "beat": 320,
+      "start_seconds": 140.86924299999995,
+      "end_seconds": 141.678535,
+      "raw": 0.6839145106861643,
+      "hidden": true,
+      "velocities": [
+        83,
+        70,
+        102,
+        101,
+        82,
+        87,
+        83
+      ]
+    },
+    {
+      "channel": "dynamics",
+      "key": "Chopin/Etudes_op_10/12/KimBenjamin04.mid",
+      "beat": 321,
+      "start_seconds": 141.678535,
+      "end_seconds": 142.049795,
+      "raw": 0.6279527559055118,
+      "hidden": false,
+      "velocities": [
+        82,
+        77,
+        80,
+        80,
+        82,
+        71,
+        85,
+        81
+      ]
+    },
+    {
+      "channel": "articulation",
+      "key": "Chopin/Etudes_op_25/11/Kociuban02.mid",
+      "beat": 374,
+      "start_seconds": 220.86917000000003,
+      "end_seconds": 221.590323,
+      "raw": -0.6832520404441144,
+      "hidden": false,
+      "matched_notes": [
+        {
+          "log2_ratio": -0.5363133380133931,
+          "held_seconds": 0.9947916666666856,
+          "score_duration_beats": 2.0
+        },
+        {
+          "log2_ratio": -0.8301907428748356,
+          "held_seconds": 0.8114583333333485,
+          "score_duration_beats": 2.0
+        }
+      ]
+    },
+    {
+      "channel": "articulation",
+      "key": "Chopin/Etudes_op_25/11/Kociuban02.mid",
+      "beat": 375,
+      "start_seconds": 221.590323,
+      "end_seconds": 222.311476,
+      "raw": -4.2935819076616415,
+      "hidden": true,
+      "matched_notes": [
+        {
+          "log2_ratio": -4.4757334309665895,
+          "held_seconds": 0.10833333333332007,
+          "score_duration_beats": 4.0
+        },
+        {
+          "log2_ratio": -4.591210648386431,
+          "held_seconds": 0.09999999999999432,
+          "score_duration_beats": 4.0
+        },
+        {
+          "log2_ratio": -4.221976838720672,
+          "held_seconds": 0.12916666666666288,
+          "score_duration_beats": 4.0
+        },
+        {
+          "log2_ratio": -3.6215842974297137,
+          "held_seconds": 0.19583333333335418,
+          "score_duration_beats": 4.0
+        },
+        {
+          "log2_ratio": -4.305808429523898,
+          "held_seconds": 0.12187500000001705,
+          "score_duration_beats": 4.0
+        },
+        {
+          "log2_ratio": -4.281355385799385,
+          "held_seconds": 0.12395833333334849,
+          "score_duration_beats": 4.0
+        }
+      ]
+    },
+    {
+      "channel": "articulation",
+      "key": "Chopin/Etudes_op_25/11/Kociuban02.mid",
+      "beat": 376,
+      "start_seconds": 222.311476,
+      "end_seconds": 222.714788,
+      "raw": -0.4059923596759668,
+      "hidden": true,
+      "matched_notes": [
+        {
+          "log2_ratio": -4.198893225607651,
+          "held_seconds": 0.13124999999999432,
+          "score_duration_beats": 4.0
+        },
+        {
+          "log2_ratio": 0.5388660861318662,
+          "held_seconds": 0.08020833333333144,
+          "score_duration_beats": 0.10624999999998863
+        },
+        {
+          "log2_ratio": -0.4059923596759668,
+          "held_seconds": 0.04166666666665719,
+          "score_duration_beats": 0.10624999999998863
+        }
+      ]
+    },
+    {
+      "channel": "articulation",
+      "key": "Chopin/Etudes_op_25/11/Kociuban02.mid",
+      "beat": 377,
+      "start_seconds": 222.714788,
+      "end_seconds": 223.3397875,
+      "raw": -0.16729474539767816,
+      "hidden": false,
+      "matched_notes": [
+        {
+          "log2_ratio": 0.14274017211520584,
+          "held_seconds": 0.07187499999997726,
+          "score_duration_beats": 0.10624999999998863
+        },
+        {
+          "log2_ratio": -0.3510744405474059,
+          "held_seconds": 0.05104166666666288,
+          "score_duration_beats": 0.10624999999998863
+        },
+        {
+          "log2_ratio": -0.16729474539767816,
+          "held_seconds": 0.06354166666665151,
+          "score_duration_beats": 0.10625000000004547
+        },
+        {
+          "log2_ratio": -0.7404800783420086,
+          "held_seconds": 0.04270833333333712,
+          "score_duration_beats": 0.10625000000004547
+        },
+        {
+          "log2_ratio": -0.3372745269812262,
+          "held_seconds": 0.06145833333332007,
+          "score_duration_beats": 0.10624999999998863
+        },
+        {
+          "log2_ratio": 0.40389725501952806,
+          "held_seconds": 0.08958333333333712,
+          "score_duration_beats": 0.10624999999998863
+        },
+        {
+          "log2_ratio": 0.1376344282754557,
+          "held_seconds": 0.08541666666667425,
+          "score_duration_beats": 0.10624999999998863
+        },
+        {
+          "log2_ratio": 0.5889296448516169,
+          "held_seconds": 0.09479166666665151,
+          "score_duration_beats": 0.10625000000004547
+        },
+        {
+          "log2_ratio": 0.5322213519953695,
+          "held_seconds": 0.0979166666666913,
+          "score_duration_beats": 0.10624999999998863
+        },
+        {
+          "log2_ratio": -0.459433376709969,
+          "held_seconds": 0.04583333333332007,
+          "score_duration_beats": 0.10625000000004547
+        },
+        {
+          "log2_ratio": -0.18286362658519806,
+          "held_seconds": 0.07708333333332007,
+          "score_duration_beats": 0.10624999999998863
+        },
+        {
+          "log2_ratio": -1.0703888973268654,
+          "held_seconds": 0.04166666666665719,
+          "score_duration_beats": 0.10624999999998863
+        },
+        {
+          "log2_ratio": 0.2596934891898474,
+          "held_seconds": 0.09479166666665151,
+          "score_duration_beats": 0.10624999999998863
+        },
+        {
+          "log2_ratio": -0.4667414374841972,
+          "held_seconds": 0.05729166666665719,
+          "score_duration_beats": 0.10624999999998863
+        },
+        {
+          "log2_ratio": 0.8732409534408291,
+          "held_seconds": 0.10208333333332575,
+          "score_duration_beats": 0.10624999999998863
+        },
+        {
+          "log2_ratio": 0.13663601088644858,
+          "held_seconds": 0.08645833333332575,
+          "score_duration_beats": 0.10624999999998863
+        },
+        {
+          "log2_ratio": -0.24961579434459727,
+          "held_seconds": 0.046875,
+          "score_duration_beats": 0.10624999999998863
+        }
+      ]
+    },
+    {
+      "channel": "pedal_depth",
+      "key": "Bach/Prelude/bwv_848/LeeSH01M.mid",
+      "beat": 292,
+      "start_seconds": 73.228125,
+      "end_seconds": 73.444792,
+      "raw": 0.2726758494266349,
+      "hidden": false,
+      "cc64_before": 0,
+      "cc64_events": [
+        [
+          73.28541666666666,
+          19
+        ],
+        [
+          73.30416666666666,
+          46
+        ],
+        [
+          73.325,
+          52
+        ],
+        [
+          73.40416666666667,
+          51
+        ]
+      ]
+    },
+    {
+      "channel": "pedal_depth",
+      "key": "Bach/Prelude/bwv_848/LeeSH01M.mid",
+      "beat": 293,
+      "start_seconds": 73.444792,
+      "end_seconds": 73.677083,
+      "raw": 0.41167339079881543,
+      "hidden": true,
+      "cc64_before": 51,
+      "cc64_events": [
+        [
+          73.484375,
+          52
+        ],
+        [
+          73.50520833333333,
+          52
+        ],
+        [
+          73.52395833333333,
+          53
+        ],
+        [
+          73.54479166666667,
+          53
+        ],
+        [
+          73.56458333333333,
+          54
+        ],
+        [
+          73.58541666666666,
+          54
+        ],
+        [
+          73.625,
+          53
+        ],
+        [
+          73.64583333333333,
+          51
+        ],
+        [
+          73.665625,
+          47
+        ]
+      ]
+    },
+    {
+      "channel": "pedal_depth",
+      "key": "Bach/Prelude/bwv_848/LeeSH01M.mid",
+      "beat": 294,
+      "start_seconds": 73.677083,
+      "end_seconds": 73.928125,
+      "raw": 0.1637536637060505,
+      "hidden": true,
+      "cc64_before": 47,
+      "cc64_events": [
+        [
+          73.68541666666667,
+          37
+        ],
+        [
+          73.70625,
+          0
+        ],
+        [
+          73.86666666666666,
+          55
+        ],
+        [
+          73.88541666666667,
+          65
+        ],
+        [
+          73.90625,
+          74
+        ],
+        [
+          73.92604166666666,
+          100
+        ]
+      ]
+    },
+    {
+      "channel": "pedal_depth",
+      "key": "Bach/Prelude/bwv_848/LeeSH01M.mid",
+      "beat": 295,
+      "start_seconds": 73.928125,
+      "end_seconds": 74.163542,
+      "raw": 0.9849488053682873,
+      "hidden": true,
+      "cc64_before": 100,
+      "cc64_events": [
+        [
+          73.94479166666666,
+          127
+        ]
+      ]
+    },
+    {
+      "channel": "pedal_depth",
+      "key": "Bach/Prelude/bwv_848/LeeSH01M.mid",
+      "beat": 296,
+      "start_seconds": 74.163542,
+      "end_seconds": 74.408333,
+      "raw": 1.0,
+      "hidden": true,
+      "cc64_before": 127,
+      "cc64_events": []
+    },
+    {
+      "channel": "pedal_depth",
+      "key": "Bach/Prelude/bwv_848/LeeSH01M.mid",
+      "beat": 297,
+      "start_seconds": 74.408333,
+      "end_seconds": 74.651042,
+      "raw": 0.4301985628556178,
+      "hidden": false,
+      "cc64_before": 127,
+      "cc64_events": [
+        [
+          74.46770833333333,
+          104
+        ],
+        [
+          74.4875,
+          80
+        ],
+        [
+          74.50729166666666,
+          65
+        ],
+        [
+          74.52708333333334,
+          38
+        ],
+        [
+          74.54791666666667,
+          0
+        ]
+      ]
+    },
+    {
+      "channel": "pedal_down_ratio",
+      "key": "Bach/Prelude/bwv_848/LeeSH01M.mid",
+      "beat": 292,
+      "start_seconds": 73.228125,
+      "end_seconds": 73.444792,
+      "raw": 0.0,
+      "hidden": false,
+      "cc64_before": 0,
+      "cc64_events": [
+        [
+          73.28541666666666,
+          19
+        ],
+        [
+          73.30416666666666,
+          46
+        ],
+        [
+          73.325,
+          52
+        ],
+        [
+          73.40416666666667,
+          51
+        ]
+      ]
+    },
+    {
+      "channel": "pedal_down_ratio",
+      "key": "Bach/Prelude/bwv_848/LeeSH01M.mid",
+      "beat": 293,
+      "start_seconds": 73.444792,
+      "end_seconds": 73.677083,
+      "raw": 0.0,
+      "hidden": true,
+      "cc64_before": 51,
+      "cc64_events": [
+        [
+          73.484375,
+          52
+        ],
+        [
+          73.50520833333333,
+          52
+        ],
+        [
+          73.52395833333333,
+          53
+        ],
+        [
+          73.54479166666667,
+          53
+        ],
+        [
+          73.56458333333333,
+          54
+        ],
+        [
+          73.58541666666666,
+          54
+        ],
+        [
+          73.625,
+          53
+        ],
+        [
+          73.64583333333333,
+          51
+        ],
+        [
+          73.665625,
+          47
+        ]
+      ]
+    },
+    {
+      "channel": "pedal_down_ratio",
+      "key": "Bach/Prelude/bwv_848/LeeSH01M.mid",
+      "beat": 294,
+      "start_seconds": 73.677083,
+      "end_seconds": 73.928125,
+      "raw": 0.17012425543663298,
+      "hidden": true,
+      "cc64_before": 47,
+      "cc64_events": [
+        [
+          73.68541666666667,
+          37
+        ],
+        [
+          73.70625,
+          0
+        ],
+        [
+          73.86666666666666,
+          55
+        ],
+        [
+          73.88541666666667,
+          65
+        ],
+        [
+          73.90625,
+          74
+        ],
+        [
+          73.92604166666666,
+          100
+        ]
+      ]
+    },
+    {
+      "channel": "pedal_down_ratio",
+      "key": "Bach/Prelude/bwv_848/LeeSH01M.mid",
+      "beat": 295,
+      "start_seconds": 73.928125,
+      "end_seconds": 74.163542,
+      "raw": 1.0,
+      "hidden": true,
+      "cc64_before": 100,
+      "cc64_events": [
+        [
+          73.94479166666666,
+          127
+        ]
+      ]
+    },
+    {
+      "channel": "pedal_down_ratio",
+      "key": "Bach/Prelude/bwv_848/LeeSH01M.mid",
+      "beat": 296,
+      "start_seconds": 74.163542,
+      "end_seconds": 74.408333,
+      "raw": 1.0,
+      "hidden": true,
+      "cc64_before": 127,
+      "cc64_events": []
+    },
+    {
+      "channel": "pedal_down_ratio",
+      "key": "Bach/Prelude/bwv_848/LeeSH01M.mid",
+      "beat": 297,
+      "start_seconds": 74.408333,
+      "end_seconds": 74.651042,
+      "raw": 0.48927041573792385,
+      "hidden": false,
+      "cc64_before": 127,
+      "cc64_events": [
+        [
+          74.46770833333333,
+          104
+        ],
+        [
+          74.4875,
+          80
+        ],
+        [
+          74.50729166666666,
+          65
+        ],
+        [
+          74.52708333333334,
+          38
+        ],
+        [
+          74.54791666666667,
+          0
+        ]
+      ]
+    },
+    {
+      "channel": "pedal_changes",
+      "key": "Bach/Prelude/bwv_848/Lee01M.mid",
+      "beat": 218,
+      "start_seconds": 51.476562,
+      "end_seconds": 51.696615,
+      "raw": 0.0,
+      "hidden": false,
+      "cc64_before": 0,
+      "cc64_events": []
+    },
+    {
+      "channel": "pedal_changes",
+      "key": "Bach/Prelude/bwv_848/Lee01M.mid",
+      "beat": 219,
+      "start_seconds": 51.696615,
+      "end_seconds": 51.929688,
+      "raw": 2.0,
+      "hidden": true,
+      "cc64_before": 0,
+      "cc64_events": [
+        [
+          51.71875,
+          45
+        ],
+        [
+          51.73958333333333,
+          58
+        ],
+        [
+          51.75911458333333,
+          63
+        ],
+        [
+          51.77734375,
+          64
+        ],
+        [
+          51.79817708333333,
+          64
+        ],
+        [
+          51.81770833333333,
+          62
+        ],
+        [
+          51.838541666666664,
+          58
+        ],
+        [
+          51.858072916666664,
+          51
+        ],
+        [
+          51.877604166666664,
+          35
+        ],
+        [
+          51.8984375,
+          0
+        ]
+      ]
+    },
+    {
+      "channel": "pedal_changes",
+      "key": "Bach/Prelude/bwv_848/Lee01M.mid",
+      "beat": 220,
+      "start_seconds": 51.929688,
+      "end_seconds": 52.147135,
+      "raw": 0.0,
+      "hidden": true,
+      "cc64_before": 0,
+      "cc64_events": []
+    },
+    {
+      "channel": "pedal_changes",
+      "key": "Bach/Prelude/bwv_848/Lee01M.mid",
+      "beat": 221,
+      "start_seconds": 52.147135,
+      "end_seconds": 52.376303,
+      "raw": 0.0,
+      "hidden": true,
+      "cc64_before": 0,
+      "cc64_events": []
+    },
+    {
+      "channel": "pedal_changes",
+      "key": "Bach/Prelude/bwv_848/Lee01M.mid",
+      "beat": 222,
+      "start_seconds": 52.376303,
+      "end_seconds": 52.610677,
+      "raw": 2.0,
+      "hidden": true,
+      "cc64_before": 0,
+      "cc64_events": [
+        [
+          52.40234375,
+          45
+        ],
+        [
+          52.42317708333333,
+          61
+        ],
+        [
+          52.44270833333333,
+          65
+        ],
+        [
+          52.463541666666664,
+          66
+        ],
+        [
+          52.483072916666664,
+          65
+        ],
+        [
+          52.50130208333333,
+          63
+        ],
+        [
+          52.522135416666664,
+          58
+        ],
+        [
+          52.541666666666664,
+          49
+        ],
+        [
+          52.561197916666664,
+          37
+        ],
+        [
+          52.58203125,
+          29
+        ],
+        [
+          52.600260416666664,
+          26
+        ]
+      ]
+    },
+    {
+      "channel": "pedal_changes",
+      "key": "Bach/Prelude/bwv_848/Lee01M.mid",
+      "beat": 223,
+      "start_seconds": 52.610677,
+      "end_seconds": 52.841146,
+      "raw": 0.0,
+      "hidden": false,
+      "cc64_before": 26,
+      "cc64_events": [
+        [
+          52.62109375,
+          20
+        ],
+        [
+          52.640625,
+          16
+        ],
+        [
+          52.658854166666664,
+          15
+        ],
+        [
+          52.6796875,
+          14
+        ],
+        [
+          52.72005208333333,
+          12
+        ],
+        [
+          52.81640625,
+          10
+        ]
+      ]
+    }
+  ]
+}
