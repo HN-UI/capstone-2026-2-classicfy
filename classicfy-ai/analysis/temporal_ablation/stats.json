@@ -1,0 +1,271 @@
+{
+  "seeds": [
+    20261006,
+    20261007,
+    20261008
+  ],
+  "epochs": 20,
+  "delta_weight": 0.5,
+  "arms": [
+    "baseline",
+    "delta_loss",
+    "wide_encoder"
+  ],
+  "reference": "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_embedding_cluster_run01",
+  "cache_sha256": "79ab737a08335c7fd7e9a912159de65b7c26795e1ef22e45114e5a8c6eb8ad2e",
+  "reference_dataset_sha256": "85486dadf913a454a38dc48131d8f8090c3d9c4ce92fe79f7bbe0c1c8427e7b4",
+  "source_sha256": {
+    "scripts/train_temporal_ablation.py": "27890b6f347628a6fbb0ced75e410117071cae3c1aeb55b680df356a3ad0ea90",
+    "src/embedding/model.py": "06844a05d709ff8a9d33aaf9d90de68c1285659a913f4520327b7ebc106c96d1",
+    "src/embedding/data.py": "bb15ea0fbe7937da3947dcb8c362c54bb7ac183f5b17318fe249e53b3eda6040",
+    "src/embedding/training.py": "bba2a763afe9196be0264bc33b8431170fc0bafa29ff82fb728815b957ff9efc",
+    "src/embedding/evaluation.py": "6cac2102cfc50d0ea61569123436f4e3f6cba430deeba5561e6244809f62afd9"
+  },
+  "primary_comparison": "final epoch for all arms; no early stopping; test untouched",
+  "encoder_widths": {
+    "baseline": 64,
+    "delta_loss": 64,
+    "wide_encoder": 128
+  },
+  "embedding_size": 64,
+  "decoder_width": 128,
+  "evaluation_mask_seed": 20261008,
+  "training_schedule": "separate torch generators: shuffle seed+1, masks seed+3; schedule hashes must match within seed",
+  "delta_definition": "adjacent pairs with both beats hidden and valid; equal five-feature weighting",
+  "objective": "(value_MSE + lambda*delta_MSE)/(1+lambda); lambda=.5 only in delta_loss arm",
+  "limits": [
+    "One work split, three seeds, one lambda, one width, fixed 20 epoch budget.",
+    "Work identities follow original score/movement split; not guaranteed disjoint musical families.",
+    "Three-seed min/max ranges are not confidence intervals.",
+    "Reconstruction tests do not validate listening similarity or recommendation quality."
+  ],
+  "source_provenance": {
+    "asap_revision": "afc815c75c42e83a79c03feb6da8a35e77d4c6b8",
+    "nasap_revision": "4097b45757bed854818cf87e77b92323ebf90615",
+    "input_sha256": "19fd51ad1f964733ca888a8da68216057a57ba0302835d055a501df5ad62077a",
+    "collector_version": 1
+  },
+  "runs_path": "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_controlled_run01",
+  "run_results": [
+    {
+      "seed": 20261006,
+      "arm": "baseline",
+      "epochs": 20,
+      "encoder_width": 64,
+      "embedding_size": 64,
+      "decoder_width": 128,
+      "parameters": 428544,
+      "encoder_parameters": 362432,
+      "decoder_parameters": 66112,
+      "delta_weight": 0.0,
+      "final_validation": {
+        "value_mse": 1.3076888622067322,
+        "delta_mse": 2.032933771954286
+      },
+      "best_value_epoch": 18,
+      "best_validation_value_mse": 1.302936850383034,
+      "training_schedule_sha256": "22cffe550f237a32c318e255cf8337df53d0e85601b1d7073d1fc5088dae793d",
+      "seconds": 130.002493374981,
+      "final_sha256": "b35258e8996091d04f0d9daca1838e49943b92df4cfac7fdc1cd5782e191aac3"
+    },
+    {
+      "seed": 20261006,
+      "arm": "delta_loss",
+      "epochs": 20,
+      "encoder_width": 64,
+      "embedding_size": 64,
+      "decoder_width": 128,
+      "parameters": 428544,
+      "encoder_parameters": 362432,
+      "decoder_parameters": 66112,
+      "delta_weight": 0.5,
+      "final_validation": {
+        "value_mse": 1.3242460066248234,
+        "delta_mse": 2.040997651835006
+      },
+      "best_value_epoch": 18,
+      "best_validation_value_mse": 1.3180638679914538,
+      "training_schedule_sha256": "22cffe550f237a32c318e255cf8337df53d0e85601b1d7073d1fc5088dae793d",
+      "seconds": 167.25972741702572,
+      "final_sha256": "0cdb114f7d3fe2ca3808b581c4a8cbc07005b494d26ba3a60db2b03bab6e8e51"
+    },
+    {
+      "seed": 20261006,
+      "arm": "wide_encoder",
+      "epochs": 20,
+      "encoder_width": 128,
+      "embedding_size": 64,
+      "decoder_width": 128,
+      "parameters": 987520,
+      "encoder_parameters": 921408,
+      "decoder_parameters": 66112,
+      "delta_weight": 0.0,
+      "final_validation": {
+        "value_mse": 1.3215276497413615,
+        "delta_mse": 2.0370648032156393
+      },
+      "best_value_epoch": 16,
+      "best_validation_value_mse": 1.3082630326207767,
+      "training_schedule_sha256": "22cffe550f237a32c318e255cf8337df53d0e85601b1d7073d1fc5088dae793d",
+      "seconds": 370.2323543331586,
+      "final_sha256": "c67db9e8ffbaa4ca15a63293ec047bbe5e05e95831e8dfd05fba01a27c8e0c14"
+    },
+    {
+      "seed": 20261007,
+      "arm": "baseline",
+      "epochs": 20,
+      "encoder_width": 64,
+      "embedding_size": 64,
+      "decoder_width": 128,
+      "parameters": 428544,
+      "encoder_parameters": 362432,
+      "decoder_parameters": 66112,
+      "delta_weight": 0.0,
+      "final_validation": {
+        "value_mse": 1.312935706211091,
+        "delta_mse": 2.0369988177570146
+      },
+      "best_value_epoch": 16,
+      "best_validation_value_mse": 1.3105590344610765,
+      "training_schedule_sha256": "5a7581215c982f5c46cca29bb92e88fe7bd914fc1f304b008ef64730f1df59d7",
+      "seconds": 172.4361197920516,
+      "final_sha256": "7fb0f511e5ae0bc079f184e2bce8ed7db5059ed2e8701b15c136c841c618d3ab"
+    },
+    {
+      "seed": 20261007,
+      "arm": "delta_loss",
+      "epochs": 20,
+      "encoder_width": 64,
+      "embedding_size": 64,
+      "decoder_width": 128,
+      "parameters": 428544,
+      "encoder_parameters": 362432,
+      "decoder_parameters": 66112,
+      "delta_weight": 0.5,
+      "final_validation": {
+        "value_mse": 1.3236200161500116,
+        "delta_mse": 2.0411959033047262
+      },
+      "best_value_epoch": 15,
+      "best_validation_value_mse": 1.3198178198429926,
+      "training_schedule_sha256": "5a7581215c982f5c46cca29bb92e88fe7bd914fc1f304b008ef64730f1df59d7",
+      "seconds": 177.41024412494153,
+      "final_sha256": "e2921eb8a3ab8e360269035dcee79c099a241e7f982e267e50a4e95dabeaecdd"
+    },
+    {
+      "seed": 20261007,
+      "arm": "wide_encoder",
+      "epochs": 20,
+      "encoder_width": 128,
+      "embedding_size": 64,
+      "decoder_width": 128,
+      "parameters": 987520,
+      "encoder_parameters": 921408,
+      "decoder_parameters": 66112,
+      "delta_weight": 0.0,
+      "final_validation": {
+        "value_mse": 1.3218761177468,
+        "delta_mse": 2.0353412363076813
+      },
+      "best_value_epoch": 15,
+      "best_validation_value_mse": 1.3133409698727412,
+      "training_schedule_sha256": "5a7581215c982f5c46cca29bb92e88fe7bd914fc1f304b008ef64730f1df59d7",
+      "seconds": 320.68298358283937,
+      "final_sha256": "a630859346668a05306d0b746ad5dab2c78a79a09b4cf8c048a1b0c060fb6256"
+    },
+    {
+      "seed": 20261008,
+      "arm": "baseline",
+      "epochs": 20,
+      "encoder_width": 64,
+      "embedding_size": 64,
+      "decoder_width": 128,
+      "parameters": 428544,
+      "encoder_parameters": 362432,
+      "decoder_parameters": 66112,
+      "delta_weight": 0.0,
+      "final_validation": {
+        "value_mse": 1.3084655469554636,
+        "delta_mse": 2.039213045631235
+      },
+      "best_value_epoch": 20,
+      "best_validation_value_mse": 1.3084655469554636,
+      "training_schedule_sha256": "415815b441d161bf411680852f443b83441fac14fc9c4149ea5808f81af142fb",
+      "seconds": 172.34663091693074,
+      "final_sha256": "24918c3045ed1e36e8a50206a433b0830ebb203dca504ebf73d23387c6e7f19d"
+    },
+    {
+      "seed": 20261008,
+      "arm": "delta_loss",
+      "epochs": 20,
+      "encoder_width": 64,
+      "embedding_size": 64,
+      "decoder_width": 128,
+      "parameters": 428544,
+      "encoder_parameters": 362432,
+      "decoder_parameters": 66112,
+      "delta_weight": 0.5,
+      "final_validation": {
+        "value_mse": 1.3282485940968867,
+        "delta_mse": 2.0533461108188584
+      },
+      "best_value_epoch": 19,
+      "best_validation_value_mse": 1.3243676953607337,
+      "training_schedule_sha256": "415815b441d161bf411680852f443b83441fac14fc9c4149ea5808f81af142fb",
+      "seconds": 177.25205716723576,
+      "final_sha256": "6f12a0fac612823bccfaa1344a95356dd4e6bc0b31a152221a03278b96d47d8d"
+    },
+    {
+      "seed": 20261008,
+      "arm": "wide_encoder",
+      "epochs": 20,
+      "encoder_width": 128,
+      "embedding_size": 64,
+      "decoder_width": 128,
+      "parameters": 987520,
+      "encoder_parameters": 921408,
+      "decoder_parameters": 66112,
+      "delta_weight": 0.0,
+      "final_validation": {
+        "value_mse": 1.3240131185445965,
+        "delta_mse": 2.0529989693706083
+      },
+      "best_value_epoch": 10,
+      "best_validation_value_mse": 1.3195144206525087,
+      "training_schedule_sha256": "415815b441d161bf411680852f443b83441fac14fc9c4149ea5808f81af142fb",
+      "seconds": 356.5308602498844,
+      "final_sha256": "f11e41ef6e90327f797ab4a4ab79b41b34690746dd069760d9230554d33be576"
+    }
+  ],
+  "evaluation_masks_sha256": {
+    "train": "454eab4f3887876be2795c2cfa82aaa07501e5eeec3ff4df0f7cf9e1ab3ca16b",
+    "validation": "3ed043c7109b481e4eb4576a919246e97266fb3ef04c83d2f4fa0847862d0d3d"
+  },
+  "examples_sha256": "11f9edf6dd615d5cad5cf8bcefbf3882d7b43e59900e548ae1397ae89e41907e",
+  "counts": {
+    "train": {
+      "windows": 5803,
+      "performances": 395,
+      "works": 39
+    },
+    "validation": {
+      "windows": 935,
+      "performances": 93,
+      "works": 8
+    }
+  },
+  "figure_files": [
+    "01_controlled_comparison.png",
+    "02_validation_feature_effects.png",
+    "03_learning_curves.png",
+    "04_validation_work_effects.png",
+    "examples/01_tempo.png",
+    "examples/02_rubato.png",
+    "examples/03_dynamics.png",
+    "examples/04_articulation.png",
+    "examples/05_pedal_depth.png",
+    "examples/06_pedal_down_ratio.png",
+    "examples/07_pedal_changes.png"
+  ],
+  "work_comparison_script_sha256": "f922c6ee1b8c1c2f1d09c848fdd6f6512c1b4bcad2f446ab090080e5a2c77b32"
+}

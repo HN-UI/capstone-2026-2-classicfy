@@ -1,0 +1,99 @@
+{
+  "run": "/Users/ihun-ui/Desktop/Classicfy/datasets/temporal_embedding_cluster_run01",
+  "best_epoch": 18,
+  "checkpoint_sha256": "11abbfc8b4a79c81610d256c44d4849ea9ae7af72ecceba445d1bb4a3f217279",
+  "cache_sha256": "79ab737a08335c7fd7e9a912159de65b7c26795e1ef22e45114e5a8c6eb8ad2e",
+  "source_provenance": {
+    "asap_revision": "afc815c75c42e83a79c03feb6da8a35e77d4c6b8",
+    "nasap_revision": "4097b45757bed854818cf87e77b92323ebf90615",
+    "input_sha256": "19fd51ad1f964733ca888a8da68216057a57ba0302835d055a501df5ad62077a",
+    "collector_version": 1
+  },
+  "script_sha256": "8f5eaf19bc3f6a9e56cab521807d93801f5081bc43c574c46b75c82faf65aa38",
+  "mask": {
+    "seed": 20261008,
+    "fraction": 0.2,
+    "requested_block_size": 4,
+    "note": "Actual adjacent blocks can merge to >4 beats. Same fixed_masks procedure used separately per split. One fixed realization."
+  },
+  "evaluation": "Saved best model, eval mode, no retraining, no test use; target-pooled per channel; overlapping windows are not independent samples.",
+  "splits": {
+    "train": {
+      "works": 39,
+      "performances": 395,
+      "windows": 5803
+    },
+    "validation": {
+      "works": 8,
+      "performances": 93,
+      "windows": 935
+    }
+  },
+  "validation_mse_reproduced": 1.3029368542875914,
+  "shape_thresholds_train_only": {
+    "tempo": {
+      "range_q25": 1.1182653307914734,
+      "step_q75": 2.2060278551653028
+    },
+    "rubato": {
+      "range_q25": 1.438316736370325,
+      "step_q75": 2.727760910987854
+    },
+    "dynamics": {
+      "range_q25": 1.2986022979021072,
+      "step_q75": 2.0608478635549545
+    },
+    "articulation": {
+      "range_q25": 1.4894619584083557,
+      "step_q75": 2.785001829266548
+    },
+    "pedal_depth": {
+      "range_q25": 0.6177755509270355,
+      "step_q75": 1.7036189213395119
+    },
+    "pedal_down_ratio": {
+      "range_q25": 0.4272834062576294,
+      "step_q75": 1.8687240481376648
+    },
+    "pedal_changes": {
+      "range_q25": 0.0,
+      "step_q75": 2.512526512145996
+    }
+  },
+  "shape_definition": {
+    "context": "one visible valid beat on each side of a maximal consecutive hidden run",
+    "small": "range <= channel train 25th percentile",
+    "abrupt": "not small and max absolute adjacent change > channel train 75th percentile",
+    "gradual": "neither above; abs(endpoint difference)/sum(abs(adjacent changes)) >= 0.8",
+    "mixed": "remaining anchored gaps",
+    "limit": "Operational diagnostics in normalized residuals, not musical phrase or articulation labels; thresholds include overlapping windows."
+  },
+  "source_checks_limit": "Re-extraction agreement is consistency only, not proof that MIDI/annotation/features reflect musical intent.",
+  "unanchored_gaps": {
+    "size": {
+      "train": 20874,
+      "validation": 3421
+    },
+    "sum": {
+      "train": 16775,
+      "validation": 2950
+    }
+  },
+  "figure_files": [
+    "01_reading_the_diagnostics.png",
+    "02_feature_by_pattern.png",
+    "02b_absolute_error_by_pattern.png",
+    "03_actual_mask_length.png",
+    "04_train_vs_validation.png",
+    "05_train_vs_validation_matched.png",
+    "06_largest_errors_source_check.png",
+    "examples/01_tempo.png",
+    "examples/02_rubato.png",
+    "examples/03_dynamics.png",
+    "examples/04_articulation.png",
+    "examples/05_pedal_depth.png",
+    "examples/06_pedal_down_ratio.png",
+    "examples/07_pedal_changes.png"
+  ],
+  "source_audit_passed": true
+}
