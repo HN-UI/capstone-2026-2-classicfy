@@ -6,6 +6,7 @@
 tests/
 ├── unit/
 │   ├── features/       # beat grid, 결과 모델, 다섯 feature와 summary 계산
+│   ├── embedding/      # 시계열 구간·마스크·CNN 복원 학습 및 임베딩 추출
 │   ├── preprocessing/  # ASAP annotation, MIDI 원본, (n)ASAP match 파일 로딩
 │   └── tools/          # 청취 평가 음원·blind 순서·응답 분석·HTTP Range
 └── integration/        # loader 출력이 feature 입력까지 이어지는 전체 흐름
@@ -54,3 +55,16 @@ HTTP Range 재생·구간 이동 및 pack 밖 파일 차단을 다룬다. 합성
 사람의 청취 결과로 저장하지 않는다.
 
 청취 도구 추가 후 실제 데이터 환경에서 전체 163개 테스트가 skip 없이 통과했다.
+
+`unit/embedding/test_temporal_embedding.py`는 시계열의 원래 beat 위치 보존,
+작품별 split, padding·마스킹, 숨긴 정답 누출 방지, 5feature 오차 비중,
+인코더 학습, checkpoint 재로드 및 같은 작품 후보 제외를 검증한다.
+실행 방법과 모델 구조는 [시계열 임베딩 안내](../src/embedding/README.md)에 있다.
+
+`unit/embedding/test_temporal_evaluation.py`는 구간 평균만 맞추는 경우와 변화 모양 복원을
+구분하고, 인접 hidden beat 조건·관측값만 사용하는 baseline·7채널 묶음 순서 변경을 검증한다.
+
+`unit/embedding/test_temporal_neighbors.py`는 다른 작품 후보의 feature 대조에서
+결측 beat를 잇지 않는 변화량 계산, Pedaling의 동일 feature 비중,
+최근접 후보를 제외한 대조·동점 처리, 결과와 무관한 대표 사례 선정을 검증한다.
+[검색 관찰 보고서](../analysis/temporal_neighbors/README.md)는 feature 기반 대조이며 사람의 청취 정답 평가가 아니다.
